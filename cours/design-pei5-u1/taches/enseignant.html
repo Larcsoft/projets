@@ -237,8 +237,9 @@ a:hover{border-bottom-color:var(--cuivre)}
 
 /* bandeau d'en-tête pleine largeur */
 .entete{background:var(--pcb);color:var(--pcb-ink);box-shadow:0 0 0 100vmax var(--pcb);clip-path:inset(0 -100vmax);padding-bottom:18px;position:relative}
-.entete::before{content:"";display:block;height:11px;margin:0 0 14px;
-  background:repeating-linear-gradient(90deg,var(--silk) 0 2px,var(--pcb-2) 2px 9px,var(--silk) 9px 11px,transparent 11px 17px);opacity:.75;width:180px}
+.pins{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 14px}
+.pins i{width:11px;height:11px;background:var(--pcb-2);border:2px solid var(--silk);border-radius:2px;display:block}
+.pins i:nth-child(3n){background:var(--cuivre)}
 .entete .haut,.entete .code,.entete .byline h5{color:var(--silk)}
 .entete .haut a{color:var(--pcb-ink);border-bottom-color:rgba(191,217,207,.4)}
 .entete h1{color:#fff;font-weight:800;letter-spacing:-.02em}
@@ -264,11 +265,11 @@ footer{color:var(--gris)}
 .puce{color:#14211E}
 @media print{
   .entete{background:none;color:#000;box-shadow:none;clip-path:none}
-  .entete::before{display:none}
+  .pins{display:none}
   .entete h1,.entete .desc,.entete .haut,.entete .code,.entete .byline p,.entete .byline h5{color:#000}
   main>section,main>nav{border:none;padding:0}
 }
-</style></head><body><header class="entete"><div class="haut"><span>Espace enseignant(e)</span><span>Tous les cours</span></div>
+</style></head><body><header class="entete"><div class="pins" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="haut"><span>Espace enseignant(e)</span><span>Tous les cours</span></div>
 <p class="code">Suivi des travaux · données anonymes</p>
 <h1>Tableau de bord</h1>
 <p class="desc">Créez vos cours et les codes de vos élèves, puis suivez leurs brouillons, leurs versions finales et leurs scores, activité par activité.</p>
