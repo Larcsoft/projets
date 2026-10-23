@@ -200,6 +200,13 @@ footer{font-size:.75em;color:var(--gris);text-align:center;padding-top:14px;padd
   .cadre,.histoire,#appliquer .panneau,.sommative{padding-left:12px;padding-right:12px}
 }
 
+/* ---------- rapprochement avec la page du témoin arrosage : pastilles colorées, encadrés à filet gauche ---------- */
+.puce{display:inline-block;min-width:2.2em;padding:0 .35em;margin-right:.45em;border-radius:3px;background:var(--crit);font-size:.82em;text-align:center;font-variant-numeric:tabular-nums;font-variant-caps:normal;color:rgba(0,0,0,.84)}
+h1 .puce{font-size:.62em;vertical-align:.18em;padding:.05em .4em}
+.sommaire li .num.puce{color:rgba(0,0,0,.84);font-variant:normal}
+.cadre,.histoire,#appliquer .panneau,.pouce,.sommative{box-shadow:none;border-left:3px solid var(--crit)}
+@media print{.puce{background:none;border:0.5pt solid #999}}
+
 /* ---------- QCM « Ai-je compris la tâche ? » ---------- */
 .qcm{margin-top:18px}
 .qcm-liste{padding-left:1.3em;margin:8px 0 0}

@@ -1,89 +1,148 @@
-/* Site des cours : compléments à distill.css (la feuille des pages témoins).
-   distill.css donne la grille, l'en-tête, le sommaire, les titres numérotés et les annexes ;
-   ce fichier ajoute seulement la barre de navigation et les éléments propres au site. */
+/* Site des cours · style « Atelier Arduino & ESP32 » choisi par Pat (23/10/2026) :
+   bandeau vert « circuit imprimé », accent cuivre, fond papier, cartes blanches,
+   rail de navigation à gauche, encadrés colorés selon leur rôle. Coloré mais sobre. */
 
-/* ---------- barre de navigation du site ---------- */
-.menu-site { border-bottom: 1px solid var(--filet); font-size: .72em; letter-spacing: .05em; text-transform: uppercase; }
-.menu-int { max-width: 1180px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 24px; padding: 12px 0; }
-.menu-int span { display: flex; flex-wrap: wrap; gap: 4px 20px; }
-.menu-int a { border: none; color: var(--gris); }
-.menu-int a:hover, .menu-int a.actif { color: var(--encre); }
-.menu-int a.actif { font-weight: 600; }
-.menu-int .marque { color: var(--encre); font-weight: 700; }
+:root{
+  --paper:#F3F6F2; --surface:#FFFFFF; --ink:#14211E; --muted:#52625C; --line:#D3DCD5;
+  --pcb:#0E4A42; --pcb-2:#0B3B35; --pcb-ink:#E8F2EC; --silk:#BFD9CF;
+  --copper:#B5652A; --copper-soft:#F7E9DB; --copper-ink:#7A3F12;
+  --ok:#1E7F46; --ok-soft:#E3F3E8; --bad:#B83A33; --bad-soft:#FBE7E5; --warn:#9A6514; --warn-soft:#FBF0DC;
+  --code-bg:#0F1D1A; --code-ink:#DCE7E1; --code-line:#1C2F2A;
+  /* une couleur par critère, comme dans les pages A1-D4 */
+  --crit-a:#9ab7dd; --crit-b:#a8cfae; --crit-c:#e6bf98; --crit-d:#c5b3dd;
+  --f-display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",Consolas,"Courier New",monospace;
+  --r:10px;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{background:var(--paper);scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--f-display);line-height:1.15;text-wrap:balance;margin:0}
+p{margin:0 0 .8em}
+a{color:var(--copper);text-decoration-thickness:1px;text-underline-offset:2px}
+a:focus-visible{outline:3px solid var(--copper);outline-offset:2px}
+code,kbd{font-family:var(--f-mono);font-size:.86em}
+:not(pre)>code{background:var(--copper-soft);color:var(--copper-ink);padding:.05em .35em;border-radius:4px}
+kbd{border:1px solid var(--line);border-radius:4px;padding:0 .3em;background:var(--surface)}
+.gris{color:var(--muted)}
+.label{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
 
-/* ---------- encadrés ---------- */
-.encadre { background: var(--regle); padding: 14px 18px; font-size: .92em; margin: 20px 0; }
-.encadre-gris { background: var(--appendice); padding: 14px 18px; margin-top: 40px; }
-.encadre-gris h2 { margin-top: 0; font-size: 1.1em; }
-.avert { margin: 24px 0; }
-.encadre p:last-child, .encadre-gris p:last-child, .avert p:last-child { margin-bottom: 0; }
-.gris { color: var(--gris); }
-kbd { font-family: var(--mono); font-size: .8em; border: 1px solid var(--filet); border-radius: 3px; padding: 0 .3em; background: var(--code-fond); }
+/* ---------- bandeau « circuit imprimé » ---------- */
+.board{background:var(--pcb);color:var(--pcb-ink);padding-inline:16px;position:relative;overflow:hidden}
+.board::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.18;
+  background-image:linear-gradient(90deg,transparent 0 46%,var(--silk) 46% 48%,transparent 48%),
+  linear-gradient(0deg,transparent 0 46%,var(--silk) 46% 48%,transparent 48%);
+  background-size:140px 90px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 60%);mask-image:linear-gradient(90deg,transparent,#000 60%)}
+.board-in{max-width:1180px;margin:0 auto;padding-block:20px 26px;position:relative;display:grid;gap:12px}
+.pins{display:flex;gap:6px;flex-wrap:wrap}
+.pins i{width:11px;height:11px;background:var(--pcb-2);border:2px solid var(--silk);border-radius:2px;display:block}
+.pins i:nth-child(3n){background:var(--copper)}
+.menu{display:flex;justify-content:space-between;align-items:center;gap:8px 20px;flex-wrap:wrap}
+.menu a{color:var(--pcb-ink);text-decoration:none;font-size:.88rem}
+.menu .marque{font-family:var(--f-display);font-weight:800;font-size:1rem}
+.menu .liens{display:inline-flex;flex-wrap:wrap;gap:3px;border:1.5px solid var(--silk);border-radius:999px;padding:3px}
+.menu .liens a{padding:.3rem .75rem;border-radius:999px;font-weight:700}
+.menu .liens a:hover{background:var(--pcb-2)}
+.menu .liens a.actif{background:var(--pcb-ink);color:var(--pcb)}
+.silk{font-family:var(--f-mono);font-size:.74rem;letter-spacing:.14em;color:var(--silk);text-transform:uppercase;margin:12px 0 0}
+.board h1{font-size:clamp(1.9rem,5vw,3rem);font-weight:800;letter-spacing:-.02em;color:#fff}
+.chapeau{font-size:1.1rem;color:var(--silk);max-width:62ch;margin:0}
+.byline{display:flex;flex-wrap:wrap;gap:8px 28px;font-size:.88rem;border-top:1px solid rgba(191,217,207,.35);padding-top:12px;margin-top:4px}
+.byline span{display:block;font-family:var(--f-mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--silk)}
+.pied .board-in{padding-block:22px 30px}
+.pied p{margin:0;font-size:.9rem;color:var(--pcb-ink)}
+.pied .silk{margin:0 0 4px}
+
+/* ---------- mise en page : rail à gauche, une colonne de cartes ---------- */
+.wrap{max-width:1180px;margin:0 auto;padding:28px 16px 60px;display:grid;grid-template-columns:250px minmax(0,1fr);gap:32px;align-items:start}
+.wrap.seul{grid-template-columns:minmax(0,1fr);max-width:900px}
+.rail{position:sticky;top:12px}
+.rail ol{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.rail a{display:grid;grid-template-columns:28px 1fr;gap:8px;align-items:baseline;padding:.5rem .6rem;border-radius:8px;color:var(--muted);text-decoration:none;font-size:.93rem;line-height:1.25}
+.rail a .n{font-family:var(--f-mono);font-size:.75rem;color:var(--copper)}
+.rail a:hover{background:var(--surface);color:var(--ink);box-shadow:inset 3px 0 0 var(--copper)}
+main{min-width:0;display:grid;gap:22px}
+main>section{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px 22px;min-width:0}
+.eyebrow{color:var(--copper);font-family:var(--f-mono);font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;margin:0 0 4px;scroll-margin-top:16px}
+main h2{font-size:clamp(1.4rem,3vw,1.9rem);font-weight:800;letter-spacing:-.01em;margin:0 0 14px}
+main h3{font-size:1.15rem;font-weight:700;margin:18px 0 8px}
+ol,ul{padding-left:1.3em}
+li{margin:3px 0}
+@media (max-width:860px){
+  .wrap{grid-template-columns:minmax(0,1fr);gap:16px}
+  .rail{position:static}
+  .rail ol{display:flex;overflow-x:auto;gap:6px;padding-bottom:6px}
+  .rail a{white-space:nowrap;background:var(--surface);border:1px solid var(--line);grid-template-columns:auto auto}
+}
+
+/* ---------- encadrés selon leur rôle ---------- */
+.encadre,.avert,.encadre-gris{border-radius:var(--r);padding:14px 16px;margin:14px 0}
+.encadre{background:var(--copper-soft)}
+.avert{background:var(--warn-soft)}
+.avert strong{color:var(--warn)}
+.encadre p:last-child,.avert p:last-child,.encadre-gris p:last-child{margin-bottom:0}
+main>section.encadre-gris{background:var(--bad-soft);border-color:transparent}
+main>section.encadre-gris .eyebrow{color:var(--bad)}
+main>section.encadre-gris h2{font-size:1.25rem}
+
+/* ---------- pastilles de critère ---------- */
+.badge{display:inline-block;min-width:2.3em;padding:.05em .45em;margin-right:.6em;border-radius:5px;background:var(--c,#eee);
+  font-family:var(--f-mono);font-weight:600;font-size:.8em;text-align:center;color:var(--ink);flex:none}
+.crit-A{--c:var(--crit-a)}.crit-B{--c:var(--crit-b)}.crit-C{--c:var(--crit-c)}.crit-D{--c:var(--crit-d)}
+.critere{margin:16px 0}
+.critere h3{display:flex;align-items:center;margin:0 0 6px}
+.critere ol,.liste-taches{list-style:none;padding:0;margin:0}
+.critere li,.liste-taches li{display:flex;align-items:baseline;margin:6px 0}
+.num{display:inline-block;min-width:2.6em;font-family:var(--f-mono);font-weight:600;color:var(--copper);font-size:.82em}
 
 /* ---------- cadre de l'unité ---------- */
-dl.cadre { display: grid; grid-template-columns: 11rem 1fr; gap: 8px 18px; margin: 0; }
-dl.cadre dt { font-weight: 600; font-size: .74em; color: var(--gris); text-transform: uppercase; letter-spacing: .06em; padding-top: 4px; }
-dl.cadre dd { margin: 0; }
-@media (max-width: 600px) { dl.cadre { grid-template-columns: 1fr; } dl.cadre dd { margin-bottom: 8px; } }
+dl.cadre{display:grid;grid-template-columns:11rem 1fr;gap:8px 18px;margin:0}
+dl.cadre dt{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding-top:4px}
+dl.cadre dd{margin:0}
+@media (max-width:600px){dl.cadre{grid-template-columns:1fr}dl.cadre dd{margin-bottom:8px}}
 
-/* ---------- cartes ---------- */
-.cartes { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--filet); }
-.cartes li { margin: 0; border-bottom: 1px solid var(--filet); }
-.cartes a { display: block; border: none; color: var(--encre); padding: 18px 0; }
-.cartes a:hover strong { color: var(--lien); }
-.cartes strong { display: block; font-size: 1.15em; margin: 2px 0 4px; }
-.cartes span { display: block; color: var(--gris); font-size: .9em; }
-.cartes .surtitre { font-size: .68em; margin: 0; }
+/* ---------- héros de l'accueil : le cycle de design ---------- */
+.heros{margin:10px 0 0}
+.cycle ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.cycle li{background:var(--surface);color:var(--ink);border-radius:var(--r);border-top:5px solid var(--c);padding:12px 14px 14px;font-size:.88rem;line-height:1.45;position:relative;margin:0}
+.cycle li strong{display:block;font-family:var(--f-display);font-size:1.2em;margin:8px 0 4px}
+.cycle li span:not(.badge){color:var(--muted)}
+.cycle figcaption{margin-top:10px;font-size:.82rem;color:var(--silk)}
+@media (max-width:760px){.cycle ol{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
-/* ---------- sommaire des tâches (une couleur par critère) ---------- */
-.critere { border-left: 4px solid var(--c, #ccc); padding-left: 16px; margin: 26px 0; }
-.critere h3 { margin-top: 0; }
-.crit-A { --c: var(--crit-a); } .crit-B { --c: var(--crit-b); } .crit-C { --c: var(--crit-c); } .crit-D { --c: var(--crit-d); }
-.critere ol, .liste-taches { list-style: none; padding: 0; margin: 0; }
-.critere li, .liste-taches li { margin: 4px 0; }
-.num { display: inline-block; min-width: 2.6em; font-weight: 600; color: var(--gris); font-size: .85em; font-variant-numeric: tabular-nums; }
+/* ---------- cartes de liens (cours, témoins) ---------- */
+.cartes{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.cartes li{margin:0}
+.cartes a{display:grid;gap:4px;height:100%;background:var(--paper);border:1.5px solid var(--line);border-radius:var(--r);padding:16px;color:var(--ink);text-decoration:none}
+.cartes a:hover{border-color:var(--copper)}
+.cartes strong{font-family:var(--f-display);font-size:1.15rem}
+.cartes span{color:var(--muted);font-size:.92rem}
+.cartes .surtitre{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--copper);margin:0}
 
 /* ---------- fichiers à télécharger ---------- */
-.fichiers { list-style: none; padding: 0; border-top: 1px solid var(--filet); }
-.fichiers li { padding: 10px 0; border-bottom: 1px solid var(--filet); }
-.format { font-size: .7em; color: var(--gris); text-transform: uppercase; letter-spacing: .05em; margin-left: 6px; }
+.fichiers{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+.fichiers li{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--paper);margin:0}
+.fichiers a{font-weight:700}
+.format{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 
-/* ---------- galerie de figures (plus large que le texte, comme dans Distill) ---------- */
-.galerie { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 24px; margin: 24px -120px 24px 0; }
-.galerie figure { margin: 0; }
-.galerie figure a { border: none; }
-.galerie figure img { width: 100%; border: 1px solid var(--filet); }
-@media (max-width: 1180px) { .galerie { margin-right: 0; } }
+/* ---------- tableaux ---------- */
+table{border-collapse:collapse;width:100%;font-size:.92rem;display:block;overflow-x:auto;margin:8px 0 14px}
+th,td{padding:.5rem .65rem;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+
+/* ---------- figures ---------- */
+.galerie{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin:8px 0}
+figure{margin:0}
+figure a{border:none}
+.galerie img{width:100%;height:auto;display:block;border:1px solid var(--line);border-radius:8px;background:#fff}
+figcaption{font-size:.82rem;color:var(--muted);margin-top:6px}
 
 /* ---------- code source replié ---------- */
-.code-source { border-top: 1px solid var(--filet); padding: 10px 0; }
-.code-source summary { cursor: pointer; font-size: .92em; }
-.code-source pre { margin-top: 10px; }
+.code-source{border-top:1px solid var(--line);padding:10px 0}
+.code-source summary{cursor:pointer;font-weight:700}
+.code-source pre{background:var(--code-bg);color:var(--code-ink);border-radius:var(--r);padding:12px 14px;overflow-x:auto;font-family:var(--f-mono);font-size:.8rem;line-height:1.6;margin:10px 0 0}
+.code-source pre code{background:none;color:inherit;padding:0;font-size:1em}
 
-table { display: table; }
-.corps > section > table { font-size: .8em; }
-
-/* ---------- touches de couleur (comme la page du témoin arrosage) ---------- */
-.badge { display: inline-block; min-width: 2.2em; padding: 0 .4em; margin-right: .6em; border-radius: 3px; background: var(--c, #eee);
-  font-weight: 600; font-size: .82em; text-align: center; font-variant-numeric: tabular-nums; color: var(--encre); }
-.critere { border-left: none; padding-left: 0; }
-.critere h3 { display: flex; align-items: center; }
-.critere h3 .badge { font-size: .85em; }
-.critere li { display: flex; align-items: baseline; margin: 6px 0; }
-.critere li .badge { font-size: .78em; flex: none; }
-.encadre { border-left: 3px solid var(--crit-a); }
-.encadre-gris { border-left: 3px solid rgba(0, 0, 0, .18); }
-
-/* héros de l'accueil : le cycle de design */
-.cycle ol { list-style: none; margin: 8px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
-.cycle li { background: color-mix(in srgb, var(--c) 28%, #fff); border-top: 4px solid var(--c); padding: 12px 14px 14px; font-size: .8em; line-height: 1.45; position: relative; }
-.cycle li strong { display: block; font-size: 1.15em; margin: 8px 0 4px; }
-.cycle li span:not(.badge) { color: rgba(0, 0, 0, .68); }
-.cycle li:not(:last-child)::after { content: "→"; position: absolute; right: -13px; top: 14px; color: var(--gris); font-size: 1.1em; }
-.cycle figcaption { margin-top: 10px; }
-@media (max-width: 760px) { .cycle ol { grid-template-columns: repeat(2, minmax(0, 1fr)); } .cycle li::after { display: none; } }
-
-/* cartes des témoins : un filet de couleur à gauche */
-.cartes li { border-left: 3px solid transparent; }
-.cartes li:hover { border-left-color: var(--crit-a); }
-.cartes a { padding-left: 14px; }
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
