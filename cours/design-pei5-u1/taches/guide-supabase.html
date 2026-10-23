@@ -1,0 +1,621 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Guide Supabase</title><style>/* Design PEI 5 · pages d'activités A1 à D4
+   Style inspiré des articles scientifiques Distill : une large colonne aérée,
+   titres nets sans empattement, filets fins, aucune décoration,
+   couleurs pastel seulement pour reconnaître les encadrés.
+   Pour changer une couleur partout, modifie seulement les variables ci-dessous. */
+
+:root{
+  --papier:#ffffff;
+  --encre:rgba(0,0,0,.84);
+  --gris:rgba(0,0,0,.55);
+  --filet:rgba(0,0,0,.12);
+  --lien:#2d4f7f;
+  /* encadrés pastel */
+  --consigne:#eef3fa;
+  --exemple:#faf5ea;
+  --trier:#eef6f0;
+  --atoi:#f4effa;
+  --pouce:#fdf9e6;
+  --sommative:#f3f3f1;
+  --juste:#2e6b3f;
+  --faux:#9b2c2c;
+  /* repère du critère (filet sous le titre) */
+  --crit:#9ab7dd;
+}
+.crit-A{--crit:#9ab7dd}.crit-B{--crit:#a8cfae}.crit-C{--crit:#e6bf98}.crit-D{--crit:#c5b3dd}
+
+*{box-sizing:border-box}
+html{background:var(--papier)}
+body{margin:0;background:var(--papier);color:var(--encre);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,Arial,sans-serif;
+  font-size:18px;line-height:1.7;-webkit-font-smoothing:antialiased}
+.entete,main,footer{max-width:46rem;margin:0 auto;padding-left:16px;padding-right:16px}
+
+a{color:var(--lien);text-decoration:none;border-bottom:1px solid var(--filet)}
+a:hover{border-bottom-color:var(--lien)}
+
+/* ---------- en-tête façon « titre d'article » ---------- */
+.entete{padding-top:24px;padding-bottom:0}
+.entete .haut{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:.75em;color:var(--gris);text-transform:uppercase;letter-spacing:.06em}
+.code{margin:44px 0 0;font-size:.8em;color:var(--gris);text-transform:uppercase;letter-spacing:.06em}
+h1{font-size:2.3em;line-height:1.15;margin:6px 0 14px;font-weight:700;letter-spacing:-.01em}
+.desc{font-size:1.1em;color:rgba(0,0,0,.7);margin:0 0 20px;line-height:1.55}
+.desc strong{font-weight:600}
+.choix-projet{display:block;margin:0;padding:12px 0;font-size:.8em;color:var(--gris);border-top:1px solid var(--filet);border-bottom:1px solid var(--filet)}
+select{font:inherit;font-size:1em;padding:3px 6px;border:1px solid var(--filet);border-radius:4px;background:#fff;color:var(--encre);max-width:100%}
+.temps{display:flex;flex-wrap:wrap;gap:4px 22px;font-size:.78em;padding:12px 0;border-bottom:1px solid var(--filet);border-left:6px solid var(--crit);padding-left:12px;margin:0}
+.temps a{border:none;color:var(--encre);font-weight:600}
+.temps a:hover{color:var(--lien)}
+.temps small{margin-left:5px;color:var(--gris);font-weight:400}
+
+.byline{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;border-top:1px solid var(--filet);padding:14px 0 12px;font-size:.75em;line-height:1.45}
+.byline h5{margin:0 0 4px;font-size:.85em;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--gris)}
+.byline p{margin:0}
+@media (max-width:600px){.byline{grid-template-columns:repeat(2,1fr)}}
+.desc-tache{font-size:.92em}
+.enonce{background:#fff;border:1px solid rgba(0,0,0,.25);border-radius:2px;padding:12px 16px;margin:0 0 16px}
+.enonce-tete{font-size:.72em;text-transform:uppercase;letter-spacing:.06em;color:var(--gris);margin:0 0 6px}
+.enonce-texte{font-size:1.05em;margin:0 0 10px}
+.termes{margin:0;font-size:.82em;border-top:1px solid var(--filet);padding-top:8px}
+.termes dt{font-weight:600;float:left;clear:left;margin-right:6px}
+.termes dt::after{content:" :"}
+.termes dd{margin:0 0 4px}
+.glossaire dt{font-weight:600;margin-top:8px}
+.glossaire dd{margin:0 0 0 0}
+sup{font-size:.65em;line-height:0;margin-left:1px}
+sup a{border:none}
+.notes{max-width:46rem;margin:56px auto 0;padding-left:16px;padding-right:16px;font-size:.75em;color:var(--gris);border-top:1px solid var(--filet);padding-top:8px}
+.notes h2{font-size:1.15em;border:none;padding:0;color:var(--gris)}
+.notes li{margin:4px 0}
+
+/* ---------- sections numérotées ---------- */
+main{padding-bottom:40px}
+section{margin:52px 0 0}
+h2{font-size:1.45em;line-height:1.25;margin:0 0 12px;font-weight:600;padding-bottom:8px;border-bottom:1px solid var(--filet)}
+h2 small,h3 small{font-weight:normal;font-size:.7em;color:var(--gris);margin-left:6px}
+h3{font-size:1.05em;margin:24px 0 6px;font-weight:600}
+h4{font-size:.8em;margin:20px 0 6px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--gris)}
+p{margin:0 0 12px}
+ol,ul{padding-left:1.4em}
+li{margin:3px 0}
+.petit{font-size:.85em;color:var(--gris)}
+code{font-family:Menlo,Consolas,"Courier New",monospace;font-size:.88em}
+pre{font-family:Menlo,Consolas,"Courier New",monospace;font-size:.78em;line-height:1.45;background:#f7f7f5;border:1px solid var(--filet);border-radius:4px;padding:10px 12px;overflow-x:auto}
+
+/* ---------- encadrés pastel (une couleur = un rôle) ---------- */
+.cadre,.histoire,#appliquer .panneau,.pouce,.sommative{border-radius:4px;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.cadre{padding:14px 18px}.cadre-consigne{background:var(--consigne)}
+.histoire{background:var(--exemple);padding:12px 18px;margin-bottom:8px}
+.histoire h3{margin-top:4px}
+.cadre-trier{background:var(--trier)}
+#appliquer .panneau{background:var(--atoi);padding:6px 18px 16px}
+.sommative{background:var(--sommative);padding:14px 18px;border-left:3px solid var(--crit)}
+.produit{margin:12px 0 0}
+.attention{font-style:italic}
+.retenir{margin-top:12px;padding-top:8px;border-top:1px solid var(--filet)}
+
+/* ---------- tableaux sobres (filets « booktabs ») ---------- */
+.tab-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:8px 0 14px}
+table{border-collapse:collapse;width:100%;font-size:.8em;line-height:1.45;border-top:1px solid rgba(0,0,0,.4);border-bottom:1px solid rgba(0,0,0,.4)}
+thead th{border-bottom:1px solid rgba(0,0,0,.4);font-weight:600}
+th,td{padding:6px 8px;vertical-align:top;text-align:left}
+tbody tr+tr td{border-top:1px solid #ecebe7}
+table.remplir td{padding:3px 4px;min-width:130px}
+td.fixe-cell{font-style:italic;padding:7px 8px}
+
+/* ---------- champs ---------- */
+textarea,input[type=text]{font:inherit;font-size:.95em;color:var(--encre);background:#fff;border:1px solid var(--filet);border-radius:3px;padding:6px 8px;width:100%;line-height:1.45}
+textarea:focus,input:focus,select:focus,button:focus,summary:focus{outline:2px solid var(--lien);outline-offset:1px}
+textarea.phrase{display:block;margin:6px 0}
+input.trou{width:auto;max-width:100%;padding:0 4px;border:none;border-bottom:1px solid var(--encre);border-radius:0;background:rgba(255,255,255,.75)}
+p.trous{line-height:2.2;text-align:left}
+.reformuler{margin-top:14px;padding-top:6px;border-top:1px solid rgba(0,0,0,.08)}
+
+/* ---------- boutons discrets ---------- */
+button{font:inherit;font-size:.85em;cursor:pointer;border:1px solid #bdbab3;background:#fff;color:var(--encre);border-radius:3px;padding:3px 10px}
+button:hover{border-color:var(--encre)}
+
+/* ---------- brouillon / version finale, connexion ---------- */
+.deux-colonnes{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:8px 0 6px}
+.deux-colonnes textarea{font-size:.85em}
+#mon-brouillon{background:#f7f7f5;color:var(--gris)}
+@media (max-width:700px){.deux-colonnes{grid-template-columns:1fr}}
+.connexion{font-size:.8em;padding:10px 0;border-bottom:1px solid var(--filet)}
+.connexion input{width:auto;font-size:1em;padding:3px 6px}
+.etat{color:var(--gris);margin-left:6px}
+.etat.ok{color:var(--juste)}
+.etat.attente{color:#8a6d00}
+
+/* ---------- trier ---------- */
+.tri{list-style:none;padding:0;margin:0}
+.tri li{padding:10px 0;border-top:1px solid rgba(0,0,0,.08)}
+.tri .item{margin:0 0 6px}
+.boutons{display:flex;flex-wrap:wrap;gap:6px}
+.tri button.choisi-ok{border-color:var(--juste);color:var(--juste);font-weight:bold}
+.tri button.choisi-ko{border-color:var(--faux);color:var(--faux);text-decoration:line-through}
+.explication{margin:6px 0 0;font-size:.9em}
+.explication.ok::before{content:"Juste. ";color:var(--juste);font-weight:bold}
+.explication.ko::before{content:"Pas tout à fait. ";color:var(--faux);font-weight:bold}
+.score{font-size:.9em;font-style:italic}
+
+/* ---------- appliquer ---------- */
+.pistes>div,.projet-vide{font-size:.92em;border-left:2px solid var(--crit);padding:2px 0 2px 12px;margin:10px 0}
+.pistes p{margin:2px 0}
+.onglets{display:flex;flex-wrap:wrap;gap:0;margin:16px 0 0;border-bottom:1px solid var(--filet)}
+.onglets button{flex:1 1 180px;text-align:left;border:none;border-bottom:2px solid transparent;border-radius:0;background:transparent;padding:6px 8px;font-size:.85em}
+.onglets button small{display:block;color:var(--gris);font-size:.9em;font-weight:normal}
+.onglets button[aria-selected=true]{border-bottom-color:var(--encre);font-weight:bold;background:var(--atoi)}
+#appliquer .panneau{border-top-left-radius:0;border-top-right-radius:0}
+.bloc.info{font-size:.9em;font-style:italic;color:var(--gris)}
+.controle li{margin:2px 0}
+
+/* ---------- coups de pouce repliés ---------- */
+.pouces{margin-top:22px}
+.pouce{background:var(--pouce);margin:6px 0;padding:6px 14px}
+.pouce summary{cursor:pointer;font-weight:bold;font-size:.92em}
+.pouce[data-vu] summary::after{content:" · déjà ouvert";font-weight:normal;color:var(--gris)}
+.pouce .contenu{padding-top:6px}
+
+/* ---------- témoin ---------- */
+details.temoin{margin-top:22px;border-top:1px solid var(--filet);border-bottom:1px solid var(--filet);padding:8px 0}
+details.temoin summary{cursor:pointer;font-style:italic}
+.autres{margin-top:12px;font-size:.92em}
+
+/* ---------- récolter ---------- */
+.check{list-style:none;padding:0}
+fieldset{border:none;border-top:1px solid var(--filet);border-bottom:1px solid var(--filet);margin:12px 0;padding:6px 0}
+legend{font-style:italic;padding:0 6px 0 0}
+fieldset label{margin-right:18px;white-space:nowrap}
+.export{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 6px}
+.export button:first-child{border-color:var(--encre);font-weight:bold}
+.message{font-style:italic;color:var(--juste);min-height:1em}
+.ou-coller{font-size:.92em}
+.transfert{font-style:italic;margin-top:10px}
+
+/* ---------- navigation, pied ---------- */
+.suite{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:38px;font-size:.9em}
+footer{font-size:.75em;color:var(--gris);text-align:center;padding-top:14px;padding-bottom:28px;border-top:1px solid var(--filet)}
+
+/* ---------- sommaire ---------- */
+.sommaire h2{margin-top:30px}
+.sommaire ol{list-style:none;padding:0}
+.sommaire li{display:flex;gap:10px;padding:4px 0;border-bottom:1px dotted var(--filet)}
+.sommaire li .num{min-width:2.2em;font-variant:small-caps;color:var(--gris)}
+
+/* ---------- impression : une feuille propre, comme un polycopié ---------- */
+@media print{
+  body{font-size:10.5pt;background:#fff;color:#000}
+  .temps,.onglets,.export,.suite,.choix-projet,.connexion,.message,#apercu,.score{display:none}
+  .panneau[hidden]{display:none}
+  
+  .cadre,.histoire,#appliquer .panneau,.pouce,.sommative{box-shadow:none;background:#fff;border:0.5pt solid #999}
+  details.temoin{display:none}
+  section{break-inside:auto}
+  h2,h3{break-after:avoid}
+  a{border:none;color:inherit}
+}
+@media (max-width:600px){
+  body{font-size:17px}
+  h1{font-size:1.7em}
+  .cadre,.histoire,#appliquer .panneau,.sommative{padding-left:12px;padding-right:12px}
+}
+
+/* ---------- QCM « Ai-je compris la tâche ? » ---------- */
+.qcm{margin-top:18px}
+.qcm-liste{padding-left:1.3em;margin:8px 0 0}
+.qcm-liste>li{padding:10px 0;border-top:1px solid rgba(0,0,0,.08)}
+.qcm-enonce{margin:0 0 8px;font-weight:600}
+.qcm-choix{display:flex;flex-direction:column;gap:6px}
+.qcm-choix button{display:flex;gap:10px;align-items:baseline;text-align:left;font-size:.88em;line-height:1.45;padding:6px 10px;width:100%}
+.qcm-choix button:disabled{cursor:default;color:var(--encre);opacity:1}
+.qcm-choix .lettre{flex:0 0 1.1em;font-weight:600;color:var(--gris)}
+.qcm-choix button.juste{border-color:var(--juste);color:var(--juste);font-weight:600}
+.qcm-choix button.faux{border-color:var(--faux);color:var(--faux);text-decoration:line-through}
+.qcm-choix button.attenue{opacity:.6}
+.qcm-score{font-weight:600;margin-bottom:0}
+@media print{.qcm-encore{display:none}}
+pre.sql{white-space:pre-wrap;max-height:22em;overflow:auto}.alerte{background:#fbeaea;border-left:3px solid #c98080;padding:6px 10px}blockquote{margin:0 0 10px;padding:8px 14px;border-left:3px solid var(--filet);background:#fff}</style></head><body><header class="entete"><div class="haut"><span>Espace enseignant(e)</span><span><a href="enseignant.html">Tableau de bord</a></span></div>
+<p class="code">Mise en route · une seule fois · environ 20 minutes</p>
+<h1>Relier les pages à Supabase</h1>
+<p class="desc">Un seul compte gratuit pour tous vos cours. Les élèves entrent un code anonyme et retrouvent leur travail sur n’importe quel ordinateur ; vous suivez tout depuis le tableau de bord.</p>
+</header>
+<main>
+
+<section><h2>Ce que vous obtenez</h2>
+<ul>
+<li>Chaque élève tape un <strong>code anonyme</strong> (ex. <code>E-K7MQ3X</code>) en haut de la page.</li>
+<li>Son travail s’enregistre tout seul : champs, tri, QCM, brouillon et version finale.</li>
+<li>Sans Internet, la page fonctionne quand même et envoie le travail quand la connexion revient.</li>
+<li>Dans <a href="enseignant.html">le tableau de bord</a>, vous voyez ✎ (brouillon) ou ✓ (version finale), les scores et le détail, et vous pouvez tout exporter en CSV.</li>
+</ul>
+<p class="petit">L’enregistrement est discret : aucun voyant ni aucun message dans les pages des élèves. Les pages ne disent rien de faux pour autant : la phrase « tes réponses restent sur cet ordinateur » disparaît quand elles sont reliées. Une phrase pour la charte de rentrée vous est proposée à l’étape 9.</p>
+</section>
+
+<section><h2>1. Créer le projet</h2><div class="cadre cadre-consigne"><ol>
+<li>Allez sur <a href="https://supabase.com" target="_blank" rel="noopener">supabase.com</a>, cliquez sur <strong>Start your project</strong> et créez un compte, avec GitHub ou une adresse courriel.</li>
+<li>Cliquez sur <strong>New project</strong> et remplissez :
+<ul>
+<li><strong>Name</strong> : <code>pages-activites</code> ;</li>
+<li><strong>Database Password</strong> : un mot de passe long, à garder (les pages n’en ont pas besoin) ;</li>
+<li><strong>Region</strong> : une région d’Europe (Paris ou Francfort) ;</li>
+<li><strong>Plan</strong> : <em>Free</em>.</li>
+</ul></li>
+<li>Attendez environ 2 minutes que le projet soit prêt.</li>
+</ol></div></section>
+
+<section><h2>2. Installer les tables et la sécurité</h2><div class="cadre cadre-consigne"><ol>
+<li>Dans le menu de gauche, ouvrez <strong>SQL Editor</strong>, puis cliquez sur <strong>New query</strong>.</li>
+<li>Cliquez ci-dessous sur <strong>Copier le script</strong>, puis collez-le dans l’éditeur (Ctrl+V).</li>
+<li>Cliquez sur <strong>Run</strong>. Vous devez lire <em>Success. No rows returned</em>.</li>
+</ol>
+<p><button type="button" class="copier-sql" data-cible="sql-installation">Copier le script</button> <span class="etat"></span></p>
+<details><summary>Voir le script (environ 280 lignes)</summary><pre id="sql-installation" class="sql">-- =====================================================================
+-- Pages d&#x27;activités · Installation Supabase (un seul projet pour TOUS les cours)
+-- À coller en une fois dans Supabase &gt; SQL Editor &gt; New query &gt; Run.
+-- Le script peut être relancé sans perte de données.
+--
+-- Principe de sécurité (élèves mineurs) :
+--   * aucune donnée personnelle : ni nom, ni courriel. Un code élève
+--     (stocké sous forme d&#x27;empreinte), une classe, des inscriptions à des cours ;
+--   * les élèves n&#x27;ont AUCUN accès direct aux tables (RLS sans règle pour
+--     « anon ») : les pages passent par 3 fonctions qui vérifient le code
+--     et l&#x27;inscription au cours ;
+--   * seul un compte enseignant (Supabase Auth) lit les travaux, crée les
+--     cours et les codes.
+-- =====================================================================
+
+create extension if not exists pgcrypto with schema extensions;
+
+-- ---------- Tables ----------
+
+create table if not exists public.cours (
+  id        text primary key check (id ~ &#x27;^[a-z0-9-]{2,40}$&#x27;),   -- ex. design-pei5-u1
+  titre     text not null,
+  cree_le   timestamptz not null default now()
+);
+
+create table if not exists public.eleves (
+  id         uuid primary key default gen_random_uuid(),
+  code_hash  text not null unique,     -- empreinte SHA-256 du code, jamais le code lui-même
+  code_fin   text not null,            -- 2 derniers caractères, pour s&#x27;y retrouver
+  classe     text not null,
+  cree_le    timestamptz not null default now(),
+  vu_le      timestamptz
+);
+
+create table if not exists public.inscriptions (
+  eleve_id  uuid not null references public.eleves(id) on delete cascade,
+  cours_id  text not null references public.cours(id) on delete cascade,
+  choix     text,                       -- choix propre au cours (ex. le projet : lampe, jeu…)
+  primary key (eleve_id, cours_id)
+);
+
+create table if not exists public.reponses (
+  eleve_id   uuid not null,
+  cours_id   text not null,
+  activite   text not null check (activite ~ &#x27;^[A-Za-z0-9_-]{1,40}$&#x27;),   -- ex. A1, fiche-3
+  donnees    jsonb not null default &#x27;{}&#x27;::jsonb,   -- brouillon : tous les champs de la page
+  finale     text not null default &#x27;&#x27;,             -- version finale reformulée
+  maj        timestamptz not null default now(),
+  primary key (eleve_id, cours_id, activite),
+  foreign key (eleve_id, cours_id) references public.inscriptions(eleve_id, cours_id) on delete cascade
+);
+
+create table if not exists public.enseignants (
+  user_id uuid primary key references auth.users(id) on delete cascade
+);
+
+-- ---------- Sécurité au niveau des lignes ----------
+
+alter table public.cours        enable row level security;
+alter table public.eleves       enable row level security;
+alter table public.inscriptions enable row level security;
+alter table public.reponses     enable row level security;
+alter table public.enseignants  enable row level security;
+
+revoke all on public.cours, public.eleves, public.inscriptions, public.reponses, public.enseignants from anon;
+
+create or replace function public.est_enseignant()
+returns boolean
+language sql stable security definer set search_path = public
+as $$
+  select exists (select 1 from public.enseignants where user_id = auth.uid());
+$$;
+
+do $$
+declare
+  t text;
+begin
+  foreach t in array array[&#x27;cours&#x27;, &#x27;eleves&#x27;, &#x27;inscriptions&#x27;, &#x27;reponses&#x27;] loop
+    execute format(&#x27;drop policy if exists &quot;enseignant&quot; on public.%I&#x27;, t);
+    execute format(&#x27;create policy &quot;enseignant&quot; on public.%I for all to authenticated
+                    using (public.est_enseignant()) with check (public.est_enseignant())&#x27;, t);
+  end loop;
+end;
+$$;
+
+drop policy if exists &quot;enseignant se voit&quot; on public.enseignants;
+create policy &quot;enseignant se voit&quot; on public.enseignants
+  for select to authenticated using (user_id = auth.uid());
+
+-- ---------- Fonctions utilitaires ----------
+
+create or replace function public.empreinte(p_code text)
+returns text
+language sql immutable
+set search_path = public, extensions
+as $$
+  select encode(extensions.digest(upper(trim(p_code)), &#x27;sha256&#x27;), &#x27;hex&#x27;);
+$$;
+
+-- ---------- Fonctions appelées par les pages élèves ----------
+
+-- Connexion : vérifie le code et l&#x27;inscription au cours ; renvoie la classe et le choix
+create or replace function public.eleve_connexion(p_code text, p_cours text)
+returns json
+language plpgsql security definer
+set search_path = public, extensions
+as $$
+declare
+  v_id uuid;
+  v_classe text;
+  v_choix text;
+begin
+  select e.id, e.classe, i.choix into v_id, v_classe, v_choix
+  from public.eleves e
+  join public.inscriptions i on i.eleve_id = e.id and i.cours_id = p_cours
+  where e.code_hash = public.empreinte(p_code);
+  if v_id is null then
+    return null;
+  end if;
+  update public.eleves set vu_le = now() where id = v_id;
+  return json_build_object(&#x27;classe&#x27;, v_classe, &#x27;choix&#x27;, v_choix);
+end;
+$$;
+
+-- Enregistre le brouillon et la version finale d&#x27;une activité
+create or replace function public.eleve_enregistrer(p_code text, p_cours text, p_activite text,
+                                                    p_donnees jsonb, p_finale text, p_choix text)
+returns timestamptz
+language plpgsql security definer
+set search_path = public, extensions
+as $$
+declare
+  v_id uuid;
+  v_maj timestamptz := now();
+begin
+  select e.id into v_id
+  from public.eleves e
+  join public.inscriptions i on i.eleve_id = e.id and i.cours_id = p_cours
+  where e.code_hash = public.empreinte(p_code);
+  if v_id is null then
+    raise exception &#x27;code inconnu ou élève non inscrit à ce cours&#x27;;
+  end if;
+  if length(coalesce(p_donnees, &#x27;{}&#x27;::jsonb)::text) &gt; 200000 or length(coalesce(p_finale, &#x27;&#x27;)) &gt; 50000 then
+    raise exception &#x27;texte trop long&#x27;;
+  end if;
+  insert into public.reponses (eleve_id, cours_id, activite, donnees, finale, maj)
+  values (v_id, p_cours, p_activite, coalesce(p_donnees, &#x27;{}&#x27;::jsonb), coalesce(p_finale, &#x27;&#x27;), v_maj)
+  on conflict (eleve_id, cours_id, activite) do update
+    set donnees = excluded.donnees, finale = excluded.finale, maj = excluded.maj;
+  if p_choix is not null and length(p_choix) &lt;= 40 then
+    update public.inscriptions set choix = p_choix where eleve_id = v_id and cours_id = p_cours;
+  end if;
+  return v_maj;
+end;
+$$;
+
+-- Relit ce que l&#x27;élève a déjà écrit pour une activité
+create or replace function public.eleve_lire(p_code text, p_cours text, p_activite text)
+returns json
+language plpgsql security definer
+set search_path = public, extensions
+as $$
+declare
+  v_donnees jsonb;
+  v_finale text;
+  v_maj timestamptz;
+begin
+  select r.donnees, r.finale, r.maj into v_donnees, v_finale, v_maj
+  from public.reponses r
+  join public.eleves e on e.id = r.eleve_id
+  where e.code_hash = public.empreinte(p_code) and r.cours_id = p_cours and r.activite = p_activite;
+  if v_maj is null then
+    return null;
+  end if;
+  return json_build_object(&#x27;donnees&#x27;, v_donnees, &#x27;finale&#x27;, v_finale, &#x27;maj&#x27;, v_maj);
+end;
+$$;
+
+-- ---------- Fonctions réservées à l&#x27;enseignant(e) ----------
+
+drop function if exists public.creer_codes(text, text, int);
+
+-- Crée des codes pour une classe et les inscrit à un cours.
+-- Renvoie les codes en clair UNE SEULE FOIS : imprimez-les ou notez-les.
+create or replace function public.creer_codes(p_classe text, p_cours text, p_nombre int)
+returns table (code text, eleve_id uuid)
+language plpgsql security definer
+set search_path = public, extensions
+as $$
+declare
+  lettres text := &#x27;ABCDEFGHJKLMNPQRSTUVWXYZ23456789&#x27;;   -- sans I, O, 0, 1 (confusions)
+  c text;
+  i int := 0;
+  k int;
+  v_id uuid;
+begin
+  if not public.est_enseignant() then
+    raise exception &#x27;réservé à l&#x27;&#x27;enseignant(e)&#x27;;
+  end if;
+  if p_nombre &lt; 1 or p_nombre &gt; 60 then
+    raise exception &#x27;entre 1 et 60 codes à la fois&#x27;;
+  end if;
+  if not exists (select 1 from public.cours where id = p_cours) then
+    raise exception &#x27;cours inconnu : %&#x27;, p_cours;
+  end if;
+  while i &lt; p_nombre loop
+    c := &#x27;E-&#x27;;
+    k := 0;
+    while k &lt; 6 loop
+      c := c || substr(lettres, 1 + (get_byte(extensions.gen_random_bytes(1), 0) % 32), 1);
+      k := k + 1;
+    end loop;
+    begin
+      insert into public.eleves (code_hash, code_fin, classe)
+      values (public.empreinte(c), right(c, 2), p_classe)
+      returning id into v_id;
+      insert into public.inscriptions as ins (eleve_id, cours_id) values (v_id, p_cours);
+      code := c;
+      eleve_id := v_id;
+      return next;
+      i := i + 1;
+    exception when unique_violation then
+      -- code déjà pris (très rare) : on en tire un autre
+    end;
+  end loop;
+end;
+$$;
+
+-- Inscrit tous les élèves d&#x27;une classe à un autre cours (ils gardent leur code)
+create or replace function public.inscrire_classe(p_classe text, p_cours text)
+returns int
+language plpgsql security definer
+set search_path = public
+as $$
+declare
+  n int;
+begin
+  if not public.est_enseignant() then
+    raise exception &#x27;réservé à l&#x27;&#x27;enseignant(e)&#x27;;
+  end if;
+  insert into public.inscriptions (eleve_id, cours_id)
+  select id, p_cours from public.eleves where classe = p_classe
+  on conflict do nothing;
+  get diagnostics n = row_count;
+  return n;
+end;
+$$;
+
+-- ---------- Droits ----------
+
+revoke all on function public.eleve_connexion(text, text),
+  public.eleve_enregistrer(text, text, text, jsonb, text, text),
+  public.eleve_lire(text, text, text), public.creer_codes(text, text, int),
+  public.inscrire_classe(text, text), public.est_enseignant(), public.empreinte(text) from public;
+grant execute on function public.eleve_connexion(text, text) to anon, authenticated;
+grant execute on function public.eleve_enregistrer(text, text, text, jsonb, text, text) to anon, authenticated;
+grant execute on function public.eleve_lire(text, text, text) to anon, authenticated;
+revoke execute on function public.creer_codes(text, text, int), public.inscrire_classe(text, text) from anon;
+grant execute on function public.creer_codes(text, text, int) to authenticated;
+grant execute on function public.inscrire_classe(text, text) to authenticated;
+grant execute on function public.est_enseignant() to authenticated;
+grant select, insert, update, delete on public.cours, public.eleves, public.inscriptions to authenticated;
+grant select, delete on public.reponses to authenticated;
+grant select on public.enseignants to authenticated;
+
+-- Premier cours : les 16 pages A1 à D4
+insert into public.cours (id, titre)
+values (&#x27;design-pei5-u1&#x27;, &#x27;Design PEI 5 · Unités 1 et 2 · Les 16 tâches&#x27;)
+on conflict (id) do nothing;
+
+-- =====================================================================
+-- DERNIÈRE ÉTAPE (après avoir créé votre compte dans Authentication &gt; Users) :
+-- remplacez l&#x27;adresse ci-dessous par la vôtre, puis exécutez ces lignes seules.
+--
+-- insert into public.enseignants (user_id)
+--   select id from auth.users where email = &#x27;votre.adresse@exemple.org&#x27;;
+-- =====================================================================
+</pre></details>
+<p class="petit">Le script peut être relancé sans perte de données, par exemple après une mise à jour. Il est aussi fourni à part, dans le fichier <code>supabase_installation.sql</code>.</p>
+</div></section>
+
+<section><h2>3. Créer votre compte enseignant(e)</h2><div class="cadre cadre-consigne"><ol>
+<li>Ouvrez <strong>Authentication</strong>, puis <strong>Users</strong>, puis <strong>Add user</strong> et <strong>Create new user</strong>.</li>
+<li>Saisissez votre adresse et un mot de passe, puis cochez <strong>Auto Confirm User</strong>.</li>
+<li>Dans <strong>Authentication</strong>, ouvrez <strong>Sign In / Providers</strong> et désactivez <strong>Allow new users to sign up</strong>. Un inscrit ne verrait rien de toute façon, mais c’est plus propre.</li>
+</ol></div></section>
+
+<section><h2>4. Vous déclarer enseignant(e)</h2><div class="cadre cadre-consigne">
+<p>Tapez votre adresse (celle de l’étape 3) : la ligne se met à jour toute seule.</p>
+<p><label>Votre adresse : <input type="text" id="adresse-prof" placeholder="votre.adresse@exemple.org"></label></p>
+<pre id="sql-prof" class="sql">insert into public.enseignants (user_id) select id from auth.users where email = 'votre.adresse@exemple.org';</pre>
+<p><button type="button" class="copier-sql" data-cible="sql-prof">Copier la ligne</button> <span class="etat"></span></p>
+<p>Dans <strong>SQL Editor</strong>, ouvrez une nouvelle requête (<strong>New query</strong>), collez la ligne, puis cliquez sur <strong>Run</strong>. Vous devez lire <em>1 row</em>. Si vous lisez <em>0 rows</em>, l’adresse ne correspond pas exactement à celle de l’étape 3.</p>
+</div></section>
+
+<section><h2>5. Récupérer l’adresse et la clé publique</h2><div class="cadre cadre-consigne"><ol>
+<li>En haut de la page du projet, cliquez sur <strong>Connect</strong>. Vous pouvez aussi passer par <strong>Settings</strong>, puis <strong>API Keys</strong>.</li>
+<li>Notez :
+<ul>
+<li>l’<strong>URL du projet</strong>, du type <code>https://abcdefgh.supabase.co</code> ;</li>
+<li>la <strong>Publishable key</strong>, qui commence par <code>sb_publishable_</code>. L’ancienne clé <em>anon public</em>, qui commence par <code>eyJ</code>, fonctionne aussi.</li>
+</ul></li>
+</ol>
+<p>Ces deux valeurs sont faites pour être publiques : la sécurité repose sur les règles installées à l’étape 2.</p>
+<p class="alerte"><strong>Ne copiez jamais</strong> la clé <em>secret</em> ni la clé <em>service_role</em> : elles ouvrent tout.</p>
+</div></section>
+
+<section><h2>6. Relier les pages</h2><div class="cadre cadre-trier">
+<p><strong>Le plus simple :</strong> envoyez l’URL et la clé publishable dans le fil du projet. Les pages sont alors régénérées pour vous.</p>
+<p><strong>Vous-même</strong> (avec Python et python-docx installés) :</p>
+<ol>
+<li>Dans le dossier <code>sources/</code>, créez le fichier <code>config_supabase.json</code> :
+<pre class="sql">{ "url": "https://abcdefgh.supabase.co", "cle": "sb_publishable_xxxxxxxx", "cours": "design-pei5-u1" }</pre></li>
+<li>Depuis <code>sources/</code>, lancez <code>python3 build.py ..</code></li>
+</ol>
+<p class="petit">Ne modifiez pas les pages à la main : la régénération met aussi à jour les textes qui parlent de l’enregistrement.</p>
+</div></section>
+
+<section><h2>7. Essayer avant la classe</h2><div class="cadre cadre-consigne"><ol>
+<li>Ouvrez <a href="enseignant.html">le tableau de bord</a> et connectez-vous.</li>
+<li>Dans <strong>2. Codes des élèves</strong>, créez 2 codes pour une classe <code>ESSAI</code>.</li>
+<li>Ouvrez <a href="A1.html">A1</a>, entrez un des codes, écrivez quelques mots et faites le tri.</li>
+<li>Rouvrez A1 sur un autre ordinateur, ou dans une fenêtre de navigation privée, avec le même code : le travail réapparaît.</li>
+<li>Dans le tableau de bord, cliquez sur <strong>Actualiser</strong> : la case A1 de l’élève affiche ✎ ou ✓, avec le score du tri.</li>
+</ol>
+<p>Pour effacer la classe d’essai, exécutez cette ligne dans SQL Editor :</p>
+<pre class="sql">delete from public.eleves where classe = 'ESSAI';</pre>
+</div></section>
+
+<section><h2>8. En classe et dans vos autres cours</h2>
+<ul>
+<li><strong>Codes.</strong> Ils ne s’affichent <strong>qu’une fois</strong>, au moment où vous les créez. Tapez le nom de chaque élève à côté, puis imprimez la liste et découpez-la. Les noms restent sur <strong>votre</strong> ordinateur : pensez à <em>Exporter les noms</em> de temps en temps.</li>
+<li><strong>Code perdu.</strong> Il est impossible de le retrouver, car Supabase n’en garde qu’une empreinte. Créez un nouveau code : l’ancien travail reste visible sous l’ancien code.</li>
+<li><strong>Poste partagé.</strong> L’élève retape son code à chaque ouverture du navigateur. <em>Changer de code</em> efface le travail du poste, mais il reste en ligne.</li>
+<li><strong>Autres cours.</strong> Créez le cours dans le tableau de bord, puis inscrivez-y une classe existante : les élèves gardent leur code. Dans les pages de ce cours, ajoutez <code>commun/socle.js</code>. La page <a href="commun/exemple-qcm.html">exemple-qcm.html</a> montre comment faire, et le fichier <code>GUIDE_SUPABASE.md</code> donne le détail.</li>
+<li><strong>Pause du plan gratuit.</strong> Le projet <strong>se met en pause après 7 jours sans aucune visite</strong>, pendant les vacances par exemple. Les données sont conservées : dans Supabase, cliquez sur <strong>Restore project</strong> avant la reprise des cours.</li>
+<li><strong>Fin d’année.</strong> Exportez les CSV, puis exécutez <code>delete from public.eleves where classe = 'PEI5-A';</code> pour chaque classe. Les réponses de ces élèves sont effacées avec eux.</li>
+</ul></section>
+
+<section class="sommative"><h2>9. Phrase pour la charte ou l’information de rentrée</h2>
+<blockquote id="charte">Certaines activités du cours se font sur des pages web. Le travail de l’élève (réponses, brouillons, versions finales, résultats aux exercices) y est enregistré automatiquement sous un code anonyme. L’élève le retrouve ainsi d’un ordinateur à l’autre, et l’enseignant(e) peut suivre les progrès et adapter son aide. Aucun nom ni aucune adresse n’est enregistré en ligne : seul(e) l’enseignant(e) sait à quel élève correspond chaque code. Les données sont hébergées en Europe (Supabase) et effacées à la fin de l’année scolaire.</blockquote>
+<p><button type="button" class="copier-sql" data-cible="charte">Copier la phrase</button> <span class="etat"></span></p>
+<p class="petit">Les élèves étant mineurs, cette information va aussi aux familles, par exemple avec la charte informatique signée en début d’année. Elle reste générale et ne précise pas quand vous consultez les réponses : vous pouvez toujours observer l’implication réelle des élèves, sans rien leur cacher sur le principe.</p>
+</section>
+</main>
+<footer>Espace enseignant(e) · Guide de mise en route</footer>
+<script>
+(function () {
+  var champ = document.getElementById('adresse-prof');
+  champ.addEventListener('input', function () {
+    var a = champ.value.trim().replace(/'/g, '');
+    if (!a) { a = 'votre.adresse@exemple.org'; }
+    document.getElementById('sql-prof').textContent = "insert into public.enseignants (user_id) select id from auth.users where email = '" + a + "';";
+  });
+  var boutons = document.querySelectorAll('.copier-sql');
+  for (var i = 0; i < boutons.length; i = i + 1) {
+    boutons[i].addEventListener('click', function () {
+      var b = this;
+      var texte = document.getElementById(b.getAttribute('data-cible')).textContent;
+      var dire = function (m) { b.nextElementSibling.textContent = m; };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(texte).then(function () { dire('Copié.'); }, function () { dire('Copie impossible : sélectionnez le texte à la main.'); });
+      } else {
+        dire('Copie impossible : sélectionnez le texte à la main.');
+      }
+    });
+  }
+})();
+</script>
+</body></html>

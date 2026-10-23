@@ -1,0 +1,532 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Espace enseignant</title><style>/* Design PEI 5 · pages d'activités A1 à D4
+   Style inspiré des articles scientifiques Distill : une large colonne aérée,
+   titres nets sans empattement, filets fins, aucune décoration,
+   couleurs pastel seulement pour reconnaître les encadrés.
+   Pour changer une couleur partout, modifie seulement les variables ci-dessous. */
+
+:root{
+  --papier:#ffffff;
+  --encre:rgba(0,0,0,.84);
+  --gris:rgba(0,0,0,.55);
+  --filet:rgba(0,0,0,.12);
+  --lien:#2d4f7f;
+  /* encadrés pastel */
+  --consigne:#eef3fa;
+  --exemple:#faf5ea;
+  --trier:#eef6f0;
+  --atoi:#f4effa;
+  --pouce:#fdf9e6;
+  --sommative:#f3f3f1;
+  --juste:#2e6b3f;
+  --faux:#9b2c2c;
+  /* repère du critère (filet sous le titre) */
+  --crit:#9ab7dd;
+}
+.crit-A{--crit:#9ab7dd}.crit-B{--crit:#a8cfae}.crit-C{--crit:#e6bf98}.crit-D{--crit:#c5b3dd}
+
+*{box-sizing:border-box}
+html{background:var(--papier)}
+body{margin:0;background:var(--papier);color:var(--encre);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,Arial,sans-serif;
+  font-size:18px;line-height:1.7;-webkit-font-smoothing:antialiased}
+.entete,main,footer{max-width:46rem;margin:0 auto;padding-left:16px;padding-right:16px}
+
+a{color:var(--lien);text-decoration:none;border-bottom:1px solid var(--filet)}
+a:hover{border-bottom-color:var(--lien)}
+
+/* ---------- en-tête façon « titre d'article » ---------- */
+.entete{padding-top:24px;padding-bottom:0}
+.entete .haut{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:.75em;color:var(--gris);text-transform:uppercase;letter-spacing:.06em}
+.code{margin:44px 0 0;font-size:.8em;color:var(--gris);text-transform:uppercase;letter-spacing:.06em}
+h1{font-size:2.3em;line-height:1.15;margin:6px 0 14px;font-weight:700;letter-spacing:-.01em}
+.desc{font-size:1.1em;color:rgba(0,0,0,.7);margin:0 0 20px;line-height:1.55}
+.desc strong{font-weight:600}
+.choix-projet{display:block;margin:0;padding:12px 0;font-size:.8em;color:var(--gris);border-top:1px solid var(--filet);border-bottom:1px solid var(--filet)}
+select{font:inherit;font-size:1em;padding:3px 6px;border:1px solid var(--filet);border-radius:4px;background:#fff;color:var(--encre);max-width:100%}
+.temps{display:flex;flex-wrap:wrap;gap:4px 22px;font-size:.78em;padding:12px 0;border-bottom:1px solid var(--filet);border-left:6px solid var(--crit);padding-left:12px;margin:0}
+.temps a{border:none;color:var(--encre);font-weight:600}
+.temps a:hover{color:var(--lien)}
+.temps small{margin-left:5px;color:var(--gris);font-weight:400}
+
+.byline{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;border-top:1px solid var(--filet);padding:14px 0 12px;font-size:.75em;line-height:1.45}
+.byline h5{margin:0 0 4px;font-size:.85em;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--gris)}
+.byline p{margin:0}
+@media (max-width:600px){.byline{grid-template-columns:repeat(2,1fr)}}
+.desc-tache{font-size:.92em}
+.enonce{background:#fff;border:1px solid rgba(0,0,0,.25);border-radius:2px;padding:12px 16px;margin:0 0 16px}
+.enonce-tete{font-size:.72em;text-transform:uppercase;letter-spacing:.06em;color:var(--gris);margin:0 0 6px}
+.enonce-texte{font-size:1.05em;margin:0 0 10px}
+.termes{margin:0;font-size:.82em;border-top:1px solid var(--filet);padding-top:8px}
+.termes dt{font-weight:600;float:left;clear:left;margin-right:6px}
+.termes dt::after{content:" :"}
+.termes dd{margin:0 0 4px}
+.glossaire dt{font-weight:600;margin-top:8px}
+.glossaire dd{margin:0 0 0 0}
+sup{font-size:.65em;line-height:0;margin-left:1px}
+sup a{border:none}
+.notes{max-width:46rem;margin:56px auto 0;padding-left:16px;padding-right:16px;font-size:.75em;color:var(--gris);border-top:1px solid var(--filet);padding-top:8px}
+.notes h2{font-size:1.15em;border:none;padding:0;color:var(--gris)}
+.notes li{margin:4px 0}
+
+/* ---------- sections numérotées ---------- */
+main{padding-bottom:40px}
+section{margin:52px 0 0}
+h2{font-size:1.45em;line-height:1.25;margin:0 0 12px;font-weight:600;padding-bottom:8px;border-bottom:1px solid var(--filet)}
+h2 small,h3 small{font-weight:normal;font-size:.7em;color:var(--gris);margin-left:6px}
+h3{font-size:1.05em;margin:24px 0 6px;font-weight:600}
+h4{font-size:.8em;margin:20px 0 6px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--gris)}
+p{margin:0 0 12px}
+ol,ul{padding-left:1.4em}
+li{margin:3px 0}
+.petit{font-size:.85em;color:var(--gris)}
+code{font-family:Menlo,Consolas,"Courier New",monospace;font-size:.88em}
+pre{font-family:Menlo,Consolas,"Courier New",monospace;font-size:.78em;line-height:1.45;background:#f7f7f5;border:1px solid var(--filet);border-radius:4px;padding:10px 12px;overflow-x:auto}
+
+/* ---------- encadrés pastel (une couleur = un rôle) ---------- */
+.cadre,.histoire,#appliquer .panneau,.pouce,.sommative{border-radius:4px;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.cadre{padding:14px 18px}.cadre-consigne{background:var(--consigne)}
+.histoire{background:var(--exemple);padding:12px 18px;margin-bottom:8px}
+.histoire h3{margin-top:4px}
+.cadre-trier{background:var(--trier)}
+#appliquer .panneau{background:var(--atoi);padding:6px 18px 16px}
+.sommative{background:var(--sommative);padding:14px 18px;border-left:3px solid var(--crit)}
+.produit{margin:12px 0 0}
+.attention{font-style:italic}
+.retenir{margin-top:12px;padding-top:8px;border-top:1px solid var(--filet)}
+
+/* ---------- tableaux sobres (filets « booktabs ») ---------- */
+.tab-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:8px 0 14px}
+table{border-collapse:collapse;width:100%;font-size:.8em;line-height:1.45;border-top:1px solid rgba(0,0,0,.4);border-bottom:1px solid rgba(0,0,0,.4)}
+thead th{border-bottom:1px solid rgba(0,0,0,.4);font-weight:600}
+th,td{padding:6px 8px;vertical-align:top;text-align:left}
+tbody tr+tr td{border-top:1px solid #ecebe7}
+table.remplir td{padding:3px 4px;min-width:130px}
+td.fixe-cell{font-style:italic;padding:7px 8px}
+
+/* ---------- champs ---------- */
+textarea,input[type=text]{font:inherit;font-size:.95em;color:var(--encre);background:#fff;border:1px solid var(--filet);border-radius:3px;padding:6px 8px;width:100%;line-height:1.45}
+textarea:focus,input:focus,select:focus,button:focus,summary:focus{outline:2px solid var(--lien);outline-offset:1px}
+textarea.phrase{display:block;margin:6px 0}
+input.trou{width:auto;max-width:100%;padding:0 4px;border:none;border-bottom:1px solid var(--encre);border-radius:0;background:rgba(255,255,255,.75)}
+p.trous{line-height:2.2;text-align:left}
+.reformuler{margin-top:14px;padding-top:6px;border-top:1px solid rgba(0,0,0,.08)}
+
+/* ---------- boutons discrets ---------- */
+button{font:inherit;font-size:.85em;cursor:pointer;border:1px solid #bdbab3;background:#fff;color:var(--encre);border-radius:3px;padding:3px 10px}
+button:hover{border-color:var(--encre)}
+
+/* ---------- brouillon / version finale, connexion ---------- */
+.deux-colonnes{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:8px 0 6px}
+.deux-colonnes textarea{font-size:.85em}
+#mon-brouillon{background:#f7f7f5;color:var(--gris)}
+@media (max-width:700px){.deux-colonnes{grid-template-columns:1fr}}
+.connexion{font-size:.8em;padding:10px 0;border-bottom:1px solid var(--filet)}
+.connexion input{width:auto;font-size:1em;padding:3px 6px}
+.etat{color:var(--gris);margin-left:6px}
+.etat.ok{color:var(--juste)}
+.etat.attente{color:#8a6d00}
+
+/* ---------- trier ---------- */
+.tri{list-style:none;padding:0;margin:0}
+.tri li{padding:10px 0;border-top:1px solid rgba(0,0,0,.08)}
+.tri .item{margin:0 0 6px}
+.boutons{display:flex;flex-wrap:wrap;gap:6px}
+.tri button.choisi-ok{border-color:var(--juste);color:var(--juste);font-weight:bold}
+.tri button.choisi-ko{border-color:var(--faux);color:var(--faux);text-decoration:line-through}
+.explication{margin:6px 0 0;font-size:.9em}
+.explication.ok::before{content:"Juste. ";color:var(--juste);font-weight:bold}
+.explication.ko::before{content:"Pas tout à fait. ";color:var(--faux);font-weight:bold}
+.score{font-size:.9em;font-style:italic}
+
+/* ---------- appliquer ---------- */
+.pistes>div,.projet-vide{font-size:.92em;border-left:2px solid var(--crit);padding:2px 0 2px 12px;margin:10px 0}
+.pistes p{margin:2px 0}
+.onglets{display:flex;flex-wrap:wrap;gap:0;margin:16px 0 0;border-bottom:1px solid var(--filet)}
+.onglets button{flex:1 1 180px;text-align:left;border:none;border-bottom:2px solid transparent;border-radius:0;background:transparent;padding:6px 8px;font-size:.85em}
+.onglets button small{display:block;color:var(--gris);font-size:.9em;font-weight:normal}
+.onglets button[aria-selected=true]{border-bottom-color:var(--encre);font-weight:bold;background:var(--atoi)}
+#appliquer .panneau{border-top-left-radius:0;border-top-right-radius:0}
+.bloc.info{font-size:.9em;font-style:italic;color:var(--gris)}
+.controle li{margin:2px 0}
+
+/* ---------- coups de pouce repliés ---------- */
+.pouces{margin-top:22px}
+.pouce{background:var(--pouce);margin:6px 0;padding:6px 14px}
+.pouce summary{cursor:pointer;font-weight:bold;font-size:.92em}
+.pouce[data-vu] summary::after{content:" · déjà ouvert";font-weight:normal;color:var(--gris)}
+.pouce .contenu{padding-top:6px}
+
+/* ---------- témoin ---------- */
+details.temoin{margin-top:22px;border-top:1px solid var(--filet);border-bottom:1px solid var(--filet);padding:8px 0}
+details.temoin summary{cursor:pointer;font-style:italic}
+.autres{margin-top:12px;font-size:.92em}
+
+/* ---------- récolter ---------- */
+.check{list-style:none;padding:0}
+fieldset{border:none;border-top:1px solid var(--filet);border-bottom:1px solid var(--filet);margin:12px 0;padding:6px 0}
+legend{font-style:italic;padding:0 6px 0 0}
+fieldset label{margin-right:18px;white-space:nowrap}
+.export{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 6px}
+.export button:first-child{border-color:var(--encre);font-weight:bold}
+.message{font-style:italic;color:var(--juste);min-height:1em}
+.ou-coller{font-size:.92em}
+.transfert{font-style:italic;margin-top:10px}
+
+/* ---------- navigation, pied ---------- */
+.suite{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:38px;font-size:.9em}
+footer{font-size:.75em;color:var(--gris);text-align:center;padding-top:14px;padding-bottom:28px;border-top:1px solid var(--filet)}
+
+/* ---------- sommaire ---------- */
+.sommaire h2{margin-top:30px}
+.sommaire ol{list-style:none;padding:0}
+.sommaire li{display:flex;gap:10px;padding:4px 0;border-bottom:1px dotted var(--filet)}
+.sommaire li .num{min-width:2.2em;font-variant:small-caps;color:var(--gris)}
+
+/* ---------- impression : une feuille propre, comme un polycopié ---------- */
+@media print{
+  body{font-size:10.5pt;background:#fff;color:#000}
+  .temps,.onglets,.export,.suite,.choix-projet,.connexion,.message,#apercu,.score{display:none}
+  .panneau[hidden]{display:none}
+  
+  .cadre,.histoire,#appliquer .panneau,.pouce,.sommative{box-shadow:none;background:#fff;border:0.5pt solid #999}
+  details.temoin{display:none}
+  section{break-inside:auto}
+  h2,h3{break-after:avoid}
+  a{border:none;color:inherit}
+}
+@media (max-width:600px){
+  body{font-size:17px}
+  h1{font-size:1.7em}
+  .cadre,.histoire,#appliquer .panneau,.sommative{padding-left:12px;padding-right:12px}
+}
+
+/* ---------- QCM « Ai-je compris la tâche ? » ---------- */
+.qcm{margin-top:18px}
+.qcm-liste{padding-left:1.3em;margin:8px 0 0}
+.qcm-liste>li{padding:10px 0;border-top:1px solid rgba(0,0,0,.08)}
+.qcm-enonce{margin:0 0 8px;font-weight:600}
+.qcm-choix{display:flex;flex-direction:column;gap:6px}
+.qcm-choix button{display:flex;gap:10px;align-items:baseline;text-align:left;font-size:.88em;line-height:1.45;padding:6px 10px;width:100%}
+.qcm-choix button:disabled{cursor:default;color:var(--encre);opacity:1}
+.qcm-choix .lettre{flex:0 0 1.1em;font-weight:600;color:var(--gris)}
+.qcm-choix button.juste{border-color:var(--juste);color:var(--juste);font-weight:600}
+.qcm-choix button.faux{border-color:var(--faux);color:var(--faux);text-decoration:line-through}
+.qcm-choix button.attenue{opacity:.6}
+.qcm-score{font-weight:600;margin-bottom:0}
+@media print{.qcm-encore{display:none}}
+</style></head><body><header class="entete"><div class="haut"><span>Espace enseignant(e)</span><span>Tous les cours</span></div>
+<p class="code">Suivi des travaux · données anonymes</p>
+<h1>Tableau de bord</h1>
+<p class="desc">Créez vos cours et les codes de vos élèves, puis suivez leurs brouillons, leurs versions finales et leurs scores, activité par activité.</p>
+</header>
+<main>
+
+<section id="bloc-connexion"><h2>Connexion</h2><div class="cadre cadre-consigne">
+<p>Connectez-vous avec le compte enseignant créé dans Supabase. Première fois ? Suivez le <a href="guide-supabase.html">guide de mise en route</a> (20 minutes).</p>
+<p><label>Adresse : <input type="text" id="courriel" autocomplete="username"></label></p>
+<p><label>Mot de passe : <input type="password" id="mdp" autocomplete="current-password"></label></p>
+<p><button type="button" id="btn-connexion">Me connecter</button> <span id="msg-connexion" class="etat"></span></p>
+<p class="petit" id="msg-config"></p>
+</div></section>
+
+<div id="espace" hidden>
+<p class="connexion"><span id="qui"></span> <button type="button" id="btn-deconnexion">Me déconnecter</button></p>
+
+<section><h2>1. Cours</h2>
+<p><label>Cours affiché : <select id="choix-cours"></select></label> <button type="button" id="btn-rafraichir">Actualiser</button></p>
+<details><summary>Créer un nouveau cours</summary>
+<p class="petit">L’identifiant est court, en minuscules, sans espace ni accent (ex. <code>design-pei4-u3</code>). C’est lui qu’on écrit dans la configuration des pages de ce cours.</p>
+<p><label>Identifiant : <input type="text" id="nouveau-id" placeholder="design-pei4-u3"></label></p>
+<p><label>Titre : <input type="text" id="nouveau-titre" placeholder="Design PEI 4 · Unité 3"></label></p>
+<p><button type="button" id="btn-creer-cours">Créer le cours</button> <span id="msg-cours" class="etat"></span></p>
+</details>
+</section>
+
+<section><h2>2. Codes des élèves</h2>
+<p>Chaque élève reçoit un code, valable pour tous vos cours. Le code n’est montré <strong>qu’une seule fois</strong> : notez le nom de l’élève à côté, puis imprimez la liste.</p>
+<p><label>Classe : <input type="text" id="code-classe" placeholder="PEI5-A" size="10"></label>
+<label>Nombre de codes : <input type="text" id="code-nombre" value="25" size="4"></label>
+<button type="button" id="btn-codes">Créer les codes et les inscrire à ce cours</button> <span id="msg-codes" class="etat"></span></p>
+<div id="liste-codes"></div>
+<details><summary>Inscrire une classe déjà créée à ce cours</summary>
+<p class="petit">Les élèves gardent leur code habituel.</p>
+<p><label>Classe : <input type="text" id="inscrire-classe" placeholder="PEI5-A" size="10"></label>
+<button type="button" id="btn-inscrire">Inscrire</button> <span id="msg-inscrire" class="etat"></span></p>
+</details>
+</section>
+
+<section><h2>3. Suivi des travaux</h2>
+<p><label>Classe : <select id="filtre-classe"><option value="">toutes</option></select></label>
+<button type="button" id="btn-csv">Exporter en CSV</button></p>
+<p class="petit">✓ version finale écrite · ✎ brouillon seulement · le nombre indique le score (exercice de tri, QCM). Cliquez sur une case pour voir le détail, sur un nom pour le modifier.</p>
+<div id="grille" class="tab-scroll"></div>
+<div id="detail"></div>
+</section>
+
+<section class="notes"><h2>Confidentialité</h2><ol>
+<li>Supabase ne contient aucun nom : seulement des codes (sous forme d’empreinte), des classes et les travaux.</li>
+<li>Les noms que vous tapez ici restent <strong>dans ce navigateur, sur cet ordinateur</strong>. Pensez à les sauvegarder : <button type="button" id="btn-noms-export">Exporter les noms</button> <label class="petit">Importer : <input type="file" id="noms-import" accept=".json"></label></li>
+</ol></section>
+</div>
+</main>
+<footer>Espace enseignant(e) · Pages d’activités</footer>
+<script>window.PEI5_CONFIG = {"url": "", "cle": "", "cours": "design-pei5-u1"};</script><script>(function(){
+var CFG = window.PEI5_CONFIG || {};
+var URLB = (CFG.url || '').replace(/\/$/, '');
+var JETON = null;
+try { JETON = sessionStorage.getItem('prof-jeton'); } catch (x) {}
+var NOMS = {};
+try { NOMS = JSON.parse(localStorage.getItem('prof-noms') || '{}'); } catch (x) { NOMS = {}; }
+var DONNEES = { eleves: [], reponses: [] };
+
+function $(id) { return document.getElementById(id); }
+function esc(t) {
+  return String(t === null || t === undefined ? '' : t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+function sauverNoms() { try { localStorage.setItem('prof-noms', JSON.stringify(NOMS)); } catch (x) {} }
+
+function requete(chemin, options) {
+  options = options || {};
+  var entetes = { 'apikey': CFG.cle, 'Content-Type': 'application/json' };
+  if (JETON) { entetes['Authorization'] = 'Bearer ' + JETON; }
+  if (options.prefer) { entetes['Prefer'] = options.prefer; }
+  return fetch(URLB + chemin, { method: options.methode || 'GET', headers: entetes, body: options.corps ? JSON.stringify(options.corps) : undefined })
+    .then(function (r) {
+      if (r.status === 401) { deconnecter(); throw new Error('Session expirée : reconnectez-vous.'); }
+      return r.text().then(function (t) {
+        var j = null;
+        try { j = t ? JSON.parse(t) : null; } catch (x) { j = t; }
+        if (!r.ok) { throw new Error((j && (j.message || j.msg || j.error_description)) || ('Erreur ' + r.status)); }
+        return j;
+      });
+    });
+}
+
+// ---------- connexion ----------
+function connecter() {
+  $('msg-connexion').textContent = 'Connexion…';
+  fetch(URLB + '/auth/v1/token?grant_type=password', {
+    method: 'POST', headers: { 'apikey': CFG.cle, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: $('courriel').value.trim(), password: $('mdp').value })
+  }).then(function (r) { return r.json().then(function (j) { if (!r.ok) { throw new Error(j.error_description || j.msg || 'Connexion refusée'); } return j; }); })
+    .then(function (j) {
+      JETON = j.access_token;
+      try { sessionStorage.setItem('prof-jeton', JETON); sessionStorage.setItem('prof-courriel', (j.user && j.user.email) || ''); } catch (x) {}
+      return requete('/rest/v1/rpc/est_enseignant', { methode: 'POST', corps: {} });
+    })
+    .then(function (ok) {
+      if (ok !== true) { deconnecter(); $('msg-connexion').textContent = 'Ce compte n’est pas enregistré comme enseignant(e) (voir la dernière étape du script SQL).'; return; }
+      $('mdp').value = '';
+      ouvrir();
+    })
+    .catch(function (e) { $('msg-connexion').textContent = e.message; });
+}
+function deconnecter() {
+  JETON = null;
+  try { sessionStorage.removeItem('prof-jeton'); sessionStorage.removeItem('prof-courriel'); } catch (x) {}
+  $('espace').hidden = true; $('bloc-connexion').hidden = false;
+}
+function ouvrir() {
+  $('bloc-connexion').hidden = true; $('espace').hidden = false;
+  var q = ''; try { q = sessionStorage.getItem('prof-courriel') || ''; } catch (x) {}
+  $('qui').textContent = 'Connecté(e)' + (q ? ' : ' + q : '');
+  chargerCours();
+}
+
+// ---------- cours ----------
+function chargerCours() {
+  return requete('/rest/v1/cours?select=id,titre&order=id').then(function (liste) {
+    var s = $('choix-cours'); var avant = s.value;
+    var memo = ''; try { memo = localStorage.getItem('prof-cours') || ''; } catch (x) {}
+    s.innerHTML = '';
+    for (var i = 0; i < liste.length; i = i + 1) {
+      var o = document.createElement('option'); o.value = liste[i].id; o.textContent = liste[i].titre + ' (' + liste[i].id + ')'; s.appendChild(o);
+    }
+    if (avant) { s.value = avant; } else if (memo) { s.value = memo; }
+    if (!s.value && liste.length) { s.value = liste[0].id; }
+    return chargerSuivi();
+  });
+}
+function creerCours() {
+  var id = $('nouveau-id').value.trim().toLowerCase(); var titre = $('nouveau-titre').value.trim();
+  if (!/^[a-z0-9-]{2,40}$/.test(id) || !titre) { $('msg-cours').textContent = 'Identifiant : minuscules, chiffres et tirets seulement ; titre obligatoire.'; return; }
+  requete('/rest/v1/cours', { methode: 'POST', corps: { id: id, titre: titre }, prefer: 'return=minimal' })
+    .then(function () { $('msg-cours').textContent = 'Cours créé.'; $('choix-cours').value = ''; try { localStorage.setItem('prof-cours', id); } catch (x) {} return chargerCours(); })
+    .then(function () { $('choix-cours').value = id; return chargerSuivi(); })
+    .catch(function (e) { $('msg-cours').textContent = e.message; });
+}
+
+// ---------- codes ----------
+function creerCodes() {
+  var classe = $('code-classe').value.trim(); var n = parseInt($('code-nombre').value, 10);
+  if (!classe || !(n >= 1 && n <= 60)) { $('msg-codes').textContent = 'Indiquez une classe et un nombre entre 1 et 60.'; return; }
+  $('msg-codes').textContent = 'Création…';
+  requete('/rest/v1/rpc/creer_codes', { methode: 'POST', corps: { p_classe: classe, p_cours: $('choix-cours').value, p_nombre: n } })
+    .then(function (liste) {
+      $('msg-codes').textContent = liste.length + ' codes créés.';
+      var h = '<div class="cadre cadre-trier"><p><strong>Classe ' + esc(classe) + '</strong> · cours ' + esc($('choix-cours').value) +
+        '. Écrivez le nom de chaque élève (il reste sur cet ordinateur), puis imprimez ou découpez.</p><table><thead><tr><th>Code</th><th>Nom de l’élève</th></tr></thead><tbody>';
+      for (var i = 0; i < liste.length; i = i + 1) {
+        h = h + '<tr><td><code style="font-size:1.1em">' + esc(liste[i].code) + '</code></td><td><input type="text" data-eleve="' + esc(liste[i].eleve_id) + '" placeholder="Nom"></td></tr>';
+      }
+      h = h + '</tbody></table><p><button type="button" onclick="window.print()">Imprimer la liste</button></p></div>';
+      $('liste-codes').innerHTML = h;
+      var champs = $('liste-codes').querySelectorAll('input[data-eleve]');
+      for (var k = 0; k < champs.length; k = k + 1) {
+        champs[k].addEventListener('input', function () { NOMS[this.getAttribute('data-eleve')] = this.value; sauverNoms(); });
+      }
+      return chargerSuivi();
+    })
+    .catch(function (e) { $('msg-codes').textContent = e.message; });
+}
+function inscrireClasse() {
+  var classe = $('inscrire-classe').value.trim(); if (!classe) { return; }
+  requete('/rest/v1/rpc/inscrire_classe', { methode: 'POST', corps: { p_classe: classe, p_cours: $('choix-cours').value } })
+    .then(function (n) { $('msg-inscrire').textContent = n + ' élève(s) inscrit(s).'; return chargerSuivi(); })
+    .catch(function (e) { $('msg-inscrire').textContent = e.message; });
+}
+
+// ---------- suivi ----------
+function trierActivites(a, b) {
+  var ma = /^([A-Za-z]+)(\d+)$/.exec(a); var mb = /^([A-Za-z]+)(\d+)$/.exec(b);
+  if (ma && mb && ma[1] === mb[1]) { return parseInt(ma[2], 10) - parseInt(mb[2], 10); }
+  return a < b ? -1 : (a > b ? 1 : 0);
+}
+function nomEleve(e) { return NOMS[e.eleve_id] || ('code …' + e.code_fin); }
+function chargerSuivi() {
+  var cours = $('choix-cours').value; if (!cours) { $('grille').innerHTML = '<p>Aucun cours : créez-en un.</p>'; return Promise.resolve(); }
+  try { localStorage.setItem('prof-cours', cours); } catch (x) {}
+  return Promise.all([
+    requete('/rest/v1/inscriptions?cours_id=eq.' + encodeURIComponent(cours) + '&select=eleve_id,choix,eleves(code_fin,classe,vu_le)'),
+    requete('/rest/v1/reponses?cours_id=eq.' + encodeURIComponent(cours) + '&select=eleve_id,activite,finale,donnees,maj')
+  ]).then(function (r) {
+    DONNEES.eleves = [];
+    for (var i = 0; i < r[0].length; i = i + 1) {
+      var x = r[0][i];
+      DONNEES.eleves.push({ eleve_id: x.eleve_id, choix: x.choix, code_fin: x.eleves.code_fin, classe: x.eleves.classe, vu_le: x.eleves.vu_le });
+    }
+    DONNEES.reponses = r[1];
+    var classes = {}; for (var j = 0; j < DONNEES.eleves.length; j = j + 1) { classes[DONNEES.eleves[j].classe] = true; }
+    var f = $('filtre-classe'); var avant = f.value; f.innerHTML = '<option value="">toutes</option>';
+    Object.keys(classes).sort().forEach(function (c) { var o = document.createElement('option'); o.value = c; o.textContent = c; f.appendChild(o); });
+    f.value = avant;
+    dessinerGrille();
+  }).catch(function (e) { $('grille').textContent = e.message; });
+}
+function score(rep) {
+  var res = rep.donnees && rep.donnees.resultat;
+  if (res && typeof res.score === 'number' && res.repondu) { return res.score + '/' + res.sur; }
+  return '';
+}
+function elevesFiltres() {
+  var f = $('filtre-classe').value; var l = [];
+  for (var i = 0; i < DONNEES.eleves.length; i = i + 1) { if (!f || DONNEES.eleves[i].classe === f) { l.push(DONNEES.eleves[i]); } }
+  l.sort(function (a, b) { var na = nomEleve(a).toLowerCase(); var nb = nomEleve(b).toLowerCase(); return na < nb ? -1 : (na > nb ? 1 : 0); });
+  return l;
+}
+function activites() {
+  var a = {}; for (var i = 0; i < DONNEES.reponses.length; i = i + 1) { a[DONNEES.reponses[i].activite] = true; }
+  return Object.keys(a).sort(trierActivites);
+}
+function trouver(eleveId, act) {
+  for (var i = 0; i < DONNEES.reponses.length; i = i + 1) {
+    var r = DONNEES.reponses[i]; if (r.eleve_id === eleveId && r.activite === act) { return r; }
+  }
+  return null;
+}
+function dessinerGrille() {
+  var el = elevesFiltres(); var acts = activites();
+  if (!el.length) { $('grille').innerHTML = '<p>Aucun élève inscrit à ce cours pour l’instant.</p>'; return; }
+  var h = '<table class="grille"><thead><tr><th>Élève</th><th>Classe</th><th>Choix</th>';
+  for (var a = 0; a < acts.length; a = a + 1) { h = h + '<th>' + esc(acts[a]) + '</th>'; }
+  h = h + '</tr></thead><tbody>';
+  for (var i = 0; i < el.length; i = i + 1) {
+    var e = el[i];
+    h = h + '<tr><td><a href="#" data-renommer="' + esc(e.eleve_id) + '">' + esc(nomEleve(e)) + '</a></td><td>' + esc(e.classe) + '</td><td>' + esc(e.choix || '') + '</td>';
+    for (var k = 0; k < acts.length; k = k + 1) {
+      var r = trouver(e.eleve_id, acts[k]);
+      if (!r) { h = h + '<td></td>'; continue; }
+      var signe = (r.finale && r.finale.trim()) ? '✓' : '✎';
+      h = h + '<td><a href="#" data-voir="' + esc(e.eleve_id) + '|' + esc(acts[k]) + '">' + signe + ' ' + esc(score(r)) + '</a></td>';
+    }
+    h = h + '</tr>';
+  }
+  h = h + '</tbody></table>';
+  $('grille').innerHTML = h;
+}
+function voir(eleveId, act) {
+  var r = trouver(eleveId, act); var e = null;
+  for (var i = 0; i < DONNEES.eleves.length; i = i + 1) { if (DONNEES.eleves[i].eleve_id === eleveId) { e = DONNEES.eleves[i]; } }
+  if (!r || !e) { return; }
+  var h = '<div class="cadre cadre-consigne"><h3>' + esc(nomEleve(e)) + ' · ' + esc(act) + '</h3><p class="petit">Dernier enregistrement : ' + esc(new Date(r.maj).toLocaleString('fr-FR')) + '</p>';
+  h = h + '<h4>Version finale</h4><p style="white-space:pre-wrap">' + (r.finale ? esc(r.finale) : '<em>pas encore écrite</em>') + '</p>';
+  var res = r.donnees && r.donnees.resultat;
+  if (res && res.repondu) { h = h + '<h4>Résultat (' + esc(res.type || '') + ')</h4><p>' + 'Score : ' + esc(res.score) + ' / ' + esc(res.sur) + ' (' + esc(res.repondu) + ' réponse(s) données ; pour le tri, le score compte les bonnes réponses du premier coup).</p>'; }
+  var et = (r.donnees && r.donnees.etat) || {};
+  if (et.niveau || (et.pouces && et.pouces.length)) { h = h + '<p class="petit">Niveau de guidage : ' + esc(et.niveau || '?') + ' · coups de pouce : ' + esc((et.pouces || []).join(', ') || 'aucun') + '</p>'; }
+  var ch = (r.donnees && r.donnees.champs) || {}; var lignes = '';
+  Object.keys(ch).sort().forEach(function (k) {
+    var v = ch[k]; if (v === '' || v === '0') { return; }
+    lignes = lignes + '<tr><td><code>' + esc(k) + '</code></td><td style="white-space:pre-wrap">' + esc(v === '1' ? '☒' : v) + '</td></tr>';
+  });
+  h = h + '<details><summary>Brouillon : tous les champs remplis</summary><table><tbody>' + (lignes || '<tr><td>vide</td></tr>') + '</tbody></table></details></div>';
+  $('detail').innerHTML = h;
+  $('detail').scrollIntoView();
+}
+function exporterCsv() {
+  var el = elevesFiltres(); var acts = activites();
+  var lignes = [['Élève', 'Classe', 'Choix'].concat(acts).join(';')];
+  for (var i = 0; i < el.length; i = i + 1) {
+    var l = [nomEleve(el[i]), el[i].classe, el[i].choix || ''];
+    for (var k = 0; k < acts.length; k = k + 1) {
+      var r = trouver(el[i].eleve_id, acts[k]);
+      l.push(r ? (((r.finale && r.finale.trim()) ? 'finale' : 'brouillon') + (score(r) ? ' ' + score(r) : '')) : '');
+    }
+    lignes.push(l.map(function (c) { return '"' + String(c).replace(/"/g, '""') + '"'; }).join(';'));
+  }
+  var blob = new Blob(['﻿' + lignes.join('\r\n')], { type: 'text/csv;charset=utf-8' });
+  var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'suivi_' + $('choix-cours').value + '.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+
+// ---------- événements ----------
+if (!URLB || !CFG.cle) {
+  $('msg-config').textContent = 'Cette page n’est pas encore reliée à Supabase : remplissez config_supabase.json puis régénérez les pages (voir le guide).';
+  $('btn-connexion').disabled = true;
+}
+$('btn-connexion').addEventListener('click', connecter);
+$('mdp').addEventListener('keydown', function (ev) { if (ev.key === 'Enter') { connecter(); } });
+$('btn-deconnexion').addEventListener('click', deconnecter);
+$('btn-rafraichir').addEventListener('click', chargerSuivi);
+$('choix-cours').addEventListener('change', function () { $('detail').innerHTML = ''; chargerSuivi(); });
+$('btn-creer-cours').addEventListener('click', creerCours);
+$('btn-codes').addEventListener('click', creerCodes);
+$('btn-inscrire').addEventListener('click', inscrireClasse);
+$('filtre-classe').addEventListener('change', dessinerGrille);
+$('btn-csv').addEventListener('click', exporterCsv);
+$('grille').addEventListener('click', function (ev) {
+  var t = ev.target.closest('a'); if (!t) { return; }
+  ev.preventDefault();
+  if (t.getAttribute('data-voir')) { var p = t.getAttribute('data-voir').split('|'); voir(p[0], p[1]); }
+  if (t.getAttribute('data-renommer')) {
+    var id = t.getAttribute('data-renommer'); var n = prompt('Nom de l’élève (reste sur cet ordinateur) :', NOMS[id] || '');
+    if (n !== null) { NOMS[id] = n.trim(); sauverNoms(); dessinerGrille(); }
+  }
+});
+$('btn-noms-export').addEventListener('click', function () {
+  var blob = new Blob([JSON.stringify(NOMS, null, 1)], { type: 'application/json' });
+  var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'noms_eleves.json';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+});
+$('noms-import').addEventListener('change', function () {
+  var f = this.files[0]; if (!f) { return; }
+  var lecteur = new FileReader();
+  lecteur.onload = function () {
+    try { var o = JSON.parse(lecteur.result); for (var k in o) { if (Object.prototype.hasOwnProperty.call(o, k)) { NOMS[k] = String(o[k]); } } sauverNoms(); dessinerGrille(); }
+    catch (x) { alert('Fichier invalide.'); }
+  };
+  lecteur.readAsText(f);
+});
+if (JETON) { ouvrir(); }
+})();
+</script></body></html>

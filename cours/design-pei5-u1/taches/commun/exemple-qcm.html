@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exemple de page avec QCM</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 46rem; margin: 2rem auto; padding: 0 1rem; line-height: 1.6; color: #222; background: #fff; }
+  fieldset { border: 1px solid #ddd; margin: 1em 0; padding: 0.6em 1em; }
+  textarea { width: 100%; min-height: 6em; font: inherit; }
+  .bon { color: #2e6b3a; } .faux { color: #9a3a2a; }
+</style>
+</head>
+<body data-activite="exemple-qcm">
+<!-- 1. La ligne « Mon code élève » s'affiche ici (seulement si la page est reliée à Supabase) -->
+<div id="socle-connexion"></div>
+
+<h1>Exemple : QCM et version finale</h1>
+
+<!-- 2. Chaque réponse porte data-save : elle est enregistrée toute seule -->
+<form id="qcm">
+  <fieldset><legend>1. Quelle tension maximale utilisons-nous en classe ?</legend>
+    <label><input type="radio" name="q1" value="a" data-save="q1-a"> 5 V</label><br>
+    <label><input type="radio" name="q1" value="b" data-save="q1-b"> 12 V</label><br>
+    <label><input type="radio" name="q1" value="c" data-save="q1-c"> 230 V</label>
+  </fieldset>
+  <fieldset><legend>2. Un cahier des charges sert à…</legend>
+    <label><input type="radio" name="q2" value="a" data-save="q2-a"> décrire la solution finale</label><br>
+    <label><input type="radio" name="q2" value="b" data-save="q2-b"> fixer ce que la solution doit respecter</label>
+  </fieldset>
+  <fieldset><legend>3. Une source fiable…</legend>
+    <label><input type="radio" name="q3" value="a" data-save="q3-a"> a un auteur et une date</label><br>
+    <label><input type="radio" name="q3" value="b" data-save="q3-b"> est la première trouvée</label>
+  </fieldset>
+  <button type="button" id="verifier">Vérifier mes réponses</button>
+  <p id="bilan"></p>
+</form>
+
+<h2>Ma version finale</h2>
+<!-- 3. data-finale : le texte que l'enseignant(e) voit comme « version finale » -->
+<textarea data-save="finale" data-finale placeholder="Reformule ici ce que tu as compris."></textarea>
+
+<!-- 4. Configuration (vide = tout reste sur cet ordinateur), puis le socle -->
+<script>window.SOCLE_CONFIG = { url: "", cle: "", cours: "exemple" };</script>
+<script src="socle.js"></script>
+
+<!-- 5. La correction du QCM, propre à cette page -->
+<script>
+var BONNES = { q1: "a", q2: "b", q3: "a" };
+
+function corriger() {
+  var score = 0;
+  var repondu = 0;
+  var detail = {};
+  var noms = Object.keys(BONNES);
+  for (var i = 0; i < noms.length; i = i + 1) {
+    var nom = noms[i];
+    var coche = document.querySelector('input[name="' + nom + '"]:checked');
+    if (coche) {
+      repondu = repondu + 1;
+      detail[nom] = coche.value;
+      if (coche.value === BONNES[nom]) {
+        score = score + 1;
+      }
+    }
+  }
+  return { score: score, repondu: repondu, sur: noms.length, detail: detail };
+}
+
+function afficher(r) {
+  var texte = r.score + " bonne(s) réponse(s) sur " + r.sur + ".";
+  if (r.repondu < r.sur) {
+    texte = texte + " Il te reste " + (r.sur - r.repondu) + " question(s).";
+  }
+  document.getElementById("bilan").textContent = texte;
+}
+
+document.getElementById("verifier").addEventListener("click", function () {
+  var r = corriger();
+  SOCLE.resultat("qcm", r.score, r.repondu, r.sur, r.detail);
+  afficher(r);
+});
+
+// Au retour sur la page, on réaffiche le dernier bilan
+var dernier = SOCLE.lireResultat();
+if (dernier.type === "qcm") {
+  afficher(dernier);
+}
+</script>
+</body>
+</html>

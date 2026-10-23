@@ -1,0 +1,217 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Les 16 tâches du design</title><style>/* Design PEI 5 · pages d'activités A1 à D4
+   Style inspiré des articles scientifiques Distill : une large colonne aérée,
+   titres nets sans empattement, filets fins, aucune décoration,
+   couleurs pastel seulement pour reconnaître les encadrés.
+   Pour changer une couleur partout, modifie seulement les variables ci-dessous. */
+
+:root{
+  --papier:#ffffff;
+  --encre:rgba(0,0,0,.84);
+  --gris:rgba(0,0,0,.55);
+  --filet:rgba(0,0,0,.12);
+  --lien:#2d4f7f;
+  /* encadrés pastel */
+  --consigne:#eef3fa;
+  --exemple:#faf5ea;
+  --trier:#eef6f0;
+  --atoi:#f4effa;
+  --pouce:#fdf9e6;
+  --sommative:#f3f3f1;
+  --juste:#2e6b3f;
+  --faux:#9b2c2c;
+  /* repère du critère (filet sous le titre) */
+  --crit:#9ab7dd;
+}
+.crit-A{--crit:#9ab7dd}.crit-B{--crit:#a8cfae}.crit-C{--crit:#e6bf98}.crit-D{--crit:#c5b3dd}
+
+*{box-sizing:border-box}
+html{background:var(--papier)}
+body{margin:0;background:var(--papier);color:var(--encre);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,Arial,sans-serif;
+  font-size:18px;line-height:1.7;-webkit-font-smoothing:antialiased}
+.entete,main,footer{max-width:46rem;margin:0 auto;padding-left:16px;padding-right:16px}
+
+a{color:var(--lien);text-decoration:none;border-bottom:1px solid var(--filet)}
+a:hover{border-bottom-color:var(--lien)}
+
+/* ---------- en-tête façon « titre d'article » ---------- */
+.entete{padding-top:24px;padding-bottom:0}
+.entete .haut{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:.75em;color:var(--gris);text-transform:uppercase;letter-spacing:.06em}
+.code{margin:44px 0 0;font-size:.8em;color:var(--gris);text-transform:uppercase;letter-spacing:.06em}
+h1{font-size:2.3em;line-height:1.15;margin:6px 0 14px;font-weight:700;letter-spacing:-.01em}
+.desc{font-size:1.1em;color:rgba(0,0,0,.7);margin:0 0 20px;line-height:1.55}
+.desc strong{font-weight:600}
+.choix-projet{display:block;margin:0;padding:12px 0;font-size:.8em;color:var(--gris);border-top:1px solid var(--filet);border-bottom:1px solid var(--filet)}
+select{font:inherit;font-size:1em;padding:3px 6px;border:1px solid var(--filet);border-radius:4px;background:#fff;color:var(--encre);max-width:100%}
+.temps{display:flex;flex-wrap:wrap;gap:4px 22px;font-size:.78em;padding:12px 0;border-bottom:1px solid var(--filet);border-left:6px solid var(--crit);padding-left:12px;margin:0}
+.temps a{border:none;color:var(--encre);font-weight:600}
+.temps a:hover{color:var(--lien)}
+.temps small{margin-left:5px;color:var(--gris);font-weight:400}
+
+.byline{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;border-top:1px solid var(--filet);padding:14px 0 12px;font-size:.75em;line-height:1.45}
+.byline h5{margin:0 0 4px;font-size:.85em;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--gris)}
+.byline p{margin:0}
+@media (max-width:600px){.byline{grid-template-columns:repeat(2,1fr)}}
+.desc-tache{font-size:.92em}
+.enonce{background:#fff;border:1px solid rgba(0,0,0,.25);border-radius:2px;padding:12px 16px;margin:0 0 16px}
+.enonce-tete{font-size:.72em;text-transform:uppercase;letter-spacing:.06em;color:var(--gris);margin:0 0 6px}
+.enonce-texte{font-size:1.05em;margin:0 0 10px}
+.termes{margin:0;font-size:.82em;border-top:1px solid var(--filet);padding-top:8px}
+.termes dt{font-weight:600;float:left;clear:left;margin-right:6px}
+.termes dt::after{content:" :"}
+.termes dd{margin:0 0 4px}
+.glossaire dt{font-weight:600;margin-top:8px}
+.glossaire dd{margin:0 0 0 0}
+sup{font-size:.65em;line-height:0;margin-left:1px}
+sup a{border:none}
+.notes{max-width:46rem;margin:56px auto 0;padding-left:16px;padding-right:16px;font-size:.75em;color:var(--gris);border-top:1px solid var(--filet);padding-top:8px}
+.notes h2{font-size:1.15em;border:none;padding:0;color:var(--gris)}
+.notes li{margin:4px 0}
+
+/* ---------- sections numérotées ---------- */
+main{padding-bottom:40px}
+section{margin:52px 0 0}
+h2{font-size:1.45em;line-height:1.25;margin:0 0 12px;font-weight:600;padding-bottom:8px;border-bottom:1px solid var(--filet)}
+h2 small,h3 small{font-weight:normal;font-size:.7em;color:var(--gris);margin-left:6px}
+h3{font-size:1.05em;margin:24px 0 6px;font-weight:600}
+h4{font-size:.8em;margin:20px 0 6px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--gris)}
+p{margin:0 0 12px}
+ol,ul{padding-left:1.4em}
+li{margin:3px 0}
+.petit{font-size:.85em;color:var(--gris)}
+code{font-family:Menlo,Consolas,"Courier New",monospace;font-size:.88em}
+pre{font-family:Menlo,Consolas,"Courier New",monospace;font-size:.78em;line-height:1.45;background:#f7f7f5;border:1px solid var(--filet);border-radius:4px;padding:10px 12px;overflow-x:auto}
+
+/* ---------- encadrés pastel (une couleur = un rôle) ---------- */
+.cadre,.histoire,#appliquer .panneau,.pouce,.sommative{border-radius:4px;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.cadre{padding:14px 18px}.cadre-consigne{background:var(--consigne)}
+.histoire{background:var(--exemple);padding:12px 18px;margin-bottom:8px}
+.histoire h3{margin-top:4px}
+.cadre-trier{background:var(--trier)}
+#appliquer .panneau{background:var(--atoi);padding:6px 18px 16px}
+.sommative{background:var(--sommative);padding:14px 18px;border-left:3px solid var(--crit)}
+.produit{margin:12px 0 0}
+.attention{font-style:italic}
+.retenir{margin-top:12px;padding-top:8px;border-top:1px solid var(--filet)}
+
+/* ---------- tableaux sobres (filets « booktabs ») ---------- */
+.tab-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:8px 0 14px}
+table{border-collapse:collapse;width:100%;font-size:.8em;line-height:1.45;border-top:1px solid rgba(0,0,0,.4);border-bottom:1px solid rgba(0,0,0,.4)}
+thead th{border-bottom:1px solid rgba(0,0,0,.4);font-weight:600}
+th,td{padding:6px 8px;vertical-align:top;text-align:left}
+tbody tr+tr td{border-top:1px solid #ecebe7}
+table.remplir td{padding:3px 4px;min-width:130px}
+td.fixe-cell{font-style:italic;padding:7px 8px}
+
+/* ---------- champs ---------- */
+textarea,input[type=text]{font:inherit;font-size:.95em;color:var(--encre);background:#fff;border:1px solid var(--filet);border-radius:3px;padding:6px 8px;width:100%;line-height:1.45}
+textarea:focus,input:focus,select:focus,button:focus,summary:focus{outline:2px solid var(--lien);outline-offset:1px}
+textarea.phrase{display:block;margin:6px 0}
+input.trou{width:auto;max-width:100%;padding:0 4px;border:none;border-bottom:1px solid var(--encre);border-radius:0;background:rgba(255,255,255,.75)}
+p.trous{line-height:2.2;text-align:left}
+.reformuler{margin-top:14px;padding-top:6px;border-top:1px solid rgba(0,0,0,.08)}
+
+/* ---------- boutons discrets ---------- */
+button{font:inherit;font-size:.85em;cursor:pointer;border:1px solid #bdbab3;background:#fff;color:var(--encre);border-radius:3px;padding:3px 10px}
+button:hover{border-color:var(--encre)}
+
+/* ---------- brouillon / version finale, connexion ---------- */
+.deux-colonnes{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:8px 0 6px}
+.deux-colonnes textarea{font-size:.85em}
+#mon-brouillon{background:#f7f7f5;color:var(--gris)}
+@media (max-width:700px){.deux-colonnes{grid-template-columns:1fr}}
+.connexion{font-size:.8em;padding:10px 0;border-bottom:1px solid var(--filet)}
+.connexion input{width:auto;font-size:1em;padding:3px 6px}
+.etat{color:var(--gris);margin-left:6px}
+.etat.ok{color:var(--juste)}
+.etat.attente{color:#8a6d00}
+
+/* ---------- trier ---------- */
+.tri{list-style:none;padding:0;margin:0}
+.tri li{padding:10px 0;border-top:1px solid rgba(0,0,0,.08)}
+.tri .item{margin:0 0 6px}
+.boutons{display:flex;flex-wrap:wrap;gap:6px}
+.tri button.choisi-ok{border-color:var(--juste);color:var(--juste);font-weight:bold}
+.tri button.choisi-ko{border-color:var(--faux);color:var(--faux);text-decoration:line-through}
+.explication{margin:6px 0 0;font-size:.9em}
+.explication.ok::before{content:"Juste. ";color:var(--juste);font-weight:bold}
+.explication.ko::before{content:"Pas tout à fait. ";color:var(--faux);font-weight:bold}
+.score{font-size:.9em;font-style:italic}
+
+/* ---------- appliquer ---------- */
+.pistes>div,.projet-vide{font-size:.92em;border-left:2px solid var(--crit);padding:2px 0 2px 12px;margin:10px 0}
+.pistes p{margin:2px 0}
+.onglets{display:flex;flex-wrap:wrap;gap:0;margin:16px 0 0;border-bottom:1px solid var(--filet)}
+.onglets button{flex:1 1 180px;text-align:left;border:none;border-bottom:2px solid transparent;border-radius:0;background:transparent;padding:6px 8px;font-size:.85em}
+.onglets button small{display:block;color:var(--gris);font-size:.9em;font-weight:normal}
+.onglets button[aria-selected=true]{border-bottom-color:var(--encre);font-weight:bold;background:var(--atoi)}
+#appliquer .panneau{border-top-left-radius:0;border-top-right-radius:0}
+.bloc.info{font-size:.9em;font-style:italic;color:var(--gris)}
+.controle li{margin:2px 0}
+
+/* ---------- coups de pouce repliés ---------- */
+.pouces{margin-top:22px}
+.pouce{background:var(--pouce);margin:6px 0;padding:6px 14px}
+.pouce summary{cursor:pointer;font-weight:bold;font-size:.92em}
+.pouce[data-vu] summary::after{content:" · déjà ouvert";font-weight:normal;color:var(--gris)}
+.pouce .contenu{padding-top:6px}
+
+/* ---------- témoin ---------- */
+details.temoin{margin-top:22px;border-top:1px solid var(--filet);border-bottom:1px solid var(--filet);padding:8px 0}
+details.temoin summary{cursor:pointer;font-style:italic}
+.autres{margin-top:12px;font-size:.92em}
+
+/* ---------- récolter ---------- */
+.check{list-style:none;padding:0}
+fieldset{border:none;border-top:1px solid var(--filet);border-bottom:1px solid var(--filet);margin:12px 0;padding:6px 0}
+legend{font-style:italic;padding:0 6px 0 0}
+fieldset label{margin-right:18px;white-space:nowrap}
+.export{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 6px}
+.export button:first-child{border-color:var(--encre);font-weight:bold}
+.message{font-style:italic;color:var(--juste);min-height:1em}
+.ou-coller{font-size:.92em}
+.transfert{font-style:italic;margin-top:10px}
+
+/* ---------- navigation, pied ---------- */
+.suite{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:38px;font-size:.9em}
+footer{font-size:.75em;color:var(--gris);text-align:center;padding-top:14px;padding-bottom:28px;border-top:1px solid var(--filet)}
+
+/* ---------- sommaire ---------- */
+.sommaire h2{margin-top:30px}
+.sommaire ol{list-style:none;padding:0}
+.sommaire li{display:flex;gap:10px;padding:4px 0;border-bottom:1px dotted var(--filet)}
+.sommaire li .num{min-width:2.2em;font-variant:small-caps;color:var(--gris)}
+
+/* ---------- impression : une feuille propre, comme un polycopié ---------- */
+@media print{
+  body{font-size:10.5pt;background:#fff;color:#000}
+  .temps,.onglets,.export,.suite,.choix-projet,.connexion,.message,#apercu,.score{display:none}
+  .panneau[hidden]{display:none}
+  
+  .cadre,.histoire,#appliquer .panneau,.pouce,.sommative{box-shadow:none;background:#fff;border:0.5pt solid #999}
+  details.temoin{display:none}
+  section{break-inside:auto}
+  h2,h3{break-after:avoid}
+  a{border:none;color:inherit}
+}
+@media (max-width:600px){
+  body{font-size:17px}
+  h1{font-size:1.7em}
+  .cadre,.histoire,#appliquer .panneau,.sommative{padding-left:12px;padding-right:12px}
+}
+
+/* ---------- QCM « Ai-je compris la tâche ? » ---------- */
+.qcm{margin-top:18px}
+.qcm-liste{padding-left:1.3em;margin:8px 0 0}
+.qcm-liste>li{padding:10px 0;border-top:1px solid rgba(0,0,0,.08)}
+.qcm-enonce{margin:0 0 8px;font-weight:600}
+.qcm-choix{display:flex;flex-direction:column;gap:6px}
+.qcm-choix button{display:flex;gap:10px;align-items:baseline;text-align:left;font-size:.88em;line-height:1.45;padding:6px 10px;width:100%}
+.qcm-choix button:disabled{cursor:default;color:var(--encre);opacity:1}
+.qcm-choix .lettre{flex:0 0 1.1em;font-weight:600;color:var(--gris)}
+.qcm-choix button.juste{border-color:var(--juste);color:var(--juste);font-weight:600}
+.qcm-choix button.faux{border-color:var(--faux);color:var(--faux);text-decoration:line-through}
+.qcm-choix button.attenue{opacity:.6}
+.qcm-score{font-weight:600;margin-bottom:0}
+@media print{.qcm-encore{display:none}}
+</style></head><body class="crit-A sommaire-page"><header class="entete"><div class="haut"><span><a href="../index.html">← Design PEI 5 · Unités 1 et 2</a></span><span>Préparation formative</span></div><p class="code">16 activités · 10 à 15 min chacune</p><h1>Les 16 tâches du cycle de design</h1><p class="desc">Une page par tâche, de A1 à D4. Chaque page t’aide à comprendre la tâche, puis à la faire sur ton projet et à la noter dans ton Word.</p><label class="choix-projet">Mon projet : <select id="projet"><option value="">(choisis ton projet)</option><option value="lampe">1. Lampe sonore : mesurer et afficher (barre de LED, Arduino / ESP32)</option><option value="detecteur">2. Détecteur : détecter et commander (relais, temporisation, Arduino / ESP32)</option><option value="jeu">3. Jeu de plateforme sur le tri des déchets (PyGame)</option><option value="repar">4. Répar’Lomé, annuaire de réparateurs (Thunkable ; Supabase aux niveaux 2 et 3)</option></select></label></header><main><section id="mode"><h2>Comment utiliser une page</h2><p>Chaque page se fait en <strong>cinq temps</strong>, dans l’ordre :</p><ol><li><strong>Consigne</strong> : ce que la tâche demande, et ta reformulation avec tes mots.</li><li><strong>Exemple réel</strong> : une personne de Lomé qui fait déjà ce que la tâche demande. Il sert à comprendre, tu ne le refais pas.</li><li><strong>Trier et vérifier</strong> : un petit exercice pour reconnaître ce qui est attendu, puis 5 questions pour vérifier que tu as compris ce que la tâche demande.</li><li><strong>Appliquer</strong> : tu fais la tâche sur ton projet, avec le niveau de guidage que tu choisis (1 : modèle à trous, 2 : phrases de départ, 3 : seul avec une liste de contrôle). Trois coups de pouce sont repliés en dessous ; un exemple complet du projet témoin est disponible.</li><li><strong>Récolter</strong> : tu t’auto-évalues avec le descripteur 7-8 et tu copies tout dans ton Word.</li></ol><p>Chaque page se termine par le <strong>lien avec la sommative</strong> : ce que tu devras savoir refaire seul(e), sur un autre sujet.</p><p class="petit">Tes réponses restent dans ce navigateur, sur cet ordinateur. Elles ne partent pas sur Internet. Pense à les copier dans ton Word (bouton « Copier tout pour mon Word ») avant de changer d’ordinateur.</p></section><section id="glossaire"><h2>Les termes de commande</h2><p>Dans les consignes et à la sommative, chaque tâche commence par un <strong>terme de commande</strong>, comme dans les épreuves de l’IB. Il dit exactement ce qu’on attend de vous.</p><dl class="glossaire"><dt>Analysez</dt><dd>Décomposez afin de faire ressortir les éléments essentiels ou la structure ; identifiez les parties et les relations entre elles, puis interprétez.</dd><dt>Concevez</dt><dd>Produisez un plan, une simulation ou un modèle.</dd><dt>Construisez</dt><dd>Présentez des informations sous une forme logique ou schématique.</dd><dt>Créez</dt><dd>Donnez naissance à une solution à partir d’un plan, en lui donnant une forme concrète.</dd><dt>Décrivez</dt><dd>Donnez un compte rendu détaillé.</dd><dt>Démontrez</dt><dd>Rendez clair au moyen d’un raisonnement ou de preuves, en illustrant par des exemples ou des applications pratiques.</dd><dt>Élaborez</dt><dd>Développez progressivement une idée ou un produit, en le précisant et en le complétant.</dd><dt>Évaluez</dt><dd>Faites une appréciation en pesant les points forts et les limites.</dd><dt>Expliquez</dt><dd>Donnez un compte rendu détaillé, en incluant les raisons ou les causes.</dd><dt>Hiérarchisez</dt><dd>Classez par ordre d’importance ou d’urgence.</dd><dt>Identifiez</dt><dd>Reconnaissez et énoncez brièvement un fait ou une caractéristique distinctive.</dd><dt>Justifiez</dt><dd>Donnez des raisons valables ou des preuves pour étayer une réponse ou une conclusion.</dd><dt>Présentez</dt><dd>Proposez pour l’examen, la discussion ou la considération.</dd><dt>Résumez</dt><dd>Exposez brièvement l’essentiel, sans les détails.</dd></dl></section><section class="sommaire"><h2>Critère A : Recherche et analyse</h2><ol><li><span class="num">A1</span><a href="A1.html">Expliquer et justifier le besoin</a></li><li><span class="num">A2</span><a href="A2.html">Identifier et hiérarchiser la recherche</a></li><li><span class="num">A3</span><a href="A3.html">Analyser des produits existants</a></li><li><span class="num">A4</span><a href="A4.html">Rédiger le cahier des charges initial</a></li></ol></section><section class="sommaire"><h2>Critère B : Développement des idées</h2><ol><li><span class="num">B1</span><a href="B1.html">Rédiger les spécifications</a></li><li><span class="num">B2</span><a href="B2.html">Développer des idées de conception</a></li><li><span class="num">B3</span><a href="B3.html">Présenter et justifier la conception choisie</a></li><li><span class="num">B4</span><a href="B4.html">Réaliser les dessins de planification et lister les besoins</a></li></ol></section><section class="sommaire"><h2>Critère C : Création de la solution</h2><ol><li><span class="num">C1</span><a href="C1.html">Construire un plan logique</a></li><li><span class="num">C2</span><a href="C2.html">Démontrer des compétences techniques</a></li><li><span class="num">C3</span><a href="C3.html">Suivre le plan pour créer la solution</a></li><li><span class="num">C4</span><a href="C4.html">Justifier les changements</a></li></ol><p class="petit">En C, un produit de niveau 1 bien documenté suffit pour passer à D. Si tu vas vite, monte librement au niveau 2 ou 3.</p></section><section class="sommaire"><h2>Critère D : Évaluation</h2><ol><li><span class="num">D1</span><a href="D1.html">Concevoir des méthodes de test</a></li><li><span class="num">D2</span><a href="D2.html">Évaluer le succès de la solution</a></li><li><span class="num">D3</span><a href="D3.html">Expliquer comment améliorer la solution</a></li><li><span class="num">D4</span><a href="D4.html">Expliquer l’impact de la solution</a></li></ol></section><section class="sommative"><h2>Rappels</h2><p><strong>Sécurité :</strong> très basse tension uniquement (5 V maximum). Jamais de fil relié au secteur.</p><p><strong>Énoncé de recherche :</strong> la technologie peut avoir un impact positif sur l’environnement. <strong>Fil rouge :</strong> le sac en coton, son cycle de vie et son usage réel.</p><p><strong>Après les 16 tâches :</strong> l’exercice de transfert sans aide (A1, B3, C4, D2) et la section Sources de ton Word.</p></section></main><footer>Design PEI 5 · Unités 1 et 2</footer><script>(function(){var s=document.getElementById("projet");try{var v=localStorage.getItem("pei5-projet");if(v){s.value=v;}}catch(x){}s.addEventListener("change",function(){try{localStorage.setItem("pei5-projet",s.value);}catch(x){}});})();</script></body></html>

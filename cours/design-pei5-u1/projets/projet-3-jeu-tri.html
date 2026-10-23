@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Projet 3 · Jeu de plateforme sur le tri des déchets</title>
+</head>
+<body>
+<style>
+/* Mise en page façon Distill : colonne de lecture de 40rem, sommaire collant à gauche,
+   notes dans la marge de droite, figures plus larges que le texte, annexes sur fond gris. */
+:root {
+  --papier: #ffffff;
+  --encre: rgba(0, 0, 0, .84);
+  --gris: rgba(0, 0, 0, .56);
+  --filet: rgba(0, 0, 0, .12);
+  --lien: #2d4f7f;
+  --code-fond: #f7f7f5;
+  --appendice: #f6f6f4;
+  /* pastels fonctionnels : une couleur = un rôle */
+  --regle: #eef3fa;
+  --fictif: #faf5ea;
+  --eval: #f4effa;
+  --eval-trait: #c5b3dd;
+  /* une couleur par critère, comme dans les pages A1-D4 */
+  --crit-a: #9ab7dd;
+  --crit-b: #a8cfae;
+  --crit-c: #e6bf98;
+  --crit-d: #c5b3dd;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, Arial, sans-serif;
+  --mono: Menlo, Consolas, "Liberation Mono", "Courier New", monospace;
+  color-scheme: light;
+}
+html { background: var(--papier); scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--papier); color: var(--encre);
+  font-family: var(--sans); font-size: 18px; line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 0;
+}
+a { color: var(--lien); text-decoration: none; border-bottom: 1px solid var(--filet); }
+a:hover { border-bottom-color: var(--lien); }
+a:focus-visible { outline: 2px solid var(--lien); outline-offset: 2px; }
+p { margin: 0 0 1em; hyphens: auto; -webkit-hyphens: auto; }
+code { font-family: var(--mono); font-size: .86em; background: var(--code-fond); padding: 0 .2em; border-radius: 3px; }
+em { font-style: italic; }
+.depart { font-style: italic; color: var(--gris); }
+.sc { font-weight: 600; font-size: .78em; text-transform: uppercase; letter-spacing: .06em; color: var(--gris); margin-right: .3em; }
+.sep { padding: 0 .3em; }
+
+/* ---------- grille ---------- */
+.page { max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: 210px minmax(0, 40rem) minmax(0, 1fr); column-gap: 44px; }
+.page > .tete, .page > .corps { grid-column: 2; }
+.page > .toc { grid-column: 1; grid-row: 2; }
+.page > .corps { grid-row: 2; min-width: 0; }
+
+/* ---------- en-tête ---------- */
+.tete { padding-top: 64px; }
+.surtitre { font-size: .72em; text-transform: uppercase; letter-spacing: .08em; color: var(--gris); margin: 0 0 10px; }
+h1 { font-size: 2.6em; line-height: 1.1; font-weight: 700; letter-spacing: -.015em; margin: 0 0 16px; text-wrap: balance; }
+.chapeau { font-size: 1.2em; line-height: 1.5; color: rgba(0, 0, 0, .68); margin: 0 0 28px; text-wrap: pretty; }
+.heros { margin: 0 -120px 8px 0; }
+.heros svg { display: block; width: 100%; height: auto; }
+.byline { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px 20px; border-top: 1px solid var(--filet); border-bottom: 1px solid var(--filet); padding: 14px 0; margin: 24px 0 32px; font-size: .74em; line-height: 1.45; }
+.byline h5 { margin: 0 0 4px; font-size: .9em; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--gris); }
+.byline p { margin: 0; }
+.resume { font-size: .95em; }
+
+/* ---------- sommaire ---------- */
+.toc { position: sticky; top: calc(24px + env(safe-area-inset-top, 0px)); align-self: start; max-height: calc(100vh - 48px); overflow-y: auto; font-size: .72em; line-height: 1.5; padding-top: 28px; }
+.toc-titre { font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--gris); margin: 0 0 8px; }
+.toc ol { list-style: none; margin: 0; padding: 0; }
+.toc > ol > li { margin-top: 10px; font-weight: 600; }
+.toc ol ol li { font-weight: 400; margin-top: 2px; }
+.toc a { color: var(--encre); border: none; display: flex; gap: .5em; }
+.toc a:hover { color: var(--lien); }
+.toc .code, .toc .num-sec { color: var(--gris); min-width: 1.6em; font-variant-numeric: tabular-nums; }
+
+/* ---------- titres ---------- */
+h2 { font-size: 1.55em; line-height: 1.25; font-weight: 700; margin: 72px 0 18px; padding-bottom: 10px; border-bottom: 1px solid var(--filet); text-wrap: balance; }
+h2 .num-sec { color: var(--gris); font-weight: 400; margin-right: .5em; }
+h2.crit { border-bottom: 3px solid var(--c); }
+.kicker { display: block; font-size: .5em; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--gris); margin-bottom: 4px; }
+h3 { font-size: 1.2em; font-weight: 700; margin: 48px 0 8px; line-height: 1.3; text-wrap: balance; }
+h3 .code { display: inline-block; min-width: 2.2em; padding: 0 .35em; margin-right: .5em; border-radius: 3px; background: var(--c, #eee); font-size: .82em; text-align: center; font-variant-numeric: tabular-nums; }
+h4 { font-size: .74em; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; color: var(--gris); margin: 26px 0 6px; }
+.desc { font-size: .92em; color: rgba(0, 0, 0, .7); }
+section[id] { scroll-margin-top: 20px; }
+
+/* ---------- encadrés pastel ---------- */
+.regle { background: var(--regle); padding: 14px 18px; font-size: .92em; margin: 0 0 20px; }
+.avert { background: var(--fictif); padding: 14px 18px; font-size: .9em; }
+.eval { background: var(--eval); border-left: 3px solid var(--eval-trait); padding: 14px 18px 6px; margin: 22px 0 0; font-size: .88em; line-height: 1.6; }
+.eval p { margin: .35em 0 .7em; }
+.eval-titre { font-weight: 600; text-transform: uppercase; letter-spacing: .06em; font-size: .85em; color: var(--gris); }
+.eval ul { list-style: none; padding: 0; margin: .3em 0 .6em; }
+.eval li { padding-left: 1.6em; text-indent: -1.6em; }
+.coche { display: inline-block; width: 1.6em; text-indent: 0; }
+
+/* ---------- notes dans la marge ---------- */
+.marge { float: right; clear: right; width: 230px; margin: 4px -274px 12px 0; font-size: .7em; line-height: 1.5; color: var(--gris); }
+.marge::before { content: ""; display: block; width: 24px; border-top: 1px solid var(--filet); margin-bottom: 6px; }
+
+/* ---------- listes ---------- */
+.liste { margin: .2em 0 1em; padding-left: 1.4em; }
+.liste li { margin-bottom: .3em; }
+.etapes { padding-left: 1.8em; font-size: .95em; }
+.etapes li { margin-bottom: .4em; }
+
+/* ---------- tableaux ---------- */
+.tab { overflow-x: auto; margin: 22px -120px 22px 0; }
+table { border-collapse: collapse; width: 100%; font-size: .74em; line-height: 1.45; }
+caption { caption-side: top; text-align: left; font-size: 1.05em; color: var(--gris); padding-bottom: 8px; }
+th { text-align: left; font-weight: 600; border-bottom: 1px solid rgba(0, 0, 0, .3); padding: 6px 8px; vertical-align: bottom; }
+td { padding: 6px 8px; vertical-align: top; border-bottom: 1px solid var(--filet); hyphens: auto; -webkit-hyphens: auto; }
+td.num { text-align: center; font-variant-numeric: tabular-nums; }
+td.crit { font-weight: 600; white-space: nowrap; }
+.lbl { font-weight: 600; color: var(--encre); }
+
+/* ---------- figures ---------- */
+figure { margin: 28px -120px 28px 0; }
+figure img { display: block; max-width: 100%; height: auto; margin: 0 auto; }
+figure svg { display: block; width: 100%; height: auto; }
+figcaption { font-size: .74em; line-height: 1.5; color: var(--gris); margin-top: 10px; max-width: 40rem; }
+figcaption .lbl { color: var(--encre); }
+
+/* ---------- code ---------- */
+pre { font-family: var(--mono); font-size: .72em; line-height: 1.5; background: var(--code-fond); border: 1px solid var(--filet); border-radius: 4px; padding: 12px 14px; overflow-x: auto; white-space: pre; margin: 8px 0 18px; }
+pre code { background: none; padding: 0; font-size: 1em; }
+.console { background: #22262b; color: #e9ecef; border-color: #22262b; }
+
+/* ---------- annexes, comme le pied d'article Distill ---------- */
+.appendice { background: var(--appendice); border-top: 1px solid var(--filet); margin: 80px calc(-1 * max(16px, env(safe-area-inset-left, 0px))) 0; padding: 24px max(16px, env(safe-area-inset-left, 0px)) 64px; font-size: .86em; color: rgba(0, 0, 0, .72); }
+.appendice-int { max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: 210px minmax(0, 40rem) minmax(0, 1fr); column-gap: 44px; }
+.appendice-int > * { grid-column: 2; min-width: 0; }
+.appendice h2 { font-size: 1.1em; margin: 40px 0 12px; border-bottom: 1px solid var(--filet); }
+.appendice h4 { margin-top: 28px; }
+.appendice figure, .appendice .tab { margin-right: -120px; }
+.refs { padding-left: 2.2em; }
+.refs li { margin-bottom: .45em; overflow-wrap: anywhere; }
+.refs li::marker { content: "[" counter(list-item) "]  "; color: var(--gris); }
+.lecture { font-size: .9em; color: var(--gris); }
+
+/* ---------- écrans moyens : sommaire en haut, notes dans le texte ---------- */
+@media (max-width: 1180px) {
+  .page, .appendice-int { grid-template-columns: minmax(0, 40rem); justify-content: center; }
+  .page > .tete, .page > .corps, .page > .toc, .appendice-int > * { grid-column: 1; }
+  .page > .toc { grid-row: 2; position: static; max-height: none; overflow: visible; border-bottom: 1px solid var(--filet); padding: 0 0 20px; }
+  .page > .corps { grid-row: 3; }
+  .heros, figure, .tab, .appendice figure, .appendice .tab { margin-right: 0; }
+  .marge { float: none; width: auto; margin: 0 0 14px; padding-left: 12px; border-left: 2px solid var(--filet); }
+  .marge::before { display: none; }
+}
+@media (max-width: 600px) {
+  body { font-size: 16.5px; }
+  .tete { padding-top: 32px; }
+  h1 { font-size: 2em; }
+  .chapeau { font-size: 1.08em; }
+  .byline { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  h2 { margin-top: 52px; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+.niv td:first-child { white-space: nowrap; font-weight: 600; }
+.fonctions { margin: 0 0 1em; }
+.pistes-lien { font-size: .85em; color: var(--gris); margin: -.4em 0 .8em; }
+.enonce { border-left: 3px solid var(--filet); padding: 2px 0 2px 16px; margin: 0 0 1em; }
+.cartes { list-style: none; padding: 0; margin: 0; }
+.cartes li { border-top: 1px solid var(--filet); padding: 14px 0; }
+.cartes li:last-child { border-bottom: 1px solid var(--filet); }
+.cartes .sc { display: block; }
+@media print {
+  .toc { display: none; }
+  .page { display: block; }
+  a { border-bottom: none; color: inherit; }
+  section, .tab { break-inside: avoid; }
+}
+</style>
+<div class="page">
+<header class="tete">
+<p class="lecture"><a href="../index.html">← Le cours</a></p>
+<p class="surtitre">Design PEI 5 · Unités 1 et 2 · Projet de préparation n° 3</p>
+<h1>Jeu de plateforme sur le tri des déchets</h1>
+<p class="chapeau">Un jeu de plateforme écrit en Python avec PyGame, dans lequel le joueur dépose chaque déchet dans le bac qui lui correspond.</p>
+<div class="byline"><div><h5>Projet</h5><p>Programmer un jeu interactif</p></div><div><h5>Plateforme</h5><p>Python et PyGame</p></div><div><h5>Durée</h5><p>8 séances de 2 × 45 min</p></div><div><h5>Sécurité</h5><p>5 V au maximum</p></div></div>
+<div class="resume"><p><span class="sc">Énoncé de recherche</span> La technologie peut avoir un impact positif sur l’environnement. <span class="sc">Concept clé</span> Développement. <span class="sc">Concept connexe</span> Durabilité. <span class="sc">Contexte mondial</span> Mondialisation et durabilité. <span class="sc">Fil rouge</span> Le sac en coton.</p><p class="avert"><strong>Projet de préparation.</strong> Ce projet sert à apprendre les seize tâches du cycle de design, de A1 à D4, afin de pouvoir les refaire sans aide lors de l’évaluation sommative, qui portera sur un autre sujet. Le projet est défini par le produit à réaliser ; la tâche A1 consiste à établir à qui ce produit est utile et pourquoi.</p></div>
+</header>
+<nav class="toc" aria-label="Sommaire"><p class="toc-titre">Sommaire</p><ol><li><a href="#enonce"><span class="num-sec">1</span>Énoncé du projet</a></li><li><a href="#niveaux"><span class="num-sec">2</span>Niveaux du produit</a></li><li><a href="#materiel"><span class="num-sec">3</span>Matériel et sécurité</a></li><li><a href="#calendrier"><span class="num-sec">4</span>Déroulement</a></li><li><a href="#taches"><span class="num-sec">5</span>Pistes, tâche par tâche</a><ol><li><a href="#crit-A"><span class="code">A</span>Recherche et analyse</a></li><li><a href="#crit-B"><span class="code">B</span>Développement des idées</a></li><li><a href="#crit-C"><span class="code">C</span>Création de la solution</a></li><li><a href="#crit-D"><span class="code">D</span>Évaluation</a></li></ol></li><li><a href="#bilan"><span class="num-sec">6</span>Bilan énergétique</a></li><li><a href="#trace"><span class="num-sec">7</span>Trace et sommative</a></li></ol></nav>
+<main class="corps">
+<h2 id="enonce"><span class="num-sec">1</span>Énoncé du projet</h2><p class="enonce"><strong>Concevez</strong> et <strong>réalisez</strong> un jeu de plateforme en Python, avec la bibliothèque PyGame, dans lequel le joueur trie des déchets en les associant au bon bac. <strong>Évaluez</strong> le jeu auprès de joueurs du public cible et <strong>expliquez</strong> son impact, bilan énergétique compris.</p><p>Fonctions de base imposées. Le produit devra :</p><ul class="liste"><li>afficher une fenêtre de jeu et un personnage commandé au clavier ;</li><li>faire apparaître des déchets de plusieurs types ;</li><li>reconnaître un tri correct et un tri incorrect ;</li><li>compter un score et terminer la partie par un écran de fin.</li></ul><p>Ces fonctions et la plateforme sont fixées par l’unité. En A, elles sont précisées (pour qui, où, avec quelles valeurs) ; en B, plusieurs façons de les réaliser sont recherchées.</p><h3>Capacités visées</h3><p>À l’issue du projet, l’élève sait :</p><ul class="liste"><li>structurer une boucle de jeu (lire les touches, mettre à jour, dessiner) ;</li><li>gérer les entrées au clavier et les déplacements ;</li><li>détecter des collisions entre objets ;</li><li>gérer un état de jeu (score, vies, temps, écrans) ;</li><li>conduire un test auprès d’utilisateurs.</li></ul><h3>Lien avec le fil rouge</h3><p>Un sac en coton n’est plus avantageux pour le climat qu’un sac plastique à usage unique qu’après environ 131 utilisations [1]. Un produit dit « durable » ne l’est donc que s’il est réellement utilisé, et suffisamment longtemps pour compenser sa fabrication. Un jeu de sensibilisation n’a d’effet que s’il modifie le geste de tri après la partie, et de façon durable. Un mini-test de tri passé avant et après la partie permet de le vérifier en D.</p><h2 id="niveaux"><span class="num-sec">2</span>Niveaux du produit</h2><p class="regle">Les niveaux du produit (N1, N2, N3) décrivent ce que le produit réalise. Ils sont distincts des trois niveaux de guidage proposés dans chaque page d’activité. <strong>Un produit de niveau 1, réalisé et documenté, suffit pour passer au critère D.</strong> Chaque niveau reprend le précédent et le complète. D’autres fonctions de difficulté comparable peuvent être retenues avec l’accord de l’enseignant(e).</p><div class="tab"><table class="niv"><caption><span class="lbl">Tableau 1.</span> Niveaux du produit et preuves attendues.</caption><thead><tr><th>Niveau</th><th>Ce que réalise le produit</th><th>Preuve attendue dans la trace</th></tr></thead><tbody><tr><td>N1</td><td>Un personnage qui se déplace, un déchet à la fois, deux bacs, un score ; la partie se termine par un écran de fin.</td><td>Captures de l’écran de jeu et de l’écran de fin ; extrait de code commenté.</td></tr><tr><td>N2</td><td>Plateformes et sauts (gravité) ; au moins quatre types de déchets et autant de bacs ; vies ou temps limité ; écran d’accueil qui présente la règle.</td><td>Courte vidéo d’écran ; extraits de code (saut, collisions).</td></tr><tr><td>N3</td><td>Difficulté progressive sur plusieurs niveaux ; déchets propres au contexte local (sachets d’eau, emballages du marché) ; meilleur score enregistré dans un fichier ; mini-test de tri avant et après la partie, réponses enregistrées.</td><td>Fichier des scores et des réponses ; captures des niveaux.</td></tr></tbody></table></div><h2 id="materiel"><span class="num-sec">3</span>Matériel et sécurité</h2><h3>Matériel disponible</h3><ul class="liste"><li>ordinateur avec Python 3 et PyGame (versions relevées dans la trace) ;</li><li>éditeur Thonny ou VS Code ;</li><li>images et sons créés par vous-même, ou libres de droits avec leur source et leur licence citées (par exemple Kenney ou OpenGameArt).</li></ul><p><span class="sc">Logiciels.</span> Python 3, PyGame, Thonny ou VS Code ; papier ou Figma pour les maquettes d’écran.</p><p class="lecture">Cette liste indique ce qui est disponible au laboratoire. Le choix des composants se justifie en B ; la liste des besoins se rédige en B4.</p><h3>Règles de sécurité</h3><ul class="liste"><li>Très basse tension uniquement : 5 V au maximum. Aucun branchement au secteur.</li><li>La source et la licence de chaque image et de chaque son sont citées dans la section Sources de la trace.</li><li>Le mini-test de niveau 3 n’enregistre aucun nom de joueur.</li></ul><h2 id="calendrier"><span class="num-sec">4</span>Déroulement</h2><p>Le projet se déroule sur quatre semaines, à raison de deux séances de 2 × 45 min par semaine. Chaque tâche commence par sa page d’activité (10 à 15 min) ; le reste de la séance est consacré à la production dans la trace. Le calendrier ci-dessous est indicatif.</p><div class="tab"><table><caption><span class="lbl">Tableau 2.</span> Déroulement indicatif sur huit séances.</caption><thead><tr><th>Séance</th><th>Tâches</th><th>Production attendue en fin de séance</th></tr></thead><tbody><tr><td class="num">1</td><td><a href="../taches/A1.html">A1</a>, <a href="../taches/A2.html">A2</a></td><td>Besoin justifié par une preuve ; questions de recherche classées.</td></tr><tr><td class="num">2</td><td><a href="../taches/A3.html">A3</a>, <a href="../taches/A4.html">A4</a></td><td>Analyse de trois produits existants ; cahier des charges initial.</td></tr><tr><td class="num">3</td><td><a href="../taches/B1.html">B1</a>, <a href="../taches/B2.html">B2</a></td><td>Spécifications mesurables ; au moins trois idées annotées.</td></tr><tr><td class="num">4</td><td><a href="../taches/B3.html">B3</a>, <a href="../taches/B4.html">B4</a></td><td>Choix justifié ; schémas, algorigramme ou maquettes ; liste des besoins.</td></tr><tr><td class="num">5</td><td><a href="../taches/C1.html">C1</a>, <a href="../taches/C2.html">C2</a></td><td>Plan de réalisation ; premières preuves de savoir-faire.</td></tr><tr><td class="num">6</td><td><a href="../taches/C2.html">C2</a>, <a href="../taches/C3.html">C3</a></td><td>Réalisation ; produit de niveau 1 fonctionnel et documenté.</td></tr><tr><td class="num">7</td><td><a href="../taches/C3.html">C3</a>, <a href="../taches/C4.html">C4</a>, <a href="../taches/D1.html">D1</a></td><td>Finitions ou niveau supérieur ; changements justifiés ; tests préparés et menés.</td></tr><tr><td class="num">8</td><td><a href="../taches/D2.html">D2</a>, <a href="../taches/D3.html">D3</a>, <a href="../taches/D4.html">D4</a></td><td>Évaluation, améliorations, impact et bilan énergétique ; exercice de transfert sans aide.</td></tr></tbody></table></div><h2 id="taches"><span class="num-sec">5</span>Pistes, tâche par tâche</h2><p>Pour chaque tâche : l’énoncé au style des épreuves de l’IB, puis les pistes propres à ce projet. La page d’activité de la tâche donne la méthode, un exemple réel, les modèles à compléter et le descripteur 7-8. Un exemple complet figure dans le projet témoin <a href="../temoins/goutte-a-goutte.html">Goutte à goutte (jeu PyGame)</a>, qui porte sur un autre sujet : il se lit pour comprendre, il ne se recopie pas.</p><h2 id="crit-A" class="crit" style="--c:var(--crit-a)"><span class="kicker">Critère A</span>Recherche et analyse</h2><p class="regle">En A, on détermine avec précision <strong>ce que</strong> le produit devra faire, pour qui et sur quelle plateforme. On ne cherche pas encore <strong>comment</strong> le réaliser.</p><section id="A1" style="--c:var(--crit-a)"><h3><span class="code">A1</span>Expliquer et justifier le besoin</h3><p class="enonce"><strong>Expliquez</strong> et <strong>justifiez</strong> la nécessité d’une solution à un problème pour un client ou un public cible précis.</p><p class="pistes-lien"><a href="../taches/A1.html">Page d’activité A1</a></p><p>Identifiez le public cible (âge, classe) et justifiez l’intérêt d’un jeu pour apprendre à trier, par une preuve recueillie vous-même : relevé des erreurs de tri dans une poubelle de la cour, ou court questionnaire de tri auprès de cinq élèves.</p></section><section id="A2" style="--c:var(--crit-a)"><h3><span class="code">A2</span>Identifier et hiérarchiser la recherche</h3><p class="enonce"><strong>Identifiez</strong> et <strong>hiérarchisez</strong> la recherche primaire et secondaire principale nécessaire pour élaborer une solution au problème.</p><p class="pistes-lien"><a href="../taches/A2.html">Page d’activité A2</a></p><p>Les questions portent sur ce que le jeu devra faire : erreurs de tri les plus fréquentes, déchets et bacs à représenter, jeux de plateforme connus du public, durée souhaitable d’une partie, ordinateurs sur lesquels le jeu sera utilisé. La programmation des sauts et des collisions relève de B.</p></section><section id="A3" style="--c:var(--crit-a)"><h3><span class="code">A3</span>Analyser des produits existants</h3><p class="enonce"><strong>Analysez</strong> un éventail de produits existants qui inspirent une solution au problème.</p><p class="pistes-lien"><a href="../taches/A3.html">Page d’activité A3</a></p><p>Produits à analyser : une affiche de tri, un jeu de cartes ou de société sur le tri, un jeu en ligne de tri des déchets, un jeu de plateforme connu (analysé pour sa jouabilité, non pour son thème). Formulez vos conclusions sous la forme « la solution devra… ».</p></section><section id="A4" style="--c:var(--crit-a)"><h3><span class="code">A4</span>Rédiger le cahier des charges initial</h3><p class="enonce"><strong>Élaborez</strong> un cahier des charges détaillé qui <strong>résume</strong> l’analyse des recherches pertinentes.</p><p class="pistes-lien"><a href="../taches/A4.html">Page d’activité A4</a></p><p>Le cahier des charges fixe : le public cible ; les déchets et les bacs ; la règle de base du jeu ; la durée d’une partie ; les commandes au clavier ; le message de sensibilisation ; la plateforme (Python et PyGame sur les ordinateurs de l’établissement).</p></section><h2 id="crit-B" class="crit" style="--c:var(--crit-b)"><span class="kicker">Critère B</span>Développement des idées</h2><p class="regle">En B, on cherche <strong>comment</strong> réaliser le produit défini en A et on développe plusieurs idées avant d’en choisir une.</p><section id="B1" style="--c:var(--crit-b)"><h3><span class="code">B1</span>Rédiger les spécifications</h3><p class="enonce"><strong>Élaborez</strong> des spécifications de conception qui <strong>décrivent</strong> clairement les critères de réussite pour la conception d’une solution.</p><p class="pistes-lien"><a href="../taches/B1.html">Page d’activité B1</a></p><p>Exemples de spécifications mesurables : une partie dure entre 2 et 4 minutes ; quatre joueurs sur cinq comprennent la règle sans aide ; le taux de bonnes réponses au mini-test augmente après la partie ; le jeu reste fluide (au moins 30 images par seconde) sur l’ordinateur le moins puissant de la salle.</p></section><section id="B2" style="--c:var(--crit-b)"><h3><span class="code">B2</span>Développer des idées de conception</h3><p class="enonce"><strong>Élaborez</strong> un éventail d’idées de conception réalisables qui peuvent être correctement interprétées par d’autres.</p><p class="pistes-lien"><a href="../taches/B2.html">Page d’activité B2</a></p><p>Proposez au moins trois idées qui diffèrent réellement, dans le cadre fixé en A : façon de trier (attraper les déchets, sauter sur le bon bac, déplacer le déchet), décor (cour de l’établissement, plage, marché), récompenses et sanctions. Chaque idée est présentée par une maquette d’écran annotée.</p></section><section id="B3" style="--c:var(--crit-b)"><h3><span class="code">B3</span>Présenter et justifier la conception choisie</h3><p class="enonce"><strong>Présentez</strong> la conception choisie et <strong>justifiez</strong> pleinement votre choix en vous appuyant sur les spécifications de conception.</p><p class="pistes-lien"><a href="../taches/B3.html">Page d’activité B3</a></p><p>Comparez les idées au regard des spécifications. Tenez compte de la faisabilité : temps nécessaire pour dessiner les images et programmer les sauts. Indiquez le niveau de produit visé.</p></section><section id="B4" style="--c:var(--crit-b)"><h3><span class="code">B4</span>Réaliser les dessins de planification et lister les besoins</h3><p class="enonce"><strong>Élaborez</strong> des dessins ou diagrammes de planification précis et détaillés, et <strong>décrivez</strong> les exigences nécessaires à la réalisation de la solution choisie.</p><p class="pistes-lien"><a href="../taches/B4.html">Page d’activité B4</a></p><p>Produisez : les maquettes des écrans (accueil, jeu, fin) ; l’algorigramme de la boucle de jeu (lire les touches → déplacer → tester les collisions → mettre à jour le score → dessiner) ; la liste des images, des sons et des versions de Python et de PyGame.</p></section><h2 id="crit-C" class="crit" style="--c:var(--crit-c)"><span class="kicker">Critère C</span>Création de la solution</h2><p class="regle">En C, un produit de niveau 1 réalisé et documenté suffit pour passer au critère D. Les niveaux 2 et 3 sont facultatifs.</p><section id="C1" style="--c:var(--crit-c)"><h3><span class="code">C1</span>Construire un plan logique</h3><p class="enonce"><strong>Construisez</strong> un plan logique qui <strong>décrit</strong> l’utilisation efficace du temps et des ressources, suffisamment détaillé pour que d’autres puissent le suivre afin de créer la solution.</p><p class="pistes-lien"><a href="../taches/C1.html">Page d’activité C1</a></p><p>Ordonnez les étapes de façon à tester chaque partie séparément : la fenêtre, le personnage qui se déplace, un déchet qui apparaît, la collision avec un bac, le score, l’écran de fin. Pour chaque étape, indiquez la séance, la durée et le niveau de produit concerné.</p></section><section id="C2" style="--c:var(--crit-c)"><h3><span class="code">C2</span>Démontrer des compétences techniques</h3><p class="enonce"><strong>Démontrez</strong> d’excellentes compétences techniques lors de la création de la solution.</p><p class="pistes-lien"><a href="../taches/C2.html">Page d’activité C2</a></p><p>Apportez une preuve pour chaque savoir-faire : affichage de la fenêtre et des images (capture), déplacement au clavier, détection des collisions, calcul du score (extraits de code commentés), correction d’une erreur (code avant et après).</p></section><section id="C3" style="--c:var(--crit-c)"><h3><span class="code">C3</span>Suivre le plan pour créer la solution</h3><p class="enonce">Suivez le plan pour <strong>créer</strong> une solution qui fonctionne comme prévu, et <strong>présentez</strong>-la de manière appropriée.</p><p class="pistes-lien"><a href="../taches/C3.html">Page d’activité C3</a></p><p>Preuve finale : captures de l’écran d’accueil, d’une partie en cours et de l’écran de fin avec le score, ou courte vidéo d’écran. Présentation : textes relus, règle affichée dans le jeu.</p></section><section id="C4" style="--c:var(--crit-c)"><h3><span class="code">C4</span>Justifier les changements</h3><p class="enonce"><strong>Justifiez</strong> pleinement les changements apportés à la conception choisie et au plan lors de la création de la solution.</p><p class="pistes-lien"><a href="../taches/C4.html">Page d’activité C4</a></p><p>Changements fréquents : vitesse ou difficulté réglée après un test, commandes modifiées, écran d’explication ajouté, déchets ajoutés ou retirés. Chaque changement est justifié par un test ou par une erreur relevée.</p></section><h2 id="crit-D" class="crit" style="--c:var(--crit-d)"><span class="kicker">Critère D</span>Évaluation</h2><p class="regle">En D, chaque jugement s’appuie sur des données issues des tests. Le bilan énergétique de D4 est obligatoire.</p><section id="D1" style="--c:var(--crit-d)"><h3><span class="code">D1</span>Concevoir des méthodes de test</h3><p class="enonce"><strong>Concevez</strong> des méthodes de test détaillées et pertinentes, qui génèrent des données, pour mesurer le succès de la solution.</p><p class="pistes-lien"><a href="../taches/D1.html">Page d’activité D1</a></p><p>Prévoyez un test par spécification : cinq joueurs du public cible jouent sans aide (compréhension de la règle) ; durée d’une partie au chronomètre ; mini-test de tri avant et après la partie ; erreurs de programme relevées sur dix parties ; fluidité mesurée.</p></section><section id="D2" style="--c:var(--crit-d)"><h3><span class="code">D2</span>Évaluer le succès de la solution</h3><p class="enonce"><strong>Évaluez</strong> de manière critique le succès de la solution par rapport aux spécifications de conception, à partir de tests pertinents du produit.</p><p class="pistes-lien"><a href="../taches/D2.html">Page d’activité D2</a></p><p>Les données proviennent des parties des testeurs (scores, durées, compréhension de la règle, mini-test). Précisez les limites des tests : nombre de testeurs, âge des testeurs par rapport au public cible.</p></section><section id="D3" style="--c:var(--crit-d)"><h3><span class="code">D3</span>Expliquer comment améliorer la solution</h3><p class="enonce"><strong>Expliquez</strong> comment la solution pourrait être améliorée.</p><p class="pistes-lien"><a href="../taches/D3.html">Page d’activité D3</a></p><p>Améliorations à relier aux résultats : écran d’explication pour les joueurs qui n’ont pas compris la règle, difficulté progressive, déchets propres au contexte local, message de sensibilisation en fin de partie.</p></section><section id="D4" style="--c:var(--crit-d)"><h3><span class="code">D4</span>Expliquer l’impact de la solution</h3><p class="enonce"><strong>Expliquez</strong> l’impact de la solution sur le client ou le public cible.</p><p class="pistes-lien"><a href="../taches/D4.html">Page d’activité D4</a></p><p>Impact sur le public : les joueurs trient-ils mieux après la partie (mini-test) ? Environnement : moins de déchets mal triés, mais l’ordinateur et l’électricité ont un coût. <strong>Bilan énergétique obligatoire</strong> : énergie consommée par l’ordinateur pendant une partie, multipliée par le nombre de parties prévues, mise en regard de l’effet mesuré.</p></section><h2 id="bilan"><span class="num-sec">6</span>Bilan énergétique (D4)</h2><p>Le bilan énergétique est obligatoire. Il se calcule avec la relation <em>E</em> = <em>P</em> × <em>t</em> : l’énergie <em>E</em> en wattheures (Wh) est égale à la puissance <em>P</em> en watts (W) multipliée par la durée <em>t</em> en heures (h). La puissance d’un appareil alimenté par USB se mesure avec un testeur USB (<em>P</em> = <em>U</em> × <em>I</em>).</p><div class="tab"><table><caption><span class="lbl">Tableau 3.</span> Gabarit du bilan énergétique. Les valeurs indiquées sont des ordres de grandeur, à remplacer par vos mesures ou par des valeurs sourcées.</caption><thead><tr><th>Élément</th><th>Ordre de grandeur</th><th>Durée à prendre en compte</th><th>Puissance mesurée (W)</th><th>Durée (h)</th><th>Énergie (Wh)</th></tr></thead><tbody><tr><td>Ordinateur portable pendant une partie</td><td>30 à 60 W</td><td>durée d’une partie</td><td></td><td></td><td></td></tr><tr><td>Écran externe éventuel</td><td>15 à 25 W</td><td>durée d’une partie</td><td></td><td></td><td></td></tr><tr><td><strong>Total par jour</strong></td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div><p>Quelle énergie représentent toutes les parties prévues pour votre public cible ? Combien de joueurs ont amélioré leur score au mini-test ? Le jeu est-il plus économe qu’une autre forme de sensibilisation (affiche imprimée, intervention orale) ? Justifiez avec vos chiffres.</p><p>Pour terminer, reliez le bilan au fil rouge : comme pour le sac en coton, combien de temps d’utilisation faut-il pour que le produit compense l’énergie et les matériaux de sa fabrication ? Un bilan défavorable est un résultat recevable, à condition d’être chiffré et expliqué.</p><h2 id="trace"><span class="num-sec">7</span>Trace et lien avec la sommative</h2><p>Toutes les productions figurent dans la trace Word, sous l’intitulé de chaque tâche. Pour chaque tâche, la trace comporte :</p><ul class="liste"><li>une reformulation de la tâche, rédigée par l’élève ;</li><li>la production, avec ses preuves (photographies, captures, extraits de code, mesures) ;</li><li>une auto-évaluation par rapport au descripteur 7-8.</li></ul><p>La trace se termine par un exercice de transfert réalisé sans aide (tâches A1, B3, C4 et D2, sur un sujet nouveau) et par la section Sources, qui recense toutes les sources utilisées, y compris les images, les sons et les bibliothèques de code.</p><p>Le code est écrit sans raccourcis, de façon lisible par un débutant : par exemple <code>total = total + 1</code> plutôt que <code>total += 1</code>. Les fonctions ne sont pas réduites pour autant.</p><p class="regle">Lors de l’évaluation sommative, le sujet sera différent et aucune piste ne sera fournie. Ce projet sert à acquérir la démarche : savoir ce qu’attend chaque tâche, quelles preuves la justifient et comment se situer par rapport au descripteur 7-8.</p><h3>Termes de commande employés</h3><dl><dt><strong>Analysez</strong></dt><dd>Décomposez afin de faire ressortir les éléments essentiels ou la structure ; identifiez les parties et les relations entre elles, puis interprétez.</dd><dt><strong>Concevez</strong></dt><dd>Produisez un plan, une simulation ou un modèle.</dd><dt><strong>Construisez</strong></dt><dd>Présentez des informations sous une forme logique ou schématique.</dd><dt><strong>Décrivez</strong></dt><dd>Donnez un compte rendu détaillé.</dd><dt><strong>Démontrez</strong></dt><dd>Rendez clair au moyen d’un raisonnement ou de preuves, en illustrant par des exemples ou des applications pratiques.</dd><dt><strong>Élaborez</strong></dt><dd>Développez progressivement une idée ou un produit, en le précisant et en le complétant.</dd><dt><strong>Évaluez</strong></dt><dd>Faites une appréciation en pesant les points forts et les limites.</dd><dt><strong>Expliquez</strong></dt><dd>Donnez un compte rendu détaillé, en incluant les raisons ou les causes.</dd><dt><strong>Hiérarchisez</strong></dt><dd>Classez par ordre d’importance ou d’urgence.</dd><dt><strong>Identifiez</strong></dt><dd>Reconnaissez et énoncez brièvement un fait ou une caractéristique distinctive.</dd><dt><strong>Justifiez</strong></dt><dd>Donnez des raisons valables ou des preuves pour étayer une réponse ou une conclusion.</dd><dt><strong>Présentez</strong></dt><dd>Proposez pour l’examen, la discussion ou la considération.</dd></dl></main>
+</div>
+<div class="appendice"><div class="appendice-int">
+<h2 id="refs" class="nonum">Références</h2><ol class="refs"><li>Environment Agency (Royaume-Uni). <em>Life cycle assessment of supermarket carrier bags: a review of the bags available in 2006</em>. Report SC030148. 2011.</li><li>PyGame. <em>Documentation officielle</em>. <a href="https://www.pygame.org/docs/">https://www.pygame.org/docs/</a></li><li>Python Software Foundation. <em>Documentation de Python 3</em>. <a href="https://docs.python.org/fr/3/">https://docs.python.org/fr/3/</a></li></ol></div></div>
+</body>
+</html>

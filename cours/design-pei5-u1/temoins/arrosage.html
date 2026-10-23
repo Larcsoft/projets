@@ -1,0 +1,813 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Arrosage automatique du jardin</title><link rel="stylesheet" href="../../../commun/distill.css"><link rel="stylesheet" href="../../../commun/site.css"></head><body><nav class="menu-site"><div class="menu-int"><a class="marque" href="../../../index.html">Cours de design</a><span><a href="../index.html">Le cours</a><a href="../projets/index.html">Les 4 projets</a><a href="../taches/index.html">Les 16 tâches</a><a href="../temoins/index.html" class="actif">Projets témoins</a><a href="../trace/index.html">Ma trace Word</a><a href="../qcm/index.html">QCM</a></span></div></nav><div class="page"><header class="tete"><p class="surtitre">Projet témoin · Électronique · Arduino ou ESP32</p><h1>Arrosage automatique du jardin</h1><p class="chapeau">Un capteur, un relais et une mini-pompe 5 V pour arroser seulement quand la terre en a besoin.</p><div class="byline"><div><h5>Cours</h5><p>Design PEI 5<br>Unités 1 et 2</p></div><div><h5>Auteur</h5><p>L’enseignant(e) de design</p></div><div><h5>Publié</h5><p>Octobre 2026</p></div><div><h5>Sécurité</h5><p>5 V au maximum</p></div></div></header><nav class="toc"><p class="toc-titre">Sommaire</p><ol><li><a href="#s1"><span class="num-sec">1</span>Le projet en bref</a></li><li><a href="#s2"><span class="num-sec">2</span>Les figures du projet</a></li><li><a href="#s3"><span class="num-sec">3</span>Trois versions du programme</a></li><li><a href="#s4"><span class="num-sec">4</span>Télécharger</a></li></ol></nav><main class="corps"><section><h2 id="s1"><span class="num-sec">1</span>Le projet en bref</h2><p>Arroser « à l’œil », c’est souvent trop ou trop peu. Le système mesure l’humidité du sol avec un capteur capacitif. Quand la terre est trop sèche, la carte ferme un <strong>relais 5 V</strong> qui alimente une <strong>mini-pompe 5 V</strong> ; elle s’arrête dès que la terre est assez humide.</p><p>La seule partie mécanique est le <strong>boîtier</strong> de la carte, conçu dans FreeCAD. Tout fonctionne en très basse tension (5 V).</p></section><div class="avert"><p><strong>Un exemple, pas un modèle à copier.</strong> Ce projet témoin a été rédigé par l’enseignant(e) pour montrer une trace de niveau 7-8. Il porte sur un autre sujet que le tien. Les personnes, les enquêtes et les tests avec des utilisateurs sont inventés pour l’exemple ; c’est signalé dans le document.</p></div><div class="encadre"><p><strong><a href="arrosage-16-taches.html">Lire la trace complète en ligne, de A1 à D4</a></strong>. C’est la même trace que le document Word, présentée comme un article.</p></div><section><h2 id="s2"><span class="num-sec">2</span>Les figures du projet</h2><div class="galerie"><figure><a href="fichiers/arrosage/figures/idees.png"><img src="fichiers/arrosage/figures/idees.png" alt="B2 · Idées de conception" loading="lazy"></a><figcaption>B2 · Idées de conception</figcaption></figure><figure><a href="fichiers/arrosage/figures/cablage.png"><img src="fichiers/arrosage/figures/cablage.png" alt="B4 · Schéma de câblage" loading="lazy"></a><figcaption>B4 · Schéma de câblage</figcaption></figure><figure><a href="fichiers/arrosage/figures/algorigramme.png"><img src="fichiers/arrosage/figures/algorigramme.png" alt="B4 · Algorigramme" loading="lazy"></a><figcaption>B4 · Algorigramme</figcaption></figure><figure><a href="fichiers/arrosage/figures/boitier.png"><img src="fichiers/arrosage/figures/boitier.png" alt="B4 · Boîtier FreeCAD" loading="lazy"></a><figcaption>B4 · Boîtier FreeCAD</figcaption></figure><figure><a href="fichiers/arrosage/figures/courbe_test.png"><img src="fichiers/arrosage/figures/courbe_test.png" alt="D1 · Courbe de test" loading="lazy"></a><figcaption>D1 · Courbe de test</figcaption></figure></div></section><section><h2 id="s3"><span class="num-sec">3</span>Trois versions du programme</h2><table><thead><tr><th>Carte</th><th>Langage</th><th>Fichier</th></tr></thead><tbody><tr><td>Arduino Uno</td><td>Arduino (C++)</td><td><code>arrosage_arduino.ino</code></td></tr><tr><td>ESP32</td><td>Arduino (C++)</td><td><code>arrosage_esp32.ino</code>, et <code>arrosage_esp32_niveau3.ino</code> avec page Wi-Fi</td></tr><tr><td>ESP32</td><td>MicroPython</td><td><code>arrosage_niveau1_2.py</code>, et <code>arrosage_niveau3.py</code> avec page Wi-Fi</td></tr></tbody></table><p class="gris">Le code est écrit pour des débutants : pas de raccourci, chaque étape est écrite en entier. Il n’a pas encore été essayé sur une vraie carte.</p><details class="code-source"><summary>Lire le code : <code>arrosage_arduino.ino</code> <span class="gris">(130 lignes)</span></summary><pre><code>// Projet témoin : arrosage automatique du jardin
+// Design PEI 5 - Unités 1 et 2
+// Carte : Arduino Uno
+// Alimentation : 5 V uniquement (câble USB ou chargeur USB 5 V)
+//
+// Niveau 1 : capteur d&#x27;humidité du sol + relais + mini-pompe 5 V
+// Niveau 2 : + capteur de niveau d&#x27;eau dans le bidon + LED rouge d&#x27;alerte
+
+// ----- 1. Les broches -----
+int PIN_SOL = A0;        // capteur d&#x27;humidité (sortie AOUT)
+int PIN_NIVEAU = A1;     // capteur de niveau d&#x27;eau (sortie S)
+int PIN_NIV_ALIM = 6;    // alimente le capteur de niveau seulement pendant la mesure
+int PIN_RELAIS = 7;      // entrée IN du module relais (cavalier sur H)
+int PIN_LED = 8;         // LED rouge avec une résistance de 220 ohms
+
+// ----- 2. Les valeurs de calibration (à mesurer avec TON capteur) -----
+int SOL_SEC = 560;       // valeur lue quand le capteur est dans l&#x27;air
+int SOL_MOUILLE = 270;   // valeur lue quand le capteur est dans un verre d&#x27;eau
+int NIVEAU_MIN = 200;    // en dessous de cette valeur, le bidon est presque vide
+
+// ----- 3. Les réglages -----
+int NIVEAU_PROJET = 2;   // écrire 1 ou 2
+int SEUIL_BAS = 35;      // en dessous de 35 %, on arrose
+int SEUIL_HAUT = 55;     // à 55 %, on arrête
+int CYCLES_MAX = 3;      // 3 doses au maximum, pour la sécurité
+
+long DUREE_POMPE = 8000;     // 8 secondes de pompe par dose
+long INFILTRATION = 20000;   // en classe : 20 s. Dans le jardin : 300000 (5 minutes)
+long ENTRE_MESURES = 10000;  // en classe : 10 s. Dans le jardin : 1800000 (30 minutes)
+
+
+// Lit 10 fois le capteur et renvoie la moyenne
+int lireMoyenne(int broche) {
+  long somme = 0;
+  int i = 0;
+  while (i &lt; 10) {
+    somme = somme + analogRead(broche);
+    delay(20);
+    i = i + 1;
+  }
+  int moyenne = somme / 10;
+  return moyenne;
+}
+
+// Renvoie l&#x27;humidité du sol en % (0 = sec, 100 = dans l&#x27;eau)
+int humiditeSol() {
+  int brut = lireMoyenne(PIN_SOL);
+  long ecart = SOL_SEC - brut;
+  long pourcent = ecart * 100 / (SOL_SEC - SOL_MOUILLE);
+  if (pourcent &lt; 0) {
+    pourcent = 0;
+  }
+  if (pourcent &gt; 100) {
+    pourcent = 100;
+  }
+  return pourcent;
+}
+
+// Renvoie true s&#x27;il reste assez d&#x27;eau dans le bidon
+bool reservoirOK() {
+  if (NIVEAU_PROJET == 1) {
+    return true;                       // niveau 1 : pas de capteur de niveau
+  }
+  digitalWrite(PIN_NIV_ALIM, HIGH);    // on allume le capteur
+  delay(50);
+  int valeur = lireMoyenne(PIN_NIVEAU);
+  digitalWrite(PIN_NIV_ALIM, LOW);     // on l&#x27;éteint : il s&#x27;abîme moins vite
+  Serial.print(&quot;  Niveau du bidon = &quot;);
+  Serial.println(valeur);
+  if (valeur &gt; NIVEAU_MIN) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+// Fait marcher la pompe pendant une dose
+void arroser() {
+  Serial.println(&quot;  Pompe ON&quot;);
+  digitalWrite(PIN_RELAIS, HIGH);
+  delay(DUREE_POMPE);
+  digitalWrite(PIN_RELAIS, LOW);
+  Serial.println(&quot;  Pompe OFF&quot;);
+}
+
+
+void setup() {
+  pinMode(PIN_RELAIS, OUTPUT);
+  digitalWrite(PIN_RELAIS, LOW);       // la pompe est arrêtée au démarrage
+  pinMode(PIN_LED, OUTPUT);
+  pinMode(PIN_NIV_ALIM, OUTPUT);
+  digitalWrite(PIN_NIV_ALIM, LOW);
+  Serial.begin(9600);
+  Serial.println(&quot;Arrosage automatique : demarrage&quot;);
+}
+
+void loop() {
+  int h = humiditeSol();
+  Serial.print(&quot;Humidite du sol = &quot;);
+  Serial.print(h);
+  Serial.println(&quot; %&quot;);
+
+  bool eau = reservoirOK();
+  if (eau == true) {
+    digitalWrite(PIN_LED, LOW);
+  } else {
+    digitalWrite(PIN_LED, HIGH);       // le bidon est vide : alerte
+  }
+
+  if (h &lt; SEUIL_BAS &amp;&amp; eau == true) {
+    int cycles = 0;
+    while (h &lt; SEUIL_HAUT &amp;&amp; cycles &lt; CYCLES_MAX &amp;&amp; eau == true) {
+      arroser();
+      cycles = cycles + 1;
+      delay(INFILTRATION);             // on laisse l&#x27;eau descendre dans la terre
+      h = humiditeSol();
+      Serial.print(&quot;  Apres la dose &quot;);
+      Serial.print(cycles);
+      Serial.print(&quot; : &quot;);
+      Serial.print(h);
+      Serial.println(&quot; %&quot;);
+      eau = reservoirOK();
+    }
+    if (eau == false) {
+      digitalWrite(PIN_LED, HIGH);
+    }
+  }
+
+  delay(ENTRE_MESURES);
+}
+</code></pre></details><details class="code-source"><summary>Lire le code : <code>arrosage_esp32.ino</code> <span class="gris">(130 lignes)</span></summary><pre><code>// Projet témoin : arrosage automatique du jardin
+// Design PEI 5 - Unités 1 et 2
+// Carte : ESP32 DevKit V1, programmé avec Arduino IDE
+// Alimentation : 5 V uniquement (câble USB ou chargeur USB 5 V)
+//
+// Niveau 1 : capteur d&#x27;humidité du sol + relais + mini-pompe 5 V
+// Niveau 2 : + capteur de niveau d&#x27;eau dans le bidon + LED rouge d&#x27;alerte
+
+// ----- 1. Les broches -----
+int PIN_SOL = 34;        // capteur d&#x27;humidité (sortie AOUT)
+int PIN_NIVEAU = 35;     // capteur de niveau d&#x27;eau (sortie S)
+int PIN_NIV_ALIM = 33;   // alimente le capteur de niveau seulement pendant la mesure
+int PIN_RELAIS = 26;     // entrée IN du module relais (cavalier sur H)
+int PIN_LED = 27;        // LED rouge avec une résistance de 220 ohms
+
+// ----- 2. Les valeurs de calibration (à mesurer avec TON capteur) -----
+int SOL_SEC = 3000;      // valeur lue quand le capteur est dans l&#x27;air
+int SOL_MOUILLE = 1300;  // valeur lue quand le capteur est dans un verre d&#x27;eau
+int NIVEAU_MIN = 800;    // en dessous de cette valeur, le bidon est presque vide
+
+// ----- 3. Les réglages -----
+int NIVEAU_PROJET = 2;   // écrire 1 ou 2
+int SEUIL_BAS = 35;      // en dessous de 35 %, on arrose
+int SEUIL_HAUT = 55;     // à 55 %, on arrête
+int CYCLES_MAX = 3;      // 3 doses au maximum, pour la sécurité
+
+long DUREE_POMPE = 8000;     // 8 secondes de pompe par dose
+long INFILTRATION = 20000;   // en classe : 20 s. Dans le jardin : 300000 (5 minutes)
+long ENTRE_MESURES = 10000;  // en classe : 10 s. Dans le jardin : 1800000 (30 minutes)
+
+
+// Lit 10 fois le capteur et renvoie la moyenne
+int lireMoyenne(int broche) {
+  long somme = 0;
+  int i = 0;
+  while (i &lt; 10) {
+    somme = somme + analogRead(broche);
+    delay(20);
+    i = i + 1;
+  }
+  int moyenne = somme / 10;
+  return moyenne;
+}
+
+// Renvoie l&#x27;humidité du sol en % (0 = sec, 100 = dans l&#x27;eau)
+int humiditeSol() {
+  int brut = lireMoyenne(PIN_SOL);
+  long ecart = SOL_SEC - brut;
+  long pourcent = ecart * 100 / (SOL_SEC - SOL_MOUILLE);
+  if (pourcent &lt; 0) {
+    pourcent = 0;
+  }
+  if (pourcent &gt; 100) {
+    pourcent = 100;
+  }
+  return pourcent;
+}
+
+// Renvoie true s&#x27;il reste assez d&#x27;eau dans le bidon
+bool reservoirOK() {
+  if (NIVEAU_PROJET == 1) {
+    return true;                       // niveau 1 : pas de capteur de niveau
+  }
+  digitalWrite(PIN_NIV_ALIM, HIGH);    // on allume le capteur
+  delay(50);
+  int valeur = lireMoyenne(PIN_NIVEAU);
+  digitalWrite(PIN_NIV_ALIM, LOW);     // on l&#x27;éteint : il s&#x27;abîme moins vite
+  Serial.print(&quot;  Niveau du bidon = &quot;);
+  Serial.println(valeur);
+  if (valeur &gt; NIVEAU_MIN) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+// Fait marcher la pompe pendant une dose
+void arroser() {
+  Serial.println(&quot;  Pompe ON&quot;);
+  digitalWrite(PIN_RELAIS, HIGH);
+  delay(DUREE_POMPE);
+  digitalWrite(PIN_RELAIS, LOW);
+  Serial.println(&quot;  Pompe OFF&quot;);
+}
+
+
+void setup() {
+  pinMode(PIN_RELAIS, OUTPUT);
+  digitalWrite(PIN_RELAIS, LOW);       // la pompe est arrêtée au démarrage
+  pinMode(PIN_LED, OUTPUT);
+  pinMode(PIN_NIV_ALIM, OUTPUT);
+  digitalWrite(PIN_NIV_ALIM, LOW);
+  Serial.begin(115200);
+  Serial.println(&quot;Arrosage automatique : demarrage&quot;);
+}
+
+void loop() {
+  int h = humiditeSol();
+  Serial.print(&quot;Humidite du sol = &quot;);
+  Serial.print(h);
+  Serial.println(&quot; %&quot;);
+
+  bool eau = reservoirOK();
+  if (eau == true) {
+    digitalWrite(PIN_LED, LOW);
+  } else {
+    digitalWrite(PIN_LED, HIGH);       // le bidon est vide : alerte
+  }
+
+  if (h &lt; SEUIL_BAS &amp;&amp; eau == true) {
+    int cycles = 0;
+    while (h &lt; SEUIL_HAUT &amp;&amp; cycles &lt; CYCLES_MAX &amp;&amp; eau == true) {
+      arroser();
+      cycles = cycles + 1;
+      delay(INFILTRATION);             // on laisse l&#x27;eau descendre dans la terre
+      h = humiditeSol();
+      Serial.print(&quot;  Apres la dose &quot;);
+      Serial.print(cycles);
+      Serial.print(&quot; : &quot;);
+      Serial.print(h);
+      Serial.println(&quot; %&quot;);
+      eau = reservoirOK();
+    }
+    if (eau == false) {
+      digitalWrite(PIN_LED, HIGH);
+    }
+  }
+
+  delay(ENTRE_MESURES);
+}
+</code></pre></details><details class="code-source"><summary>Lire le code : <code>arrosage_esp32_niveau3.ino</code> <span class="gris">(233 lignes)</span></summary><pre><code>// Projet témoin : arrosage automatique du jardin - NIVEAU 3
+// Design PEI 5 - Unités 1 et 2
+// Carte : ESP32 DevKit V1, programmé avec Arduino IDE (même câblage que le niveau 2)
+// Alimentation : 5 V uniquement
+//
+// Ce programme fait tout ce que fait le niveau 2, et en plus :
+// - il prend l&#x27;heure sur Internet et arrose seulement tôt le matin ou le soir
+//   (moins d&#x27;évaporation qu&#x27;en plein soleil) ;
+// - il affiche une page web sur le téléphone : humidité, bidon, historique.
+
+#include &lt;WiFi.h&gt;
+#include &lt;WebServer.h&gt;
+#include &lt;time.h&gt;
+
+// ----- 1. Le Wi-Fi -----
+const char* WIFI_NOM = &quot;NOM_DU_WIFI&quot;;
+const char* WIFI_MDP = &quot;MOT_DE_PASSE&quot;;
+
+// ----- 2. Les broches -----
+int PIN_SOL = 34;
+int PIN_NIVEAU = 35;
+int PIN_NIV_ALIM = 33;
+int PIN_RELAIS = 26;
+int PIN_LED = 27;
+
+// ----- 3. Les valeurs de calibration -----
+int SOL_SEC = 3000;
+int SOL_MOUILLE = 1300;
+int NIVEAU_MIN = 800;
+
+// ----- 4. Les réglages -----
+int SEUIL_BAS = 35;
+int SEUIL_HAUT = 55;
+int CYCLES_MAX = 3;
+long DUREE_POMPE = 8000;          // 8 secondes par dose
+unsigned long ENTRE_MESURES = 300000;     // une mesure toutes les 5 minutes (c&#x27;est aussi le temps d&#x27;infiltration)
+
+// ----- 5. Les variables qui changent pendant le programme -----
+WebServer serveur(80);
+int historique[24];               // les 24 dernières mesures (2 heures)
+int nbMesures = 0;
+int derniereHumidite = 0;
+bool dernierBidonOK = true;
+bool enArrosage = false;
+int cycles = 0;
+unsigned long derniereMesure = 0;
+
+
+int lireMoyenne(int broche) {
+  long somme = 0;
+  int i = 0;
+  while (i &lt; 10) {
+    somme = somme + analogRead(broche);
+    delay(20);
+    i = i + 1;
+  }
+  int moyenne = somme / 10;
+  return moyenne;
+}
+
+int humiditeSol() {
+  int brut = lireMoyenne(PIN_SOL);
+  long ecart = SOL_SEC - brut;
+  long pourcent = ecart * 100 / (SOL_SEC - SOL_MOUILLE);
+  if (pourcent &lt; 0) {
+    pourcent = 0;
+  }
+  if (pourcent &gt; 100) {
+    pourcent = 100;
+  }
+  return pourcent;
+}
+
+bool reservoirOK() {
+  digitalWrite(PIN_NIV_ALIM, HIGH);
+  delay(50);
+  int valeur = lireMoyenne(PIN_NIVEAU);
+  digitalWrite(PIN_NIV_ALIM, LOW);
+  if (valeur &gt; NIVEAU_MIN) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+void arroser() {
+  Serial.println(&quot;  Pompe ON&quot;);
+  digitalWrite(PIN_RELAIS, HIGH);
+  delay(DUREE_POMPE);
+  digitalWrite(PIN_RELAIS, LOW);
+  Serial.println(&quot;  Pompe OFF&quot;);
+}
+
+// Renvoie true entre 5 h et 9 h, ou entre 17 h et 20 h.
+// Si l&#x27;heure n&#x27;est pas connue (pas de Wi-Fi), on autorise l&#x27;arrosage.
+bool heureAutorisee() {
+  struct tm maintenant;
+  bool heureConnue = getLocalTime(&amp;maintenant, 100);
+  if (heureConnue == false) {
+    return true;
+  }
+  int heure = maintenant.tm_hour;
+  if (heure &gt;= 5 &amp;&amp; heure &lt; 9) {
+    return true;
+  }
+  if (heure &gt;= 17 &amp;&amp; heure &lt; 20) {
+    return true;
+  }
+  return false;
+}
+
+// Ajoute une mesure à la fin de l&#x27;historique.
+// Quand il est plein, on décale tout d&#x27;une case vers la gauche.
+void ajouterHistorique(int valeur) {
+  if (nbMesures &lt; 24) {
+    historique[nbMesures] = valeur;
+    nbMesures = nbMesures + 1;
+  } else {
+    int i = 0;
+    while (i &lt; 23) {
+      historique[i] = historique[i + 1];
+      i = i + 1;
+    }
+    historique[23] = valeur;
+  }
+}
+
+// Fabrique la page web et l&#x27;envoie au téléphone
+void pageAccueil() {
+  String page = &quot;&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;&lt;meta charset=&#x27;utf-8&#x27;&gt;&quot;;
+  page = page + &quot;&lt;meta name=&#x27;viewport&#x27; content=&#x27;width=device-width&#x27;&gt;&quot;;
+  page = page + &quot;&lt;meta http-equiv=&#x27;refresh&#x27; content=&#x27;30&#x27;&gt;&quot;;
+  page = page + &quot;&lt;title&gt;Arrosage&lt;/title&gt;&lt;/head&gt;&lt;body style=&#x27;font-family:sans-serif&#x27;&gt;&quot;;
+  page = page + &quot;&lt;h1&gt;Arrosage du jardin&lt;/h1&gt;&quot;;
+  page = page + &quot;&lt;p&gt;Humidité du sol : &lt;b&gt;&quot; + String(derniereHumidite) + &quot; %&lt;/b&gt;&lt;/p&gt;&quot;;
+
+  if (dernierBidonOK == true) {
+    page = page + &quot;&lt;p&gt;Bidon : &lt;b&gt;OK&lt;/b&gt;&lt;/p&gt;&quot;;
+  } else {
+    page = page + &quot;&lt;p&gt;Bidon : &lt;b&gt;VIDE, à remplir&lt;/b&gt;&lt;/p&gt;&quot;;
+  }
+
+  if (heureAutorisee() == true) {
+    page = page + &quot;&lt;p&gt;Arrosage autorisé maintenant : oui&lt;/p&gt;&quot;;
+  } else {
+    page = page + &quot;&lt;p&gt;Arrosage autorisé maintenant : non&lt;/p&gt;&quot;;
+  }
+
+  page = page + &quot;&lt;p&gt;Historique (de la plus ancienne à la plus récente) :&lt;br&gt;&quot;;
+  int i = 0;
+  while (i &lt; nbMesures) {
+    page = page + String(historique[i]) + &quot; %  &quot;;
+    i = i + 1;
+  }
+  page = page + &quot;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;&quot;;
+
+  serveur.send(200, &quot;text/html&quot;, page);
+}
+
+
+void setup() {
+  pinMode(PIN_RELAIS, OUTPUT);
+  digitalWrite(PIN_RELAIS, LOW);
+  pinMode(PIN_LED, OUTPUT);
+  pinMode(PIN_NIV_ALIM, OUTPUT);
+  digitalWrite(PIN_NIV_ALIM, LOW);
+  Serial.begin(115200);
+
+  // Connexion au Wi-Fi : on essaie pendant 10 secondes au maximum
+  WiFi.begin(WIFI_NOM, WIFI_MDP);
+  int essais = 0;
+  while (WiFi.status() != WL_CONNECTED &amp;&amp; essais &lt; 20) {
+    delay(500);
+    essais = essais + 1;
+  }
+
+  if (WiFi.status() == WL_CONNECTED) {
+    Serial.print(&quot;Page web : http://&quot;);
+    Serial.println(WiFi.localIP());
+    configTime(0, 0, &quot;pool.ntp.org&quot;);   // Lomé : heure GMT, pas d&#x27;heure d&#x27;été
+  } else {
+    Serial.println(&quot;Pas de Wi-Fi : le systeme marche quand meme, comme le niveau 2&quot;);
+  }
+
+  serveur.on(&quot;/&quot;, pageAccueil);
+  serveur.begin();
+
+  derniereMesure = millis() - ENTRE_MESURES;  // pour faire la première mesure tout de suite
+}
+
+void loop() {
+  // 1. Répondre au téléphone s&#x27;il demande la page
+  serveur.handleClient();
+
+  // 2. Toutes les 5 minutes : mesurer et décider
+  if (millis() - derniereMesure &gt;= ENTRE_MESURES) {
+    derniereMesure = millis();
+
+    derniereHumidite = humiditeSol();
+    dernierBidonOK = reservoirOK();
+    ajouterHistorique(derniereHumidite);
+
+    Serial.print(&quot;Humidite du sol = &quot;);
+    Serial.print(derniereHumidite);
+    Serial.println(&quot; %&quot;);
+
+    if (dernierBidonOK == true) {
+      digitalWrite(PIN_LED, LOW);
+    } else {
+      digitalWrite(PIN_LED, HIGH);
+    }
+
+    // Faut-il commencer à arroser ?
+    if (enArrosage == false &amp;&amp; derniereHumidite &lt; SEUIL_BAS) {
+      enArrosage = true;
+      cycles = 0;
+    }
+
+    // Faut-il arrêter ?
+    if (enArrosage == true &amp;&amp; derniereHumidite &gt;= SEUIL_HAUT) {
+      enArrosage = false;
+    }
+    if (enArrosage == true &amp;&amp; cycles &gt;= CYCLES_MAX) {
+      enArrosage = false;
+    }
+
+    // On donne une dose seulement si le bidon a de l&#x27;eau et si l&#x27;heure est bonne
+    if (enArrosage == true &amp;&amp; dernierBidonOK == true &amp;&amp; heureAutorisee() == true) {
+      arroser();
+      cycles = cycles + 1;
+    }
+  }
+}
+</code></pre></details><details class="code-source"><summary>Lire le code : <code>arrosage_niveau1_2.py</code> <span class="gris">(113 lignes)</span></summary><pre><code># Projet témoin : arrosage automatique du jardin
+# Design PEI 5 - Unités 1 et 2
+# Carte : ESP32 avec MicroPython (programmé avec Thonny)
+# Pour que le programme démarre tout seul, l&#x27;enregistrer sur l&#x27;ESP32 sous le nom main.py
+# Alimentation : 5 V uniquement (câble USB ou chargeur USB 5 V)
+#
+# Niveau 1 : capteur d&#x27;humidité du sol + relais + mini-pompe 5 V
+# Niveau 2 : + capteur de niveau d&#x27;eau dans le bidon + LED rouge d&#x27;alerte
+
+from machine import Pin, ADC
+import time
+
+# ----- 1. Les broches -----
+capteur_sol = ADC(Pin(34))           # capteur d&#x27;humidité (sortie AOUT)
+capteur_sol.atten(ADC.ATTN_11DB)     # pour mesurer de 0 à 3,3 V
+capteur_niveau = ADC(Pin(35))        # capteur de niveau d&#x27;eau (sortie S)
+capteur_niveau.atten(ADC.ATTN_11DB)
+alim_niveau = Pin(33, Pin.OUT)       # alimente le capteur de niveau seulement pendant la mesure
+relais = Pin(26, Pin.OUT)            # entrée IN du module relais (cavalier sur H)
+led = Pin(27, Pin.OUT)               # LED rouge avec une résistance de 220 ohms
+
+# ----- 2. Les valeurs de calibration (à mesurer avec TON capteur) -----
+SOL_SEC = 3000         # valeur lue quand le capteur est dans l&#x27;air
+SOL_MOUILLE = 1300     # valeur lue quand le capteur est dans un verre d&#x27;eau
+NIVEAU_MIN = 800       # en dessous de cette valeur, le bidon est presque vide
+
+# ----- 3. Les réglages -----
+NIVEAU_PROJET = 2      # écrire 1 ou 2
+SEUIL_BAS = 35         # en dessous de 35 %, on arrose
+SEUIL_HAUT = 55        # à 55 %, on arrête
+CYCLES_MAX = 3         # 3 doses au maximum, pour la sécurité
+DUREE_POMPE = 8        # 8 secondes de pompe par dose
+INFILTRATION = 20      # en classe : 20 s. Dans le jardin : 300 (5 minutes)
+ENTRE_MESURES = 10     # en classe : 10 s. Dans le jardin : 1800 (30 minutes)
+
+
+# Lit 10 fois le capteur et renvoie la moyenne
+def lire_moyenne(capteur):
+    somme = 0
+    i = 0
+    while i &lt; 10:
+        somme = somme + capteur.read()
+        time.sleep(0.02)
+        i = i + 1
+    moyenne = int(somme / 10)
+    return moyenne
+
+
+# Renvoie l&#x27;humidité du sol en % (0 = sec, 100 = dans l&#x27;eau)
+def humidite_sol():
+    brut = lire_moyenne(capteur_sol)
+    ecart = SOL_SEC - brut
+    pourcent = int(ecart * 100 / (SOL_SEC - SOL_MOUILLE))
+    if pourcent &lt; 0:
+        pourcent = 0
+    if pourcent &gt; 100:
+        pourcent = 100
+    return pourcent
+
+
+# Renvoie True s&#x27;il reste assez d&#x27;eau dans le bidon
+def reservoir_ok():
+    if NIVEAU_PROJET == 1:
+        return True                    # niveau 1 : pas de capteur de niveau
+    alim_niveau.value(1)               # on allume le capteur
+    time.sleep(0.05)
+    valeur = lire_moyenne(capteur_niveau)
+    alim_niveau.value(0)               # on l&#x27;éteint : il s&#x27;abîme moins vite
+    print(&quot;  Niveau du bidon =&quot;, valeur)
+    if valeur &gt; NIVEAU_MIN:
+        return True
+    else:
+        return False
+
+
+# Fait marcher la pompe pendant une dose
+def arroser():
+    print(&quot;  Pompe ON&quot;)
+    relais.value(1)
+    time.sleep(DUREE_POMPE)
+    relais.value(0)
+    print(&quot;  Pompe OFF&quot;)
+
+
+# ----- 4. Le programme principal -----
+relais.value(0)        # la pompe est arrêtée au démarrage
+alim_niveau.value(0)
+led.value(0)
+print(&quot;Arrosage automatique : demarrage&quot;)
+
+while True:
+    h = humidite_sol()
+    print(&quot;Humidite du sol =&quot;, h, &quot;%&quot;)
+
+    eau = reservoir_ok()
+    if eau == True:
+        led.value(0)
+    else:
+        led.value(1)                   # le bidon est vide : alerte
+
+    if h &lt; SEUIL_BAS and eau == True:
+        cycles = 0
+        while h &lt; SEUIL_HAUT and cycles &lt; CYCLES_MAX and eau == True:
+            arroser()
+            cycles = cycles + 1
+            time.sleep(INFILTRATION)   # on laisse l&#x27;eau descendre dans la terre
+            h = humidite_sol()
+            print(&quot;  Apres la dose&quot;, cycles, &quot;:&quot;, h, &quot;%&quot;)
+            eau = reservoir_ok()
+        if eau == False:
+            led.value(1)
+
+    time.sleep(ENTRE_MESURES)
+</code></pre></details><details class="code-source"><summary>Lire le code : <code>arrosage_niveau3.py</code> <span class="gris">(206 lignes)</span></summary><pre><code># Projet témoin : arrosage automatique du jardin - NIVEAU 3
+# Design PEI 5 - Unités 1 et 2
+# Carte : ESP32 avec MicroPython (même câblage que le niveau 2)
+# Pour que le programme démarre tout seul, l&#x27;enregistrer sur l&#x27;ESP32 sous le nom main.py
+# Alimentation : 5 V uniquement
+#
+# Ce programme fait tout ce que fait le niveau 2, et en plus :
+# - il prend l&#x27;heure sur Internet et arrose seulement tôt le matin ou le soir
+#   (moins d&#x27;évaporation qu&#x27;en plein soleil) ;
+# - il affiche une page web sur le téléphone : humidité, bidon, historique.
+
+from machine import Pin, ADC
+import time
+import network
+import socket
+import ntptime
+
+# ----- 1. Le Wi-Fi -----
+WIFI_NOM = &quot;NOM_DU_WIFI&quot;
+WIFI_MDP = &quot;MOT_DE_PASSE&quot;
+
+# ----- 2. Les broches -----
+capteur_sol = ADC(Pin(34))
+capteur_sol.atten(ADC.ATTN_11DB)
+capteur_niveau = ADC(Pin(35))
+capteur_niveau.atten(ADC.ATTN_11DB)
+alim_niveau = Pin(33, Pin.OUT)
+relais = Pin(26, Pin.OUT)
+led = Pin(27, Pin.OUT)
+
+# ----- 3. Les valeurs de calibration -----
+SOL_SEC = 3000
+SOL_MOUILLE = 1300
+NIVEAU_MIN = 800
+
+# ----- 4. Les réglages -----
+SEUIL_BAS = 35
+SEUIL_HAUT = 55
+CYCLES_MAX = 3
+DUREE_POMPE = 8        # 8 secondes par dose
+ENTRE_MESURES = 300    # une mesure toutes les 5 minutes (c&#x27;est aussi le temps d&#x27;infiltration)
+
+
+def lire_moyenne(capteur):
+    somme = 0
+    i = 0
+    while i &lt; 10:
+        somme = somme + capteur.read()
+        time.sleep(0.02)
+        i = i + 1
+    moyenne = int(somme / 10)
+    return moyenne
+
+
+def humidite_sol():
+    brut = lire_moyenne(capteur_sol)
+    ecart = SOL_SEC - brut
+    pourcent = int(ecart * 100 / (SOL_SEC - SOL_MOUILLE))
+    if pourcent &lt; 0:
+        pourcent = 0
+    if pourcent &gt; 100:
+        pourcent = 100
+    return pourcent
+
+
+def reservoir_ok():
+    alim_niveau.value(1)
+    time.sleep(0.05)
+    valeur = lire_moyenne(capteur_niveau)
+    alim_niveau.value(0)
+    if valeur &gt; NIVEAU_MIN:
+        return True
+    else:
+        return False
+
+
+def arroser():
+    print(&quot;  Pompe ON&quot;)
+    relais.value(1)
+    time.sleep(DUREE_POMPE)
+    relais.value(0)
+    print(&quot;  Pompe OFF&quot;)
+
+
+# Renvoie True entre 5 h et 9 h, ou entre 17 h et 20 h.
+# Si l&#x27;heure n&#x27;est pas connue (pas de Wi-Fi), on autorise l&#x27;arrosage.
+def heure_autorisee():
+    if heure_connue == False:
+        return True
+    maintenant = time.localtime()
+    heure = maintenant[3]
+    if heure &gt;= 5 and heure &lt; 9:
+        return True
+    if heure &gt;= 17 and heure &lt; 20:
+        return True
+    return False
+
+
+# Fabrique le texte de la page web
+def fabriquer_page():
+    page = &quot;&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;&lt;meta charset=&#x27;utf-8&#x27;&gt;&quot;
+    page = page + &quot;&lt;meta name=&#x27;viewport&#x27; content=&#x27;width=device-width&#x27;&gt;&quot;
+    page = page + &quot;&lt;meta http-equiv=&#x27;refresh&#x27; content=&#x27;30&#x27;&gt;&quot;
+    page = page + &quot;&lt;title&gt;Arrosage&lt;/title&gt;&lt;/head&gt;&lt;body style=&#x27;font-family:sans-serif&#x27;&gt;&quot;
+    page = page + &quot;&lt;h1&gt;Arrosage du jardin&lt;/h1&gt;&quot;
+    page = page + &quot;&lt;p&gt;Humidité du sol : &lt;b&gt;&quot; + str(derniere_humidite) + &quot; %&lt;/b&gt;&lt;/p&gt;&quot;
+
+    if dernier_bidon_ok == True:
+        page = page + &quot;&lt;p&gt;Bidon : &lt;b&gt;OK&lt;/b&gt;&lt;/p&gt;&quot;
+    else:
+        page = page + &quot;&lt;p&gt;Bidon : &lt;b&gt;VIDE, à remplir&lt;/b&gt;&lt;/p&gt;&quot;
+
+    if heure_autorisee() == True:
+        page = page + &quot;&lt;p&gt;Arrosage autorisé maintenant : oui&lt;/p&gt;&quot;
+    else:
+        page = page + &quot;&lt;p&gt;Arrosage autorisé maintenant : non&lt;/p&gt;&quot;
+
+    page = page + &quot;&lt;p&gt;Historique (de la plus ancienne à la plus récente) :&lt;br&gt;&quot;
+    for valeur in historique:
+        page = page + str(valeur) + &quot; %  &quot;
+    page = page + &quot;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;&quot;
+    return page
+
+
+# ----- 5. Démarrage -----
+relais.value(0)
+alim_niveau.value(0)
+led.value(0)
+
+# Connexion au Wi-Fi : on essaie pendant 10 secondes au maximum
+wifi = network.WLAN(network.STA_IF)
+wifi.active(True)
+wifi.connect(WIFI_NOM, WIFI_MDP)
+essais = 0
+while wifi.isconnected() == False and essais &lt; 20:
+    time.sleep(0.5)
+    essais = essais + 1
+
+heure_connue = False
+if wifi.isconnected() == True:
+    print(&quot;Page web : http://&quot; + wifi.ifconfig()[0])
+    try:
+        ntptime.settime()              # Lomé : heure GMT, pas d&#x27;heure d&#x27;été
+        heure_connue = True
+    except OSError:
+        print(&quot;Heure Internet non disponible&quot;)
+else:
+    print(&quot;Pas de Wi-Fi : le systeme marche quand meme, comme le niveau 2&quot;)
+
+# Le serveur web : il attend au maximum 0,2 s qu&#x27;un téléphone se connecte
+serveur = socket.socket()
+serveur.bind((&quot;0.0.0.0&quot;, 80))
+serveur.listen(1)
+serveur.settimeout(0.2)
+
+# Les variables qui changent pendant le programme
+historique = []                        # les 24 dernières mesures (2 heures)
+derniere_humidite = 0
+dernier_bidon_ok = True
+en_arrosage = False
+cycles = 0
+derniere_mesure = time.time() - ENTRE_MESURES   # pour mesurer tout de suite
+
+# ----- 6. Le programme principal -----
+while True:
+    # 1. Répondre au téléphone s&#x27;il demande la page
+    try:
+        client, adresse = serveur.accept()
+        client.recv(1024)
+        client.send(&quot;HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n\r\n&quot;)
+        client.send(fabriquer_page())
+        client.close()
+    except OSError:
+        pass                           # personne n&#x27;a demandé la page : on continue
+
+    # 2. Toutes les 5 minutes : mesurer et décider
+    if time.time() - derniere_mesure &gt;= ENTRE_MESURES:
+        derniere_mesure = time.time()
+
+        derniere_humidite = humidite_sol()
+        dernier_bidon_ok = reservoir_ok()
+        historique.append(derniere_humidite)
+        if len(historique) &gt; 24:
+            historique.pop(0)          # on enlève la plus ancienne mesure
+        print(&quot;Humidite du sol =&quot;, derniere_humidite, &quot;%&quot;)
+
+        if dernier_bidon_ok == True:
+            led.value(0)
+        else:
+            led.value(1)
+
+        # Faut-il commencer à arroser ?
+        if en_arrosage == False and derniere_humidite &lt; SEUIL_BAS:
+            en_arrosage = True
+            cycles = 0
+
+        # Faut-il arrêter ?
+        if en_arrosage == True and derniere_humidite &gt;= SEUIL_HAUT:
+            en_arrosage = False
+        if en_arrosage == True and cycles &gt;= CYCLES_MAX:
+            en_arrosage = False
+
+        # On donne une dose seulement si le bidon a de l&#x27;eau et si l&#x27;heure est bonne
+        if en_arrosage == True and dernier_bidon_ok == True and heure_autorisee() == True:
+            arroser()
+            cycles = cycles + 1
+</code></pre></details></section><section><h2 id="s4"><span class="num-sec">4</span>Télécharger</h2><ul class="fichiers"><li><a href="fichiers/arrosage/Trace_temoin_arrosage.docx" download>La trace complète, de A1 à D4</a> <span class="format">DOCX, 627 Ko</span> <span class="gris">(Word)</span></li><li><a href="fichiers/arrosage/code_arrosage.zip" download>Tout le code (Arduino Uno, ESP32 Arduino, ESP32 MicroPython)</a> <span class="format">ZIP, 10 Ko</span></li></ul></section></main></div><footer class="appendice"><div class="appendice-int"><p>Design PEI 5 · Unités 1 et 2 · Préparation formative au cycle de design (critères A à D).</p><p>Sécurité : très basse tension uniquement, 5 V au maximum. Jamais de branchement sur le secteur.</p></div></footer></body></html>

@@ -1,0 +1,692 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Goutte à goutte</title><link rel="stylesheet" href="../../../commun/distill.css"><link rel="stylesheet" href="../../../commun/site.css"></head><body><nav class="menu-site"><div class="menu-int"><a class="marque" href="../../../index.html">Cours de design</a><span><a href="../index.html">Le cours</a><a href="../projets/index.html">Les 4 projets</a><a href="../taches/index.html">Les 16 tâches</a><a href="../temoins/index.html" class="actif">Projets témoins</a><a href="../trace/index.html">Ma trace Word</a><a href="../qcm/index.html">QCM</a></span></div></nav><div class="page"><header class="tete"><p class="surtitre">Projet témoin · Jeu · PyGame</p><h1>Goutte à goutte</h1><p class="chapeau">Un petit jeu pour apprendre à arroser le jardin scolaire sans gaspiller l’eau du puits.</p><div class="byline"><div><h5>Cours</h5><p>Design PEI 5<br>Unités 1 et 2</p></div><div><h5>Auteur</h5><p>L’enseignant(e) de design</p></div><div><h5>Publié</h5><p>Octobre 2026</p></div><div><h5>Sécurité</h5><p>5 V au maximum</p></div></div></header><nav class="toc"><p class="toc-titre">Sommaire</p><ol><li><a href="#s1"><span class="num-sec">1</span>Le projet en bref</a></li><li><a href="#s2"><span class="num-sec">2</span>Captures d’écran</a></li><li><a href="#s3"><span class="num-sec">3</span>Jouer</a></li><li><a href="#s4"><span class="num-sec">4</span>Télécharger</a></li></ol></nav><main class="corps"><section><h2 id="s1"><span class="num-sec">1</span>Le projet en bref</h2><p>Le club jardin des élèves de 6e gaspille beaucoup d’eau. Dans ce jeu, on déplace un jardinier qui arrose six planches (tomate, gombo, piment, laitue, adémè, gboma) avec un arrosoir de 10 L qu’il faut remplir au puits. Le soleil de midi assèche la terre, la pluie l’arrose gratuitement : le but est que les plantes poussent sans gaspiller.</p><p>Les tests automatiques comparent deux façons de jouer : le joueur économe gaspille 21 % de l’eau, le gaspilleur 56 %.</p></section><div class="avert"><p><strong>Un exemple, pas un modèle à copier.</strong> Ce projet témoin a été rédigé par l’enseignant(e) pour montrer une trace de niveau 7-8. Il porte sur un autre sujet que le tien. Les personnes, les enquêtes et les tests avec des utilisateurs sont inventés pour l’exemple ; c’est signalé dans le document.</p></div><div class="encadre"><p><strong><a href="goutte-a-goutte-16-taches.html">Lire la trace complète en ligne, de A1 à D4</a></strong>. C’est la même trace que le document Word, présentée comme un article.</p></div><section><h2 id="s2"><span class="num-sec">2</span>Captures d’écran</h2><div class="galerie"><figure><a href="fichiers/goutte/captures/capture_niveau1.png"><img src="fichiers/goutte/captures/capture_niveau1.png" alt="Niveau 1" loading="lazy"></a><figcaption>Niveau 1</figcaption></figure><figure><a href="fichiers/goutte/captures/capture_niveau2.png"><img src="fichiers/goutte/captures/capture_niveau2.png" alt="Niveau 2" loading="lazy"></a><figcaption>Niveau 2</figcaption></figure><figure><a href="fichiers/goutte/captures/capture_matin.png"><img src="fichiers/goutte/captures/capture_matin.png" alt="Le matin" loading="lazy"></a><figcaption>Le matin</figcaption></figure><figure><a href="fichiers/goutte/captures/capture_midi.png"><img src="fichiers/goutte/captures/capture_midi.png" alt="Le soleil de midi" loading="lazy"></a><figcaption>Le soleil de midi</figcaption></figure><figure><a href="fichiers/goutte/captures/capture_pluie.png"><img src="fichiers/goutte/captures/capture_pluie.png" alt="La pluie" loading="lazy"></a><figcaption>La pluie</figcaption></figure><figure><a href="fichiers/goutte/captures/capture_bilan.png"><img src="fichiers/goutte/captures/capture_bilan.png" alt="Le bilan de la partie" loading="lazy"></a><figcaption>Le bilan de la partie</figcaption></figure></div></section><section><h2 id="s3"><span class="num-sec">3</span>Jouer</h2><ol><li>Installe PyGame : <code>pip install pygame</code></li><li>Lance le jeu : <code>python goutte_a_goutte.py</code></li><li>Flèches pour se déplacer, <kbd>Espace</kbd> pour arroser, <kbd>R</kbd> pour remplir au puits, <kbd>Entrée</kbd> pour rejouer, <kbd>Échap</kbd> pour quitter.</li><li>Pour changer de niveau, modifie la ligne <code>NIVEAU = 3</code> en haut du fichier (1, 2 ou 3).</li></ol><details class="code-source"><summary>Lire le code : <code>goutte_a_goutte.py</code> <span class="gris">(526 lignes)</span></summary><pre><code># Goutte à goutte : jeu témoin PyGame (Design PEI 5, unités 1 et 2)
+#
+# Le joueur arrose les planches du jardin scolaire pendant une journée,
+# sans laisser mourir les plantes et sans gaspiller l&#x27;eau.
+#
+# Commandes : flèches = se déplacer, ESPACE = arroser la planche touchée,
+# R = remplir l&#x27;arrosoir au puits, ENTRÉE = rejouer, ÉCHAP = quitter.
+#
+# NIVEAU 1 : déplacement, arrosage, jauges d&#x27;humidité, minuterie.
+# NIVEAU 2 : + arrosoir de 10 L, puits, litres gaspillés, écran de bilan.
+# NIVEAU 3 : + météo (soleil de midi, pluie), meilleur score enregistré.
+#
+# Le code est volontairement simple : pas de raccourcis comme +=,
+# chaque calcul est écrit en entier.
+
+import os
+import random
+import pygame
+
+NIVEAU = 3
+
+# Réglages du jeu
+LARGEUR = 800
+HAUTEUR = 600
+IMAGES_PAR_SECONDE = 30
+DUREE_JOURNEE = 120        # secondes de jeu pour une journée
+CAPACITE_ARROSOIR = 10     # litres
+DOSE = 1                   # litres versés à chaque appui sur ESPACE
+GAIN_PAR_LITRE = 20        # points d&#x27;humidité apportés par un litre
+MARGE_ARROSAGE = 15        # pixels autour de la planche où l&#x27;on peut arroser
+VITESSE_JARDINIER = 220    # pixels par seconde
+DELAI_FANAISON = 5         # secondes à 0 % avant que la plante meure
+LARGEUR_PLANCHE = 150
+HAUTEUR_PLANCHE = 90
+LARGEUR_JARDINIER = 30
+HAUTEUR_JARDINIER = 40
+PUITS_X = 75               # centre du puits
+PUITS_Y = 125
+FICHIER_SCORE = &quot;meilleur_score.txt&quot;
+
+# Couleurs (rouge, vert, bleu)
+TERRE = (176, 128, 82)
+HERBE = (98, 160, 72)
+BLEU_NUIT = (32, 64, 96)
+BLANC = (255, 255, 255)
+NOIR = (20, 20, 20)
+BLEU_EAU = (40, 120, 220)
+VERT_PLANTE = (40, 140, 50)
+VERT_FONCE = (30, 80, 40)
+JAUNE_SEC = (200, 170, 40)
+GRIS_MORT = (120, 110, 100)
+JAUNE_TEXTE = (255, 220, 120)
+ORANGE = (230, 120, 40)
+MARRON = (90, 60, 40)
+GRIS_PUITS = (90, 90, 90)
+BLEU_PLUIE = (180, 200, 255)
+
+# Noms des planches et vitesse de séchage (points d&#x27;humidité perdus par seconde)
+NOMS = [&quot;Tomate&quot;, &quot;Gombo&quot;, &quot;Piment&quot;, &quot;Laitue&quot;, &quot;Adémè&quot;, &quot;Gboma&quot;]
+SECHAGES = [1.2, 0.9, 1.0, 1.5, 1.1, 1.3]
+
+# Variables du jeu (elles changent pendant la partie)
+planches = []
+jardinier_x = 0
+jardinier_y = 0
+temps = 0
+arrosoir = 0
+litres_verses = 0
+litres_gaspilles = 0
+message = &quot;&quot;
+duree_message = 0
+fini = False
+pluie_debut = 0
+pluie_fin = 0
+meilleur_score = 0
+police = None
+grande_police = None
+
+
+# ---------- Planches ----------
+
+def creer_planche(nom, sechage, x, y):
+    planche = {}
+    planche[&quot;nom&quot;] = nom
+    planche[&quot;sechage&quot;] = sechage
+    planche[&quot;x&quot;] = x
+    planche[&quot;y&quot;] = y
+    planche[&quot;humidite&quot;] = 60
+    planche[&quot;temps_a_sec&quot;] = 0
+    planche[&quot;morte&quot;] = False
+    return planche
+
+
+def secher_planche(planche, dt, facteur):
+    if planche[&quot;morte&quot;] == True:
+        return
+    if il_pleut() == True:
+        planche[&quot;humidite&quot;] = planche[&quot;humidite&quot;] + 4 * dt
+        if planche[&quot;humidite&quot;] &gt; 100:
+            planche[&quot;humidite&quot;] = 100
+    else:
+        planche[&quot;humidite&quot;] = planche[&quot;humidite&quot;] - planche[&quot;sechage&quot;] * facteur * dt
+        if planche[&quot;humidite&quot;] &lt; 0:
+            planche[&quot;humidite&quot;] = 0
+    if planche[&quot;humidite&quot;] == 0:
+        planche[&quot;temps_a_sec&quot;] = planche[&quot;temps_a_sec&quot;] + dt
+        if planche[&quot;temps_a_sec&quot;] &gt;= DELAI_FANAISON:
+            planche[&quot;morte&quot;] = True
+    else:
+        planche[&quot;temps_a_sec&quot;] = 0
+
+
+def donner_eau(planche, litres):
+    # Ajoute l&#x27;eau à la planche et renvoie les litres qui débordent (gaspillés).
+    place = 100 - planche[&quot;humidite&quot;]
+    apport = litres * GAIN_PAR_LITRE
+    if apport &lt;= place:
+        planche[&quot;humidite&quot;] = planche[&quot;humidite&quot;] + apport
+        return 0
+    planche[&quot;humidite&quot;] = 100
+    trop = (apport - place) / GAIN_PAR_LITRE
+    return trop
+
+
+# ---------- Début d&#x27;une partie ----------
+
+def reinitialiser():
+    global planches, jardinier_x, jardinier_y, temps, arrosoir
+    global litres_verses, litres_gaspilles, message, duree_message, fini
+    global pluie_debut, pluie_fin
+    planches = []
+    for i in range(6):
+        colonne = i % 3
+        ligne = i // 3
+        x = 190 + colonne * 190
+        y = 140 + ligne * 200
+        planche = creer_planche(NOMS[i], SECHAGES[i], x, y)
+        planches.append(planche)
+    jardinier_x = 60
+    jardinier_y = 400
+    temps = 0
+    arrosoir = CAPACITE_ARROSOIR
+    litres_verses = 0
+    litres_gaspilles = 0
+    message = &quot;&quot;
+    duree_message = 0
+    fini = False
+    pluie_debut = random.uniform(20, DUREE_JOURNEE - 30)
+    pluie_fin = pluie_debut + 10
+
+
+# ---------- Météo (niveau 3) ----------
+
+def il_pleut():
+    if NIVEAU &lt; 3:
+        return False
+    if temps &gt;= pluie_debut and temps &lt; pluie_fin:
+        return True
+    return False
+
+
+def soleil_de_midi():
+    if NIVEAU &lt; 3:
+        return False
+    if il_pleut() == True:
+        return False
+    if temps &gt;= 40 and temps &lt; 80:
+        return True
+    return False
+
+
+def texte_meteo():
+    if il_pleut() == True:
+        return &quot;Pluie : n&#x27;arrose pas !&quot;
+    if soleil_de_midi() == True:
+        return &quot;Soleil de midi : l&#x27;eau s&#x27;évapore&quot;
+    if temps &lt; 40:
+        return &quot;Matin&quot;
+    return &quot;Soir&quot;
+
+
+# ---------- Actions du joueur ----------
+
+def afficher_message(texte):
+    global message, duree_message
+    message = texte
+    duree_message = 2
+
+
+def touche_le_rectangle(x, y, largeur, hauteur, marge):
+    # Vrai si le jardinier chevauche le rectangle agrandi de la marge.
+    if jardinier_x + LARGEUR_JARDINIER &lt; x - marge:
+        return False
+    if jardinier_x &gt; x + largeur + marge:
+        return False
+    if jardinier_y + HAUTEUR_JARDINIER &lt; y - marge:
+        return False
+    if jardinier_y &gt; y + hauteur + marge:
+        return False
+    return True
+
+
+def planche_touchee():
+    for planche in planches:
+        if touche_le_rectangle(planche[&quot;x&quot;], planche[&quot;y&quot;], LARGEUR_PLANCHE, HAUTEUR_PLANCHE, MARGE_ARROSAGE):
+            return planche
+    return None
+
+
+def pres_du_puits():
+    return touche_le_rectangle(PUITS_X - 35, PUITS_Y - 35, 70, 70, 20)
+
+
+def arroser():
+    global arrosoir, litres_verses, litres_gaspilles
+    planche = planche_touchee()
+    if planche == None:
+        return
+    if planche[&quot;morte&quot;] == True:
+        return
+    if NIVEAU &gt;= 2:
+        if arrosoir &lt; DOSE:
+            afficher_message(&quot;Arrosoir vide : va au puits (touche R)&quot;)
+            return
+        arrosoir = arrosoir - DOSE
+    litres_verses = litres_verses + DOSE
+    perdu = 0
+    if il_pleut() == True:
+        perdu = DOSE
+        afficher_message(&quot;Gaspillage : il pleut déjà !&quot;)
+    if soleil_de_midi() == True:
+        perdu = DOSE / 2
+        afficher_message(&quot;La moitié de l&#x27;eau s&#x27;évapore à midi&quot;)
+    trop = donner_eau(planche, DOSE - perdu)
+    if trop &gt; 0:
+        afficher_message(&quot;Gaspillage : &quot; + planche[&quot;nom&quot;] + &quot; avait assez d&#x27;eau&quot;)
+    if NIVEAU &gt;= 2:
+        litres_gaspilles = litres_gaspilles + perdu + trop
+
+
+def remplir():
+    global arrosoir
+    if NIVEAU &lt; 2:
+        return
+    if pres_du_puits() == True:
+        arrosoir = CAPACITE_ARROSOIR
+        afficher_message(&quot;Arrosoir rempli : 10 L&quot;)
+
+
+# ---------- Mise à jour à chaque image ----------
+
+def deplacer_jardinier(dt, gauche, droite, haut, bas):
+    global jardinier_x, jardinier_y
+    pas = VITESSE_JARDINIER * dt
+    if gauche == True:
+        jardinier_x = jardinier_x - pas
+    if droite == True:
+        jardinier_x = jardinier_x + pas
+    if haut == True:
+        jardinier_y = jardinier_y - pas
+    if bas == True:
+        jardinier_y = jardinier_y + pas
+    # Le jardinier ne doit pas sortir de l&#x27;écran
+    if jardinier_x &lt; 0:
+        jardinier_x = 0
+    if jardinier_x &gt; LARGEUR - LARGEUR_JARDINIER:
+        jardinier_x = LARGEUR - LARGEUR_JARDINIER
+    if jardinier_y &lt; 60:
+        jardinier_y = 60
+    if jardinier_y &gt; HAUTEUR - HAUTEUR_JARDINIER:
+        jardinier_y = HAUTEUR - HAUTEUR_JARDINIER
+
+
+def mettre_a_jour(dt, gauche, droite, haut, bas):
+    global temps, duree_message
+    if fini == True:
+        return
+    temps = temps + dt
+    deplacer_jardinier(dt, gauche, droite, haut, bas)
+    facteur = 1
+    if soleil_de_midi() == True:
+        facteur = 2
+    for planche in planches:
+        secher_planche(planche, dt, facteur)
+    duree_message = duree_message - dt
+    if duree_message &lt; 0:
+        duree_message = 0
+    if temps &gt;= DUREE_JOURNEE:
+        terminer()
+    if plantes_vivantes() == 0:
+        terminer()
+
+
+# ---------- Score et fin de partie ----------
+
+def plantes_vivantes():
+    nombre = 0
+    for planche in planches:
+        if planche[&quot;morte&quot;] == False:
+            nombre = nombre + 1
+    return nombre
+
+
+def calculer_score():
+    score = plantes_vivantes() * 100 - round(litres_gaspilles * 20)
+    return score
+
+
+def pourcentage_gaspille():
+    if litres_verses == 0:
+        return 0
+    pourcentage = round(100 * litres_gaspilles / litres_verses)
+    return pourcentage
+
+
+def nombre_etoiles():
+    vivantes = plantes_vivantes()
+    gaspi = pourcentage_gaspille()
+    if vivantes == 6 and gaspi &lt;= 10:
+        return 3
+    if vivantes &gt;= 5 and gaspi &lt;= 25:
+        return 2
+    if vivantes &gt;= 3:
+        return 1
+    return 0
+
+
+def terminer():
+    global fini, meilleur_score
+    if fini == True:
+        return
+    fini = True
+    if NIVEAU &gt;= 3:
+        if calculer_score() &gt; meilleur_score:
+            meilleur_score = calculer_score()
+            ecrire_meilleur_score()
+
+
+# ---------- Meilleur score (niveau 3) ----------
+
+def lire_meilleur_score():
+    if os.path.exists(FICHIER_SCORE) == False:
+        return 0
+    fichier = open(FICHIER_SCORE, &quot;r&quot;)
+    texte = fichier.read()
+    fichier.close()
+    if texte.strip().isdigit() == False:
+        return 0
+    return int(texte)
+
+
+def ecrire_meilleur_score():
+    fichier = open(FICHIER_SCORE, &quot;w&quot;)
+    fichier.write(str(meilleur_score))
+    fichier.close()
+
+
+# ---------- Dessin ----------
+
+def ecrire_texte(ecran, texte, x, y, couleur):
+    image = police.render(texte, True, couleur)
+    ecran.blit(image, (x, y))
+
+
+def ecrire_texte_centre(ecran, texte, y, couleur, grande):
+    if grande == True:
+        image = grande_police.render(texte, True, couleur)
+    else:
+        image = police.render(texte, True, couleur)
+    x = LARGEUR // 2 - image.get_width() // 2
+    ecran.blit(image, (x, y))
+
+
+def dessiner_planche(ecran, planche):
+    x = planche[&quot;x&quot;]
+    y = planche[&quot;y&quot;]
+    pygame.draw.rect(ecran, TERRE, (x, y, LARGEUR_PLANCHE, HAUTEUR_PLANCHE))
+    couleur = VERT_PLANTE
+    if planche[&quot;humidite&quot;] &lt; 25:
+        couleur = JAUNE_SEC
+    if planche[&quot;morte&quot;] == True:
+        couleur = GRIS_MORT
+    # Trois plantes dessinées avec une tige et deux feuilles
+    for i in range(3):
+        cx = x + 30 + i * 45
+        cy = y + 40
+        pygame.draw.line(ecran, couleur, (cx, cy + 20), (cx, cy), 4)
+        pygame.draw.circle(ecran, couleur, (cx - 8, cy), 9)
+        pygame.draw.circle(ecran, couleur, (cx + 8, cy - 4), 9)
+    # Jauge d&#x27;humidité : la zone idéale (40 à 80 %) est en vert foncé
+    jauge_x = x + 10
+    jauge_y = y + HAUTEUR_PLANCHE - 14
+    pygame.draw.rect(ecran, NOIR, (jauge_x, jauge_y, 130, 8))
+    pygame.draw.rect(ecran, VERT_FONCE, (jauge_x + 52, jauge_y, 52, 8))
+    longueur = int(130 * planche[&quot;humidite&quot;] / 100)
+    pygame.draw.rect(ecran, BLEU_EAU, (jauge_x, jauge_y, longueur, 8))
+    texte = planche[&quot;nom&quot;] + &quot; &quot; + str(int(planche[&quot;humidite&quot;])) + &quot; %&quot;
+    ecrire_texte(ecran, texte, x + 8, y + 4, BLANC)
+
+
+def dessiner_jardinier(ecran):
+    x = int(jardinier_x)
+    y = int(jardinier_y)
+    pygame.draw.rect(ecran, ORANGE, (x, y + 14, LARGEUR_JARDINIER, HAUTEUR_JARDINIER - 14))
+    pygame.draw.circle(ecran, MARRON, (x + 15, y + 8), 10)
+    pygame.draw.rect(ecran, BLEU_EAU, (x + LARGEUR_JARDINIER, y + 20, 14, 12))
+
+
+def dessiner_pluie(ecran):
+    for i in range(60):
+        x = random.randint(0, LARGEUR)
+        y = random.randint(60, HAUTEUR)
+        pygame.draw.line(ecran, BLEU_PLUIE, (x, y), (x - 3, y + 10), 1)
+
+
+def dessiner_barre(ecran):
+    pygame.draw.rect(ecran, BLEU_NUIT, (0, 0, LARGEUR, 60))
+    restant = int(DUREE_JOURNEE - temps)
+    if restant &lt; 0:
+        restant = 0
+    ecrire_texte(ecran, &quot;Temps : &quot; + str(restant) + &quot; s&quot;, 10, 8, BLANC)
+    ecrire_texte(ecran, &quot;Plantes : &quot; + str(plantes_vivantes()) + &quot;/6&quot;, 180, 8, BLANC)
+    if NIVEAU &gt;= 2:
+        ecrire_texte(ecran, &quot;Arrosoir : &quot; + str(arrosoir) + &quot; L&quot;, 350, 8, BLANC)
+        ecrire_texte(ecran, &quot;Gaspillé : &quot; + str(round(litres_gaspilles, 1)) + &quot; L&quot;, 520, 8, BLANC)
+    if NIVEAU &gt;= 3:
+        ecrire_texte(ecran, texte_meteo(), 10, 34, JAUNE_TEXTE)
+
+
+def dessiner_message(ecran):
+    image = police.render(message, True, BLANC)
+    x = LARGEUR // 2 - image.get_width() // 2
+    y = HAUTEUR - 35
+    pygame.draw.rect(ecran, NOIR, (x - 10, y - 5, image.get_width() + 20, image.get_height() + 10))
+    ecran.blit(image, (x, y))
+
+
+def dessiner_bilan(ecran):
+    voile = pygame.Surface((LARGEUR, HAUTEUR))
+    voile.set_alpha(190)
+    voile.fill(NOIR)
+    ecran.blit(voile, (0, 0))
+    ecrire_texte_centre(ecran, &quot;Bilan de la journée&quot;, 130, BLANC, True)
+    y = 210
+    ecrire_texte_centre(ecran, &quot;Fin de la journée : &quot; + str(plantes_vivantes()) + &quot; plantes sur 6 vivantes&quot;, y, BLANC, False)
+    if NIVEAU &gt;= 2:
+        y = y + 36
+        texte = &quot;Eau versée : &quot; + str(litres_verses) + &quot; L   Eau gaspillée : &quot; + str(round(litres_gaspilles, 1))
+        texte = texte + &quot; L (&quot; + str(pourcentage_gaspille()) + &quot; %)&quot;
+        ecrire_texte_centre(ecran, texte, y, BLANC, False)
+        y = y + 36
+        texte = &quot;Score : &quot; + str(calculer_score()) + &quot;   Étoiles : &quot; + str(nombre_etoiles()) + &quot; sur 3&quot;
+        ecrire_texte_centre(ecran, texte, y, BLANC, False)
+        y = y + 36
+        ecrire_texte_centre(ecran, &quot;Bon geste : arrose tôt le matin ou le soir, jamais sous la pluie,&quot;, y, BLANC, False)
+        y = y + 36
+        ecrire_texte_centre(ecran, &quot;et seulement quand la terre est sèche.&quot;, y, BLANC, False)
+    if NIVEAU &gt;= 3:
+        y = y + 36
+        ecrire_texte_centre(ecran, &quot;Meilleur score : &quot; + str(meilleur_score), y, BLANC, False)
+    y = y + 36
+    ecrire_texte_centre(ecran, &quot;ENTRÉE : rejouer    ÉCHAP : quitter&quot;, y, BLANC, False)
+
+
+def dessiner(ecran):
+    ecran.fill(HERBE)
+    if il_pleut() == True:
+        dessiner_pluie(ecran)
+    for planche in planches:
+        dessiner_planche(ecran, planche)
+    if NIVEAU &gt;= 2:
+        pygame.draw.circle(ecran, GRIS_PUITS, (PUITS_X, PUITS_Y), 35)
+        pygame.draw.circle(ecran, BLEU_EAU, (PUITS_X, PUITS_Y), 25)
+        ecrire_texte(ecran, &quot;Puits (R)&quot;, PUITS_X - 35, PUITS_Y + 40, BLANC)
+    dessiner_jardinier(ecran)
+    dessiner_barre(ecran)
+    if duree_message &gt; 0:
+        dessiner_message(ecran)
+    if fini == True:
+        dessiner_bilan(ecran)
+
+
+# ---------- Programme principal ----------
+
+def preparer_polices():
+    global police, grande_police
+    police = pygame.font.SysFont(None, 26)
+    grande_police = pygame.font.SysFont(None, 48)
+
+
+def main():
+    global meilleur_score
+    pygame.init()
+    ecran = pygame.display.set_mode((LARGEUR, HAUTEUR))
+    pygame.display.set_caption(&quot;Goutte à goutte : arrose sans gaspiller&quot;)
+    horloge = pygame.time.Clock()
+    preparer_polices()
+    meilleur_score = lire_meilleur_score()
+    reinitialiser()
+    en_cours = True
+    while en_cours == True:
+        dt = horloge.tick(IMAGES_PAR_SECONDE) / 1000
+        for evenement in pygame.event.get():
+            if evenement.type == pygame.QUIT:
+                en_cours = False
+            if evenement.type == pygame.KEYDOWN:
+                if evenement.key == pygame.K_ESCAPE:
+                    en_cours = False
+                if evenement.key == pygame.K_SPACE and fini == False:
+                    arroser()
+                if evenement.key == pygame.K_r and fini == False:
+                    remplir()
+                if evenement.key == pygame.K_RETURN and fini == True:
+                    reinitialiser()
+        touches = pygame.key.get_pressed()
+        gauche = touches[pygame.K_LEFT]
+        droite = touches[pygame.K_RIGHT]
+        haut = touches[pygame.K_UP]
+        bas = touches[pygame.K_DOWN]
+        mettre_a_jour(dt, gauche, droite, haut, bas)
+        dessiner(ecran)
+        pygame.display.flip()
+    pygame.quit()
+
+
+main()
+</code></pre></details><details class="code-source"><summary>Lire le code : <code>tests_automatiques.py</code> <span class="gris">(165 lignes)</span></summary><pre><code># Tests automatiques du jeu témoin « Goutte à goutte » (preuves pour C2, C3, D1 et D2).
+#
+# Lancer : python tests_automatiques.py
+# Le script joue des parties sans fenêtre avec trois joueurs simulés,
+# mesure la vitesse d&#x27;affichage et enregistre des captures d&#x27;écran dans captures/.
+# Outil de l&#x27;enseignant(e) : les élèves n&#x27;ont pas besoin de le comprendre.
+
+import os
+import random
+import time
+
+os.environ[&quot;SDL_VIDEODRIVER&quot;] = &quot;dummy&quot;
+import pygame
+
+DOSSIER = os.path.dirname(os.path.abspath(__file__))
+DOSSIER_CAPTURES = os.path.join(DOSSIER, &quot;captures&quot;)
+DT = 1 / 30
+
+# Charger le jeu sans lancer sa dernière ligne main()
+chemin_jeu = os.path.join(DOSSIER, &quot;goutte_a_goutte.py&quot;)
+fichier = open(chemin_jeu, &quot;r&quot;, encoding=&quot;utf-8&quot;)
+code = fichier.read()
+fichier.close()
+code = code.replace(&quot;\nmain()\n&quot;, &quot;\n&quot;)
+jeu = {}
+exec(code, jeu)
+
+
+def aller_vers(x, y):
+    # Renvoie gauche, droite, haut, bas pour rejoindre le point (x, y)
+    centre_x = jeu[&quot;jardinier_x&quot;] + 15
+    centre_y = jeu[&quot;jardinier_y&quot;] + 20
+    gauche = centre_x &gt; x + 5
+    droite = centre_x &lt; x - 5
+    haut = centre_y &gt; y + 5
+    bas = centre_y &lt; y - 5
+    return gauche, droite, haut, bas
+
+
+def centre_planche(planche):
+    return planche[&quot;x&quot;] + 75, planche[&quot;y&quot;] + 45
+
+
+def joueur_econome(memoire):
+    # Arrose la planche la plus sèche sous 45 %, jamais sous la pluie, remplit au puits.
+    if jeu[&quot;arrosoir&quot;] == 0 or memoire[&quot;au_puits&quot;] == True:
+        memoire[&quot;au_puits&quot;] = True
+        if jeu[&quot;pres_du_puits&quot;]() == True:
+            jeu[&quot;remplir&quot;]()
+            memoire[&quot;au_puits&quot;] = False
+            return False, False, False, False
+        return aller_vers(jeu[&quot;PUITS_X&quot;], jeu[&quot;PUITS_Y&quot;])
+    cible = None
+    for planche in jeu[&quot;planches&quot;]:
+        if planche[&quot;morte&quot;] == False:
+            if cible == None or planche[&quot;humidite&quot;] &lt; cible[&quot;humidite&quot;]:
+                cible = planche
+    if cible == None or cible[&quot;humidite&quot;] &gt; 45 or jeu[&quot;il_pleut&quot;]() == True:
+        return False, False, False, False
+    if jeu[&quot;planche_touchee&quot;]() is cible:
+        memoire[&quot;pause&quot;] = memoire[&quot;pause&quot;] + 1
+        if memoire[&quot;pause&quot;] % 6 == 0 and cible[&quot;humidite&quot;] &lt;= 80:
+            jeu[&quot;arroser&quot;]()
+        return False, False, False, False
+    x, y = centre_planche(cible)
+    return aller_vers(x, y)
+
+
+def joueur_gaspilleur(memoire):
+    # Arrose dès qu&#x27;il touche une planche, sans regarder la jauge ni la météo.
+    if jeu[&quot;arrosoir&quot;] == 0:
+        if jeu[&quot;pres_du_puits&quot;]() == True:
+            jeu[&quot;remplir&quot;]()
+            return False, False, False, False
+        return aller_vers(jeu[&quot;PUITS_X&quot;], jeu[&quot;PUITS_Y&quot;])
+    cible = jeu[&quot;planches&quot;][memoire[&quot;i&quot;] % 6]
+    if jeu[&quot;planche_touchee&quot;]() is cible:
+        jeu[&quot;arroser&quot;]()
+        memoire[&quot;i&quot;] = memoire[&quot;i&quot;] + 1
+        return False, False, False, False
+    x, y = centre_planche(cible)
+    return aller_vers(x, y)
+
+
+def joueur_inactif(memoire):
+    return False, False, False, False
+
+
+def capture(nom):
+    ecran = pygame.Surface((800, 600))
+    jeu[&quot;dessiner&quot;](ecran)
+    pygame.image.save(ecran, os.path.join(DOSSIER_CAPTURES, nom))
+
+
+def jouer(joueur, graine, captures):
+    random.seed(graine)
+    jeu[&quot;NIVEAU&quot;] = 3
+    jeu[&quot;reinitialiser&quot;]()
+    jeu[&quot;meilleur_score&quot;] = 1000000  # ne pas écraser le vrai meilleur score
+    memoire = {&quot;au_puits&quot;: False, &quot;pause&quot;: 0, &quot;i&quot;: 0}
+    images = 0
+    while jeu[&quot;fini&quot;] == False:
+        gauche, droite, haut, bas = joueur(memoire)
+        jeu[&quot;mettre_a_jour&quot;](DT, gauche, droite, haut, bas)
+        images = images + 1
+        for instant in list(captures.keys()):
+            if jeu[&quot;temps&quot;] &gt;= instant:
+                nom, message = captures[instant]
+                if message != &quot;&quot;:
+                    jeu[&quot;afficher_message&quot;](message)
+                capture(nom)
+                del captures[instant]
+    return images * DT
+
+
+def mesurer_images_par_seconde():
+    ecran = pygame.display.set_mode((800, 600))
+    jeu[&quot;reinitialiser&quot;]()
+    debut = time.perf_counter()
+    for i in range(300):
+        jeu[&quot;mettre_a_jour&quot;](DT, False, False, False, False)
+        jeu[&quot;dessiner&quot;](ecran)
+        pygame.display.flip()
+    return 300 / (time.perf_counter() - debut)
+
+
+def main():
+    pygame.init()
+    jeu[&quot;preparer_polices&quot;]()
+    os.makedirs(DOSSIER_CAPTURES, exist_ok=True)
+    print(&quot;Joueur        | Partie | Durée (s) | Vivantes | Versé (L) | Gaspillé (L) | Gaspillé % | Étoiles&quot;)
+    joueurs = [(&quot;économe&quot;, joueur_econome), (&quot;gaspilleur&quot;, joueur_gaspilleur), (&quot;inactif&quot;, joueur_inactif)]
+    for nom, joueur in joueurs:
+        total = 0
+        for graine in range(1, 6):
+            duree = jouer(joueur, graine, {})
+            total = total + jeu[&quot;pourcentage_gaspille&quot;]()
+            print(&quot;%-13s | %6d | %9.1f | %8d | %9.0f | %12.1f | %10d | %d&quot; % (
+                nom, graine, duree, jeu[&quot;plantes_vivantes&quot;](), jeu[&quot;litres_verses&quot;],
+                jeu[&quot;litres_gaspilles&quot;], jeu[&quot;pourcentage_gaspille&quot;](), jeu[&quot;nombre_etoiles&quot;]()))
+        print(&quot;%-13s | moyenne du gaspillage : %.0f %%&quot; % (nom, total / 5))
+    print(&quot;Vitesse d&#x27;affichage : %.0f images par seconde (objectif : 30)&quot; % mesurer_images_par_seconde())
+    print(&quot;Taille du programme : %.1f Ko, aucun fichier image ou son&quot; % (os.path.getsize(chemin_jeu) / 1024))
+
+    # Captures d&#x27;écran pour la trace
+    jouer(joueur_econome, 3, {5: (&quot;capture_matin.png&quot;, &quot;&quot;),
+                              50: (&quot;capture_midi.png&quot;, &quot;La moitié de l&#x27;eau s&#x27;évapore à midi&quot;)})
+    random.seed(3)
+    jeu[&quot;reinitialiser&quot;]()
+    jeu[&quot;temps&quot;] = jeu[&quot;pluie_debut&quot;] + 2
+    jeu[&quot;afficher_message&quot;](&quot;Gaspillage : il pleut déjà !&quot;)
+    capture(&quot;capture_pluie.png&quot;)
+    jouer(joueur_econome, 3, {})
+    jeu[&quot;meilleur_score&quot;] = jeu[&quot;calculer_score&quot;]()
+    capture(&quot;capture_bilan.png&quot;)
+    for niveau in [1, 2]:
+        jeu[&quot;NIVEAU&quot;] = niveau
+        jeu[&quot;reinitialiser&quot;]()
+        jeu[&quot;mettre_a_jour&quot;](DT, False, False, False, False)
+        capture(&quot;capture_niveau&quot; + str(niveau) + &quot;.png&quot;)
+    print(&quot;Captures enregistrées dans&quot;, DOSSIER_CAPTURES)
+    pygame.quit()
+
+
+main()
+</code></pre></details></section><section><h2 id="s4"><span class="num-sec">4</span>Télécharger</h2><ul class="fichiers"><li><a href="fichiers/goutte/Trace_temoin_Goutte_a_goutte.docx" download>La trace complète, de A1 à D4</a> <span class="format">DOCX, 426 Ko</span> <span class="gris">(Word)</span></li><li><a href="fichiers/goutte/jeu_goutte_a_goutte.zip" download>Le jeu, les tests et les captures</a> <span class="format">ZIP, 144 Ko</span></li></ul></section></main></div><footer class="appendice"><div class="appendice-int"><p>Design PEI 5 · Unités 1 et 2 · Préparation formative au cycle de design (critères A à D).</p><p>Sécurité : très basse tension uniquement, 5 V au maximum. Jamais de branchement sur le secteur.</p></div></footer></body></html>

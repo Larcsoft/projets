@@ -1,0 +1,504 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>B4 Réaliser les dessins de planification et lister les besoins</title><style>/* Design PEI 5 · pages d'activités A1 à D4
+   Style inspiré des articles scientifiques Distill : une large colonne aérée,
+   titres nets sans empattement, filets fins, aucune décoration,
+   couleurs pastel seulement pour reconnaître les encadrés.
+   Pour changer une couleur partout, modifie seulement les variables ci-dessous. */
+
+:root{
+  --papier:#ffffff;
+  --encre:rgba(0,0,0,.84);
+  --gris:rgba(0,0,0,.55);
+  --filet:rgba(0,0,0,.12);
+  --lien:#2d4f7f;
+  /* encadrés pastel */
+  --consigne:#eef3fa;
+  --exemple:#faf5ea;
+  --trier:#eef6f0;
+  --atoi:#f4effa;
+  --pouce:#fdf9e6;
+  --sommative:#f3f3f1;
+  --juste:#2e6b3f;
+  --faux:#9b2c2c;
+  /* repère du critère (filet sous le titre) */
+  --crit:#9ab7dd;
+}
+.crit-A{--crit:#9ab7dd}.crit-B{--crit:#a8cfae}.crit-C{--crit:#e6bf98}.crit-D{--crit:#c5b3dd}
+
+*{box-sizing:border-box}
+html{background:var(--papier)}
+body{margin:0;background:var(--papier);color:var(--encre);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,Arial,sans-serif;
+  font-size:18px;line-height:1.7;-webkit-font-smoothing:antialiased}
+.entete,main,footer{max-width:46rem;margin:0 auto;padding-left:16px;padding-right:16px}
+
+a{color:var(--lien);text-decoration:none;border-bottom:1px solid var(--filet)}
+a:hover{border-bottom-color:var(--lien)}
+
+/* ---------- en-tête façon « titre d'article » ---------- */
+.entete{padding-top:24px;padding-bottom:0}
+.entete .haut{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:.75em;color:var(--gris);text-transform:uppercase;letter-spacing:.06em}
+.code{margin:44px 0 0;font-size:.8em;color:var(--gris);text-transform:uppercase;letter-spacing:.06em}
+h1{font-size:2.3em;line-height:1.15;margin:6px 0 14px;font-weight:700;letter-spacing:-.01em}
+.desc{font-size:1.1em;color:rgba(0,0,0,.7);margin:0 0 20px;line-height:1.55}
+.desc strong{font-weight:600}
+.choix-projet{display:block;margin:0;padding:12px 0;font-size:.8em;color:var(--gris);border-top:1px solid var(--filet);border-bottom:1px solid var(--filet)}
+select{font:inherit;font-size:1em;padding:3px 6px;border:1px solid var(--filet);border-radius:4px;background:#fff;color:var(--encre);max-width:100%}
+.temps{display:flex;flex-wrap:wrap;gap:4px 22px;font-size:.78em;padding:12px 0;border-bottom:1px solid var(--filet);border-left:6px solid var(--crit);padding-left:12px;margin:0}
+.temps a{border:none;color:var(--encre);font-weight:600}
+.temps a:hover{color:var(--lien)}
+.temps small{margin-left:5px;color:var(--gris);font-weight:400}
+
+.byline{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;border-top:1px solid var(--filet);padding:14px 0 12px;font-size:.75em;line-height:1.45}
+.byline h5{margin:0 0 4px;font-size:.85em;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--gris)}
+.byline p{margin:0}
+@media (max-width:600px){.byline{grid-template-columns:repeat(2,1fr)}}
+.desc-tache{font-size:.92em}
+.enonce{background:#fff;border:1px solid rgba(0,0,0,.25);border-radius:2px;padding:12px 16px;margin:0 0 16px}
+.enonce-tete{font-size:.72em;text-transform:uppercase;letter-spacing:.06em;color:var(--gris);margin:0 0 6px}
+.enonce-texte{font-size:1.05em;margin:0 0 10px}
+.termes{margin:0;font-size:.82em;border-top:1px solid var(--filet);padding-top:8px}
+.termes dt{font-weight:600;float:left;clear:left;margin-right:6px}
+.termes dt::after{content:" :"}
+.termes dd{margin:0 0 4px}
+.glossaire dt{font-weight:600;margin-top:8px}
+.glossaire dd{margin:0 0 0 0}
+sup{font-size:.65em;line-height:0;margin-left:1px}
+sup a{border:none}
+.notes{max-width:46rem;margin:56px auto 0;padding-left:16px;padding-right:16px;font-size:.75em;color:var(--gris);border-top:1px solid var(--filet);padding-top:8px}
+.notes h2{font-size:1.15em;border:none;padding:0;color:var(--gris)}
+.notes li{margin:4px 0}
+
+/* ---------- sections numérotées ---------- */
+main{padding-bottom:40px}
+section{margin:52px 0 0}
+h2{font-size:1.45em;line-height:1.25;margin:0 0 12px;font-weight:600;padding-bottom:8px;border-bottom:1px solid var(--filet)}
+h2 small,h3 small{font-weight:normal;font-size:.7em;color:var(--gris);margin-left:6px}
+h3{font-size:1.05em;margin:24px 0 6px;font-weight:600}
+h4{font-size:.8em;margin:20px 0 6px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--gris)}
+p{margin:0 0 12px}
+ol,ul{padding-left:1.4em}
+li{margin:3px 0}
+.petit{font-size:.85em;color:var(--gris)}
+code{font-family:Menlo,Consolas,"Courier New",monospace;font-size:.88em}
+pre{font-family:Menlo,Consolas,"Courier New",monospace;font-size:.78em;line-height:1.45;background:#f7f7f5;border:1px solid var(--filet);border-radius:4px;padding:10px 12px;overflow-x:auto}
+
+/* ---------- encadrés pastel (une couleur = un rôle) ---------- */
+.cadre,.histoire,#appliquer .panneau,.pouce,.sommative{border-radius:4px;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.cadre{padding:14px 18px}.cadre-consigne{background:var(--consigne)}
+.histoire{background:var(--exemple);padding:12px 18px;margin-bottom:8px}
+.histoire h3{margin-top:4px}
+.cadre-trier{background:var(--trier)}
+#appliquer .panneau{background:var(--atoi);padding:6px 18px 16px}
+.sommative{background:var(--sommative);padding:14px 18px;border-left:3px solid var(--crit)}
+.produit{margin:12px 0 0}
+.attention{font-style:italic}
+.retenir{margin-top:12px;padding-top:8px;border-top:1px solid var(--filet)}
+
+/* ---------- tableaux sobres (filets « booktabs ») ---------- */
+.tab-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:8px 0 14px}
+table{border-collapse:collapse;width:100%;font-size:.8em;line-height:1.45;border-top:1px solid rgba(0,0,0,.4);border-bottom:1px solid rgba(0,0,0,.4)}
+thead th{border-bottom:1px solid rgba(0,0,0,.4);font-weight:600}
+th,td{padding:6px 8px;vertical-align:top;text-align:left}
+tbody tr+tr td{border-top:1px solid #ecebe7}
+table.remplir td{padding:3px 4px;min-width:130px}
+td.fixe-cell{font-style:italic;padding:7px 8px}
+
+/* ---------- champs ---------- */
+textarea,input[type=text]{font:inherit;font-size:.95em;color:var(--encre);background:#fff;border:1px solid var(--filet);border-radius:3px;padding:6px 8px;width:100%;line-height:1.45}
+textarea:focus,input:focus,select:focus,button:focus,summary:focus{outline:2px solid var(--lien);outline-offset:1px}
+textarea.phrase{display:block;margin:6px 0}
+input.trou{width:auto;max-width:100%;padding:0 4px;border:none;border-bottom:1px solid var(--encre);border-radius:0;background:rgba(255,255,255,.75)}
+p.trous{line-height:2.2;text-align:left}
+.reformuler{margin-top:14px;padding-top:6px;border-top:1px solid rgba(0,0,0,.08)}
+
+/* ---------- boutons discrets ---------- */
+button{font:inherit;font-size:.85em;cursor:pointer;border:1px solid #bdbab3;background:#fff;color:var(--encre);border-radius:3px;padding:3px 10px}
+button:hover{border-color:var(--encre)}
+
+/* ---------- brouillon / version finale, connexion ---------- */
+.deux-colonnes{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:8px 0 6px}
+.deux-colonnes textarea{font-size:.85em}
+#mon-brouillon{background:#f7f7f5;color:var(--gris)}
+@media (max-width:700px){.deux-colonnes{grid-template-columns:1fr}}
+.connexion{font-size:.8em;padding:10px 0;border-bottom:1px solid var(--filet)}
+.connexion input{width:auto;font-size:1em;padding:3px 6px}
+.etat{color:var(--gris);margin-left:6px}
+.etat.ok{color:var(--juste)}
+.etat.attente{color:#8a6d00}
+
+/* ---------- trier ---------- */
+.tri{list-style:none;padding:0;margin:0}
+.tri li{padding:10px 0;border-top:1px solid rgba(0,0,0,.08)}
+.tri .item{margin:0 0 6px}
+.boutons{display:flex;flex-wrap:wrap;gap:6px}
+.tri button.choisi-ok{border-color:var(--juste);color:var(--juste);font-weight:bold}
+.tri button.choisi-ko{border-color:var(--faux);color:var(--faux);text-decoration:line-through}
+.explication{margin:6px 0 0;font-size:.9em}
+.explication.ok::before{content:"Juste. ";color:var(--juste);font-weight:bold}
+.explication.ko::before{content:"Pas tout à fait. ";color:var(--faux);font-weight:bold}
+.score{font-size:.9em;font-style:italic}
+
+/* ---------- appliquer ---------- */
+.pistes>div,.projet-vide{font-size:.92em;border-left:2px solid var(--crit);padding:2px 0 2px 12px;margin:10px 0}
+.pistes p{margin:2px 0}
+.onglets{display:flex;flex-wrap:wrap;gap:0;margin:16px 0 0;border-bottom:1px solid var(--filet)}
+.onglets button{flex:1 1 180px;text-align:left;border:none;border-bottom:2px solid transparent;border-radius:0;background:transparent;padding:6px 8px;font-size:.85em}
+.onglets button small{display:block;color:var(--gris);font-size:.9em;font-weight:normal}
+.onglets button[aria-selected=true]{border-bottom-color:var(--encre);font-weight:bold;background:var(--atoi)}
+#appliquer .panneau{border-top-left-radius:0;border-top-right-radius:0}
+.bloc.info{font-size:.9em;font-style:italic;color:var(--gris)}
+.controle li{margin:2px 0}
+
+/* ---------- coups de pouce repliés ---------- */
+.pouces{margin-top:22px}
+.pouce{background:var(--pouce);margin:6px 0;padding:6px 14px}
+.pouce summary{cursor:pointer;font-weight:bold;font-size:.92em}
+.pouce[data-vu] summary::after{content:" · déjà ouvert";font-weight:normal;color:var(--gris)}
+.pouce .contenu{padding-top:6px}
+
+/* ---------- témoin ---------- */
+details.temoin{margin-top:22px;border-top:1px solid var(--filet);border-bottom:1px solid var(--filet);padding:8px 0}
+details.temoin summary{cursor:pointer;font-style:italic}
+.autres{margin-top:12px;font-size:.92em}
+
+/* ---------- récolter ---------- */
+.check{list-style:none;padding:0}
+fieldset{border:none;border-top:1px solid var(--filet);border-bottom:1px solid var(--filet);margin:12px 0;padding:6px 0}
+legend{font-style:italic;padding:0 6px 0 0}
+fieldset label{margin-right:18px;white-space:nowrap}
+.export{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 6px}
+.export button:first-child{border-color:var(--encre);font-weight:bold}
+.message{font-style:italic;color:var(--juste);min-height:1em}
+.ou-coller{font-size:.92em}
+.transfert{font-style:italic;margin-top:10px}
+
+/* ---------- navigation, pied ---------- */
+.suite{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:38px;font-size:.9em}
+footer{font-size:.75em;color:var(--gris);text-align:center;padding-top:14px;padding-bottom:28px;border-top:1px solid var(--filet)}
+
+/* ---------- sommaire ---------- */
+.sommaire h2{margin-top:30px}
+.sommaire ol{list-style:none;padding:0}
+.sommaire li{display:flex;gap:10px;padding:4px 0;border-bottom:1px dotted var(--filet)}
+.sommaire li .num{min-width:2.2em;font-variant:small-caps;color:var(--gris)}
+
+/* ---------- impression : une feuille propre, comme un polycopié ---------- */
+@media print{
+  body{font-size:10.5pt;background:#fff;color:#000}
+  .temps,.onglets,.export,.suite,.choix-projet,.connexion,.message,#apercu,.score{display:none}
+  .panneau[hidden]{display:none}
+  
+  .cadre,.histoire,#appliquer .panneau,.pouce,.sommative{box-shadow:none;background:#fff;border:0.5pt solid #999}
+  details.temoin{display:none}
+  section{break-inside:auto}
+  h2,h3{break-after:avoid}
+  a{border:none;color:inherit}
+}
+@media (max-width:600px){
+  body{font-size:17px}
+  h1{font-size:1.7em}
+  .cadre,.histoire,#appliquer .panneau,.sommative{padding-left:12px;padding-right:12px}
+}
+
+/* ---------- QCM « Ai-je compris la tâche ? » ---------- */
+.qcm{margin-top:18px}
+.qcm-liste{padding-left:1.3em;margin:8px 0 0}
+.qcm-liste>li{padding:10px 0;border-top:1px solid rgba(0,0,0,.08)}
+.qcm-enonce{margin:0 0 8px;font-weight:600}
+.qcm-choix{display:flex;flex-direction:column;gap:6px}
+.qcm-choix button{display:flex;gap:10px;align-items:baseline;text-align:left;font-size:.88em;line-height:1.45;padding:6px 10px;width:100%}
+.qcm-choix button:disabled{cursor:default;color:var(--encre);opacity:1}
+.qcm-choix .lettre{flex:0 0 1.1em;font-weight:600;color:var(--gris)}
+.qcm-choix button.juste{border-color:var(--juste);color:var(--juste);font-weight:600}
+.qcm-choix button.faux{border-color:var(--faux);color:var(--faux);text-decoration:line-through}
+.qcm-choix button.attenue{opacity:.6}
+.qcm-score{font-weight:600;margin-bottom:0}
+@media print{.qcm-encore{display:none}}
+</style></head><body class="crit-B" data-code="B4" data-titre="Réaliser les dessins de planification et lister les besoins"><header class="entete"><div class="haut"><a href="index.html">← Sommaire</a><span>Critère B : Développement des idées</span></div><p class="code">B4 · 8 / 16 · 10 à 15 min</p><h1>B4 : Réaliser les dessins de planification et lister les besoins</h1><p class="desc">Un bon dossier de fabrication permet à quelqu’un d’autre de construire ta solution pendant que tu es absent. C’est ce dossier que tu prépares ici.</p><div class="byline"><div><h5>Auteur</h5><p>L’enseignant(e) de Design<br>PEI 5, unités 1 et 2</p></div><div><h5>Publié</h5><p>Octobre 2026</p></div><div><h5>Critère</h5><p>Développement des idées</p></div><div><h5>Lecture</h5><p>10 à 15 min<br>Tâche 8 sur 16</p></div></div><label class="choix-projet">Mon projet : <select id="projet"><option value="">(choisis ton projet)</option><option value="lampe">1. Lampe sonore : mesurer et afficher (barre de LED, Arduino / ESP32)</option><option value="detecteur">2. Détecteur : détecter et commander (relais, temporisation, Arduino / ESP32)</option><option value="jeu">3. Jeu de plateforme sur le tri des déchets (PyGame)</option><option value="repar">4. Répar’Lomé, annuaire de réparateurs (Thunkable ; Supabase aux niveaux 2 et 3)</option></select></label><div id="connexion" class="connexion" hidden></div><nav class="temps"><a href="#consigne">1. Consigne<small>2 min</small></a><a href="#exemple">2. Exemple réel<small>2 min</small></a><a href="#trier">3. Trier et vérifier<small>3 + 4 min</small></a><a href="#appliquer">4. Appliquer<small>5 à 6 min</small></a><a href="#recolter">5. Récolter<small>2 min</small></a></nav></header><main><section id="consigne"><h2>1. Consigne <small>2 min</small></h2><div class="cadre cadre-consigne"><div class="enonce"><p class="enonce-tete">Tâche B4 · Critère B : Développement des idées · niveau visé 7-8</p><p class="enonce-texte"><strong>Élaborez</strong> des dessins ou diagrammes de planification précis et détaillés, et <strong>décrivez</strong> les exigences nécessaires à la réalisation de la solution choisie.</p><dl class="termes"><dt>Élaborez</dt><dd>Développez progressivement une idée ou un produit, en le précisant et en le complétant.</dd><dt>Décrivez</dt><dd>Donnez un compte rendu détaillé.</dd></dl></div><p class="desc-tache"><strong>La tâche, telle qu’elle est écrite dans ton Word :</strong> <em>Je fais les schémas précis de ma solution (schéma de câblage, algorigramme, maquette d’écran…) et je liste tout ce qu’il faut pour la fabriquer.</em></p><h3>Ce que cela veut dire, pas à pas</h3><p>Tu prépares un <strong>dossier de fabrication</strong> assez précis pour qu’une autre personne puisse fabriquer ta solution <strong>sans toi</strong> : les dessins ou diagrammes, et la liste de <strong>tout ce qu’il faut</strong>.</p><ol class="etapes"><li>Fais les dessins qui correspondent à ton type de projet : <strong>électronique</strong> → schéma de câblage + tableau des broches + algorigramme + plan coté du boîtier FreeCAD ; <strong>jeu ou application</strong> → maquettes d’écran annotées + algorigramme + structure des données.</li><li>Écris la liste des <strong>fonctions</strong> de ton programme : nom de la fonction et ce qu’elle fait, en une ligne.</li><li>Fais la <strong>liste des besoins</strong> : composants, logiciels, bibliothèques, outils, avec quantité ou version et rôle.</li><li>Vérifie la <strong>sécurité</strong> : tout est en 5 V maximum (électronique) ou aucune donnée personnelle sans accord (application).</li></ol><p class="produit"><strong>À la fin, tu auras :</strong> des schémas précis et annotés, la liste des fonctions du programme et la liste complète des besoins.</p><p class="attention">Électronique : 5 V maximum partout. Un relais ou un transistor commande la charge ; jamais de fil vers le secteur.</p><div class="reformuler"><h3>Je reformule avec mes mots <small>(zone 1 du Word)</small></h3><p class="petit">Mots importants à reprendre : dessin de planification, schéma de câblage, algorigramme, maquette, liste des besoins, précis.</p><textarea class="phrase reform" rows="2" data-save="B4-reform-0" data-depart="Dans cette tâche, je dois">Dans cette tâche, je dois </textarea><textarea class="phrase reform" rows="2" data-save="B4-reform-1" data-depart="Pour cela, je vais">Pour cela, je vais </textarea><textarea class="phrase reform" rows="2" data-save="B4-reform-2" data-depart="À la fin, j’aurai produit">À la fin, j’aurai produit </textarea></div></div></section><section id="exemple"><h2>2. Exemple réel à Lomé <small>2 min</small></h2><div class="histoire"><h3>Le maçon M. Sénam prépare le chantier d’une chambre à Adidogomé<sup><a href="#note-1" id="renvoi-1">1</a></sup></h3><p>Avant le premier coup de truelle, M. Sénam dessine <strong>le plan coté</strong> de la chambre (3,5 m × 3 m, porte de 0,9 m, fenêtre de 1,2 m) et fait la <strong>liste du matériel</strong> : 450 briques de 15, 12 sacs de ciment, 2 voyages de sable, 6 fers de 10.</p><p>Il donne le plan et la liste à son chef d’équipe : « Si je suis malade demain, tu peux commencer avec ça. »</p></div><h3>Ce que cette personne fait, c’est exactement la tâche B4</h3><div class="tab-scroll"><table class="corresp"><thead><tr><th>Ce que fait le maçon</th><th>Ce que la tâche te demande</th></tr></thead><tbody><tr><td>Un plan coté, pas un croquis approximatif.</td><td>Des dessins <strong>précis et détaillés</strong>.</td></tr><tr><td>La liste avec les quantités.</td><td>Décrire les <strong>exigences</strong> : tout ce qu’il faut pour fabriquer.</td></tr><tr><td>Son chef d’équipe peut commencer sans lui.</td><td>Un dossier qu’<strong>un autre peut suivre</strong>.</td></tr></tbody></table></div><p class="petit">Cet exemple sert seulement à comprendre la tâche : tu ne le refais pas. Tu feras la même démarche sur ton projet.</p></section><section id="trier"><h2>3. Trier et vérifier <small>3 + 4 min</small></h2><div class="cadre cadre-trier"><p>Dans quel document du dossier de fabrication du témoin chaque information va-t-elle ?</p><ul class="tri" data-categories="[&quot;Schéma de câblage / broches&quot;, &quot;Algorigramme&quot;, &quot;Plan du boîtier&quot;, &quot;Liste des besoins&quot;]"><li data-bonne="0"><p class="item">Le module relais est relié à GPIO26 (ESP32) ou D7 (Uno).</p><div class="boutons"><button type="button" data-k="0">Schéma de câblage / broches</button><button type="button" data-k="1">Algorigramme</button><button type="button" data-k="2">Plan du boîtier</button><button type="button" data-k="3">Liste des besoins</button></div><p class="explication" hidden>Une connexion entre deux composants : schéma de câblage et tableau des broches.</p></li><li data-bonne="1"><p class="item">Si humidité &lt; 35 % et bidon non vide, alors arroser 8 s, attendre, mesurer de nouveau.</p><div class="boutons"><button type="button" data-k="0">Schéma de câblage / broches</button><button type="button" data-k="1">Algorigramme</button><button type="button" data-k="2">Plan du boîtier</button><button type="button" data-k="3">Liste des besoins</button></div><p class="explication" hidden>Une suite de décisions du programme : algorigramme.</p></li><li data-bonne="2"><p class="item">Boîtier de 124 × 84 × 44 mm, passe-fils en bas de la face avant.</p><div class="boutons"><button type="button" data-k="0">Schéma de câblage / broches</button><button type="button" data-k="1">Algorigramme</button><button type="button" data-k="2">Plan du boîtier</button><button type="button" data-k="3">Liste des besoins</button></div><p class="explication" hidden>Des dimensions et des formes : plan du boîtier.</p></li><li data-bonne="3"><p class="item">Mini-pompe immergée 5 V + 1 m de tuyau Ø 6 mm, 1 pièce, 2 500 FCFA.</p><div class="boutons"><button type="button" data-k="0">Schéma de câblage / broches</button><button type="button" data-k="1">Algorigramme</button><button type="button" data-k="2">Plan du boîtier</button><button type="button" data-k="3">Liste des besoins</button></div><p class="explication" hidden>Un composant avec quantité et prix : liste des besoins.</p></li><li data-bonne="3"><p class="item">Thonny + MicroPython, ou Arduino IDE 2.</p><div class="boutons"><button type="button" data-k="0">Schéma de câblage / broches</button><button type="button" data-k="1">Algorigramme</button><button type="button" data-k="2">Plan du boîtier</button><button type="button" data-k="3">Liste des besoins</button></div><p class="explication" hidden>Les logiciels font aussi partie des besoins.</p></li><li data-bonne="1"><p class="item">Répéter : au plus 3 doses, puis attendre 30 min avant de mesurer.</p><div class="boutons"><button type="button" data-k="0">Schéma de câblage / broches</button><button type="button" data-k="1">Algorigramme</button><button type="button" data-k="2">Plan du boîtier</button><button type="button" data-k="3">Liste des besoins</button></div><p class="explication" hidden>Une boucle et une condition : algorigramme.</p></li></ul><p class="score" aria-live="polite"></p><p class="retenir"><strong>À retenir :</strong> un dossier complet répond à trois questions : <strong>comment c’est relié</strong> (schéma), <strong>comment ça décide</strong> (algorigramme), <strong>avec quoi on le fait</strong> (liste des besoins).</p></div><div class="cadre cadre-trier qcm" data-nb="5"><h3>Ai-je compris la tâche ? <small>4 min</small></h3><p>5 questions tirées au hasard parmi 10. Pour chacune, <strong>une seule</strong> proposition décrit exactement ce que la tâche B4 demande ; les autres contiennent une erreur fréquente, parfois d’un seul mot. Lis les cinq propositions avant de choisir : tu n’as qu’un essai par question.</p><script type="application/json" class="qcm-donnees">[{"e": "Que te demande la tâche B4 ?", "p": ["Des dessins précis et la liste de tous les besoins, pour qu’un autre fabrique sans toi.", "Des dessins clairs et annotés de plusieurs idées, pour qu’un autre les comprenne.", "Des dessins précis et la liste des étapes, pour savoir combien de temps prévoir.", "Un dessin final soigné de la solution, pour la présenter au client avant de fabriquer.", "Des dessins précis et la liste de tous les besoins, pour vérifier la sécurité seulement."], "x": "B4 prépare un <strong>dossier de fabrication<\/strong> : assez précis pour qu’un autre fabrique <strong>sans toi<\/strong>. Les idées sont en B2, les étapes en C1, la présentation en B3."}, {"e": "Pour un projet électronique, quel ensemble de documents correspond à B4 ?", "p": ["Schéma de câblage, broches, algorigramme, plan coté du boîtier, liste des besoins.", "Schéma de câblage, broches, algorigramme, plan coté du boîtier, plan des séances.", "Schéma de câblage, broches, journal de fabrication, photos, liste des besoins.", "Croquis de trois idées, broches, algorigramme, plan du boîtier, liste des besoins.", "Schéma de câblage, broches, plan coté du boîtier, liste des besoins, tests."], "x": "Un dossier complet répond à : <strong>comment c’est relié<\/strong> (schéma, broches), <strong>comment ça décide<\/strong> (algorigramme), <strong>avec quoi on le fait<\/strong> (plans, liste). Les séances et le journal sont en C, les tests en D."}, {"e": "Pour un jeu PyGame ou une appli Thunkable, quels dessins attend-on en B4 ?", "p": ["Maquettes d’écran annotées, algorigramme, structure des données.", "Maquettes d’écran annotées, algorigramme, captures du jeu fini.", "Maquettes d’écran annotées, code complet, structure des données.", "Croquis de trois idées d’écran, algorigramme, liste des joueurs.", "Maquettes d’écran annotées, schéma de câblage, plan du boîtier."], "x": "Pour un logiciel : <strong>écrans<\/strong>, <strong>logique<\/strong> (algorigramme) et <strong>données<\/strong> (liste, table Supabase…). Le code et les captures arrivent en C."}, {"e": "Laquelle de ces lignes de la liste des besoins est assez précise ?", "p": ["Module relais 1 canal 5 V, ×1 : commande la pompe sans le secteur.", "Module relais 5 V, ×1 : un composant important du montage.", "Relais et fils de connexion, en quantité suffisante pour le montage.", "Module relais : commande la pompe pour arroser le bac de la cliente.", "Composants électroniques du labo : relais, capteur, pompe, fils."], "x": "Chaque besoin dit <strong>quoi<\/strong> (référence, tension), <strong>combien<\/strong> et <strong>à quoi il sert<\/strong>. Il manque toujours au moins un de ces trois éléments dans les pièges."}, {"e": "Pourquoi faut-il lister les fonctions du programme en B4 ?", "p": ["Pour savoir, avant de coder, ce que fait chaque partie : nom et rôle.", "Pour écrire dès maintenant le code complet de chaque fonction.", "Pour remplacer l’algorigramme, qui devient alors inutile.", "Pour montrer que l’on connaît beaucoup de fonctions Python.", "Pour pouvoir copier un programme qui a les mêmes fonctions."], "x": "Exemple du témoin : <code>humidite_sol()<\/code> convertit la valeur brute en pourcentage ; <code>arroser()<\/code> ferme le relais 8 s. Le code complet est écrit en C."}, {"e": "Que doit vérifier B4 sur la sécurité d’un projet électronique ?", "p": ["Tout en 5 V maximum ; un relais ou un transistor commande la charge.", "Tout en 5 V maximum, sauf la pompe, qui peut être branchée au secteur.", "Tout en 12 V maximum, car c’est encore une très basse tension.", "Tout en 5 V maximum ; la pompe est branchée directement sur l’ESP32.", "Tout en 5 V maximum ; le boîtier est fermé, sans aucune ouverture."], "x": "Case du descripteur : <strong>tout fonctionne en très basse tension (5 V)<\/strong>. La broche de l’ESP32 ne peut pas alimenter une pompe : un relais (ou transistor) la commande."}, {"e": "Que doit faire un algorigramme dans le dossier de B4 ?", "p": ["Montrer comment le programme décide : étapes, conditions, boucles.", "Montrer comment les composants sont reliés aux broches de la carte.", "Montrer dans quel ordre on fabrique la solution, séance par séance.", "Montrer comment l’utilisateur se sert de la solution au quotidien.", "Montrer toutes les lignes du programme, dans l’ordre où on les écrit."], "x": "L’algorigramme décrit la <strong>logique<\/strong> : « humidité &lt; 35 % ? oui → bidon OK ? oui → arroser 8 s → attendre 5 min… ». Ce n’est ni le câblage, ni le plan, ni le code ligne à ligne."}, {"e": "Le plan du boîtier indique : « Passe-fils : 2 trous Ø 6 mm en bas de la face avant. » Pourquoi cette précision ?", "p": ["Pour qu’un autre le refasse à l’identique, et pour que la pluie n’entre pas.", "Pour qu’un autre le refasse à l’identique ; l’endroit n’a pas d’importance.", "Pour que FreeCAD accepte le trou ; sans diamètre, la pièce ne s’imprime pas.", "Pour que le boîtier ait l’air professionnel sur la photo de présentation.", "Pour respecter une règle : tous les passe-fils se placent toujours en bas."], "x": "Une cote précise <strong>et sa raison<\/strong> : c’est ce qui rend un plan à la fois <strong>reproductible<\/strong> et <strong>justifié<\/strong> (ici, la protection contre la pluie)."}, {"e": "Comment savoir si tes dessins de B4 sont « assez précis » ?", "p": ["Un camarade pourrait fabriquer la solution avec ton dossier, sans te questionner.", "Ton enseignant(e) comprend ton dossier, car il ou elle connaît bien ton projet.", "Tes dessins sont faits à l’ordinateur, avec un logiciel de dessin technique.", "Tes dessins ressemblent à ceux du projet témoin, avec les mêmes rubriques.", "Tu peux fabriquer la solution toi-même avec ton dossier, sans rien oublier."], "x": "Le test, c’est un <strong>lecteur extérieur<\/strong> qui ne connaît pas ton projet. Un dessin à la main peut très bien suffire s’il est précis."}, {"e": "Un élève a un beau schéma de câblage mais pas de liste des besoins. Qu’est-ce qui manque alors ?", "p": ["Les logiciels, bibliothèques, quantités et outils : tout ce qu’il faut préparer.", "Rien : le schéma de câblage montre déjà tous les composants nécessaires.", "La logique du programme : comment la solution décide d’arroser ou non.", "Les dimensions du boîtier, qui sont indiquées dans la liste des besoins.", "La justification du choix de la conception, qui se fait dans cette liste."], "x": "Le schéma ne montre ni les <strong>logiciels<\/strong>, ni les <strong>bibliothèques<\/strong>, ni les <strong>quantités<\/strong>, ni les <strong>outils<\/strong>. B4 demande les dessins <strong>et<\/strong> les exigences."}]</script><ol class="qcm-liste"></ol><p class="qcm-score" aria-live="polite"></p><p><button type="button" class="qcm-encore" hidden>5 autres questions</button></p></div></section><section id="appliquer"><h2>4. Appliquer sur mon projet <small>5 à 6 min</small></h2><p>Les schémas se dessinent sur papier ou dans un logiciel (Fritzing, Tinkercad Circuits, draw.io, FreeCAD). Ici, tu écris les textes et les listes qui les accompagnent.</p><div class="pistes"><p class="projet-vide"><strong>Pour ton projet :</strong> choisis ton projet en haut de la page pour voir des questions qui t’aident à démarrer.</p><div class="projet-lampe" hidden><strong>Pour ton projet (Lampe sonore : mesurer et afficher) :</strong> <p>Ton schéma : capteur de son, 6 à 8 LED de 5 mm chacune avec sa résistance de 220 Ω, carte, alimentation USB 5 V. Ton algorigramme : lire le son → calculer combien de LED allumer → allumer les LED → enregistrer la valeur. N’oublie pas le plan coté du boîtier FreeCAD.</p></div><div class="projet-detecteur" hidden><strong>Pour ton projet (Détecteur : détecter et commander) :</strong> <p>Ton schéma : capteur PIR, photorésistance avec sa résistance, module relais 5 V, éclairage 5 V commandé par le relais, carte, alimentation USB 5 V. Ton algorigramme : mouvement ? → fait-il sombre ? → fermer le relais → attendre la temporisation (relancée à chaque mouvement) → ouvrir le relais. N’oublie pas le plan coté du boîtier FreeCAD.</p></div><div class="projet-jeu" hidden><strong>Pour ton projet (Jeu de plateforme sur le tri des déchets) :</strong> <p>Tes maquettes : écran d’accueil, écran de jeu (personnage, déchets, poubelles, score), écran de fin. Ton algorigramme : la boucle de jeu (lire les touches → déplacer → tester les collisions → dessiner). Besoins : Python, PyGame (version), images, sons.</p></div><div class="projet-repar" hidden><strong>Pour ton projet (Répar’Lomé, annuaire de réparateurs) :</strong> <p>Tes maquettes (Figma) : écran liste avec filtre, écran fiche, et au niveau 3 écran avis. Ta structure de données : un réparateur = un objet (nom, catégorie, quartier, téléphone) ; au niveau 2, les tables <code>categories</code>, <code>reparateurs</code> et <code>avis</code> reliées dans Supabase. Besoins : Thunkable, un compte Supabase (niveaux 2 et 3), de quoi imprimer les codes QR (niveau 3).</p></div></div><div class="onglets" role="tablist"><button type="button" role="tab" data-niveau="1"><strong>Niveau 1</strong><small>Je suis guidé(e) pas à pas : je complète un modèle à trous.</small></button><button type="button" role="tab" data-niveau="2"><strong>Niveau 2</strong><small>J’ai des phrases de départ : je les continue.</small></button><button type="button" role="tab" data-niveau="3"><strong>Niveau 3</strong><small>Je me lance seul(e) : j’écris avec la liste de contrôle.</small></button></div><div class="panneau" data-niveau="1"><div class="bloc" data-type="trous"><h4 data-titre>Ce que montre mon dessin principal</h4><p class="trous"><span class="fixe">Mon schéma montre </span><input class="trou" type="text" data-save="B4-1" size="48" placeholder="ce que montre ton schéma : les connexions ou les écrans" aria-label="ce que montre ton schéma : les connexions ou les écrans"><span class="fixe">. Le composant ou l’écran principal est </span><input class="trou" type="text" data-save="B4-2" size="18" placeholder="lequel" aria-label="lequel"><span class="fixe">, il sert à </span><input class="trou" type="text" data-save="B4-3" size="18" placeholder="rôle" aria-label="rôle"><span class="fixe">.</span></p></div><div class="bloc" data-type="tableau"><h4 data-titre>Mes broches (électronique) ou mes écrans (jeu, appli)</h4><div class="tab-scroll"><table class="remplir"><thead><tr><th>Élément</th><th>Broche / touche / écran</th><th>Relié à / mène à</th><th>Rôle</th></tr></thead><tbody><tr><td><textarea rows="2" data-save="B4-4" placeholder="capteur, LED… ou écran d’accueil…"></textarea></td><td><textarea rows="2" data-save="B4-5" placeholder="GPIO… / touche… / bouton…"></textarea></td><td><textarea rows="2" data-save="B4-6" placeholder="ESP32, GND… / écran suivant"></textarea></td><td><textarea rows="2" data-save="B4-7" placeholder="mesure, affiche, déclenche…"></textarea></td></tr><tr><td><textarea rows="2" data-save="B4-8" placeholder="capteur, LED… ou écran d’accueil…"></textarea></td><td><textarea rows="2" data-save="B4-9" placeholder="GPIO… / touche… / bouton…"></textarea></td><td><textarea rows="2" data-save="B4-10" placeholder="ESP32, GND… / écran suivant"></textarea></td><td><textarea rows="2" data-save="B4-11" placeholder="mesure, affiche, déclenche…"></textarea></td></tr><tr><td><textarea rows="2" data-save="B4-12" placeholder="capteur, LED… ou écran d’accueil…"></textarea></td><td><textarea rows="2" data-save="B4-13" placeholder="GPIO… / touche… / bouton…"></textarea></td><td><textarea rows="2" data-save="B4-14" placeholder="ESP32, GND… / écran suivant"></textarea></td><td><textarea rows="2" data-save="B4-15" placeholder="mesure, affiche, déclenche…"></textarea></td></tr><tr><td><textarea rows="2" data-save="B4-16" placeholder="capteur, LED… ou écran d’accueil…"></textarea></td><td><textarea rows="2" data-save="B4-17" placeholder="GPIO… / touche… / bouton…"></textarea></td><td><textarea rows="2" data-save="B4-18" placeholder="ESP32, GND… / écran suivant"></textarea></td><td><textarea rows="2" data-save="B4-19" placeholder="mesure, affiche, déclenche…"></textarea></td></tr></tbody></table></div></div><div class="bloc" data-type="tableau"><h4 data-titre>Les fonctions de mon programme</h4><div class="tab-scroll"><table class="remplir"><thead><tr><th>Nom de la fonction</th><th>Ce qu’elle fait (une ligne)</th></tr></thead><tbody><tr><td><textarea rows="2" data-save="B4-20" placeholder="ex. lire_capteur()"></textarea></td><td><textarea rows="2" data-save="B4-21" placeholder="elle lit… et renvoie…"></textarea></td></tr><tr><td><textarea rows="2" data-save="B4-22" placeholder="ex. lire_capteur()"></textarea></td><td><textarea rows="2" data-save="B4-23" placeholder="elle lit… et renvoie…"></textarea></td></tr><tr><td><textarea rows="2" data-save="B4-24" placeholder="ex. lire_capteur()"></textarea></td><td><textarea rows="2" data-save="B4-25" placeholder="elle lit… et renvoie…"></textarea></td></tr><tr><td><textarea rows="2" data-save="B4-26" placeholder="ex. lire_capteur()"></textarea></td><td><textarea rows="2" data-save="B4-27" placeholder="elle lit… et renvoie…"></textarea></td></tr></tbody></table></div></div><div class="bloc" data-type="tableau"><h4 data-titre>Ma liste des besoins</h4><div class="tab-scroll"><table class="remplir"><thead><tr><th>Besoin (composant, logiciel, bibliothèque, outil)</th><th>Quantité / version</th><th>Rôle dans la solution</th></tr></thead><tbody><tr><td><textarea rows="2" data-save="B4-28" placeholder="nom précis"></textarea></td><td><textarea rows="2" data-save="B4-29" placeholder="1 / version 2.3…"></textarea></td><td><textarea rows="2" data-save="B4-30" placeholder="à quoi il sert"></textarea></td></tr><tr><td><textarea rows="2" data-save="B4-31" placeholder="nom précis"></textarea></td><td><textarea rows="2" data-save="B4-32" placeholder="1 / version 2.3…"></textarea></td><td><textarea rows="2" data-save="B4-33" placeholder="à quoi il sert"></textarea></td></tr><tr><td><textarea rows="2" data-save="B4-34" placeholder="nom précis"></textarea></td><td><textarea rows="2" data-save="B4-35" placeholder="1 / version 2.3…"></textarea></td><td><textarea rows="2" data-save="B4-36" placeholder="à quoi il sert"></textarea></td></tr><tr><td><textarea rows="2" data-save="B4-37" placeholder="nom précis"></textarea></td><td><textarea rows="2" data-save="B4-38" placeholder="1 / version 2.3…"></textarea></td><td><textarea rows="2" data-save="B4-39" placeholder="à quoi il sert"></textarea></td></tr><tr><td><textarea rows="2" data-save="B4-40" placeholder="nom précis"></textarea></td><td><textarea rows="2" data-save="B4-41" placeholder="1 / version 2.3…"></textarea></td><td><textarea rows="2" data-save="B4-42" placeholder="à quoi il sert"></textarea></td></tr><tr><td><textarea rows="2" data-save="B4-43" placeholder="nom précis"></textarea></td><td><textarea rows="2" data-save="B4-44" placeholder="1 / version 2.3…"></textarea></td><td><textarea rows="2" data-save="B4-45" placeholder="à quoi il sert"></textarea></td></tr></tbody></table></div></div><div class="bloc" data-type="trous"><p class="trous"><span class="fixe">Sécurité : </span><input class="trou" type="text" data-save="B4-46" size="48" placeholder="tout est en 5 V maximum / aucune donnée personnelle n’est enregistrée sans accord" aria-label="tout est en 5 V maximum / aucune donnée personnelle n’est enregistrée sans accord"><span class="fixe">, je l’ai vérifié en </span><input class="trou" type="text" data-save="B4-47" size="18" placeholder="comment" aria-label="comment"><span class="fixe">.</span></p></div></div><div class="panneau" data-niveau="2" hidden><div class="bloc" data-type="phrases"><textarea class="phrase" rows="2" data-save="B4-48" data-depart="Mon schéma montre">Mon schéma montre </textarea><textarea class="phrase" rows="2" data-save="B4-49" data-depart="Les broches utilisées sont (ou : les écrans sont)">Les broches utilisées sont (ou : les écrans sont) </textarea><textarea class="phrase" rows="2" data-save="B4-50" data-depart="Les fonctions de mon programme sont">Les fonctions de mon programme sont </textarea></div><div class="bloc" data-type="tableau"><h4 data-titre>Ma liste des besoins</h4><div class="tab-scroll"><table class="remplir"><thead><tr><th>Besoin (composant, logiciel, bibliothèque, outil)</th><th>Quantité / version</th><th>Rôle dans la solution</th></tr></thead><tbody><tr><td><textarea rows="2" data-save="B4-51" placeholder=""></textarea></td><td><textarea rows="2" data-save="B4-52" placeholder=""></textarea></td><td><textarea rows="2" data-save="B4-53" placeholder=""></textarea></td></tr><tr><td><textarea rows="2" data-save="B4-54" placeholder=""></textarea></td><td><textarea rows="2" data-save="B4-55" placeholder=""></textarea></td><td><textarea rows="2" data-save="B4-56" placeholder=""></textarea></td></tr><tr><td><textarea rows="2" data-save="B4-57" placeholder=""></textarea></td><td><textarea rows="2" data-save="B4-58" placeholder=""></textarea></td><td><textarea rows="2" data-save="B4-59" placeholder=""></textarea></td></tr><tr><td><textarea rows="2" data-save="B4-60" placeholder=""></textarea></td><td><textarea rows="2" data-save="B4-61" placeholder=""></textarea></td><td><textarea rows="2" data-save="B4-62" placeholder=""></textarea></td></tr><tr><td><textarea rows="2" data-save="B4-63" placeholder=""></textarea></td><td><textarea rows="2" data-save="B4-64" placeholder=""></textarea></td><td><textarea rows="2" data-save="B4-65" placeholder=""></textarea></td></tr><tr><td><textarea rows="2" data-save="B4-66" placeholder=""></textarea></td><td><textarea rows="2" data-save="B4-67" placeholder=""></textarea></td><td><textarea rows="2" data-save="B4-68" placeholder=""></textarea></td></tr></tbody></table></div></div></div><div class="panneau" data-niveau="3" hidden><p>Élabore des dessins de planification précis et détaillés, et décris tout ce qu’il faut pour réaliser la solution choisie.</p><ul class="controle"><li>Un dessin principal précis (câblage ou maquettes d’écran).</li><li>Un algorigramme du programme.</li><li>Électronique : un plan coté du boîtier FreeCAD.</li><li>La liste des fonctions du programme.</li><li>La liste complète des besoins avec quantités ou versions.</li><li>La sécurité (5 V) vérifiée.</li></ul><div class="bloc" data-type="libre"><h4 data-titre>Ma production</h4><textarea rows="12" data-save="B4-69" placeholder=""></textarea></div></div><div class="pouces"><h3>Coups de pouce</h3><p class="petit">Bloqué(e) ? Ouvre-les dans l’ordre, un seul à la fois, et seulement si tu en as besoin. Ils seront notés dans ton auto-évaluation : ce n’est pas une faute, c’est une information pour toi et ton enseignant(e).</p><details class="pouce" data-i="1"><summary>Coup de pouce 1</summary><div class="contenu"><p>Fais le test du « camarade fabricant » : si tu donnais ton dossier à quelqu’un d’autre, quelle question te poserait-il ? Chaque question = une information qui manque.</p></div></details><details class="pouce" data-i="2"><summary>Coup de pouce 2</summary><div class="contenu"><p>Un algorigramme utilise trois formes : <strong>ovale</strong> (début / fin), <strong>rectangle</strong> (action : « allumer la LED »), <strong>losange</strong> (question oui / non : « bruit &gt; seuil ? »). Commence par la boucle principale de ton programme.</p></div></details><details class="pouce" data-i="3"><summary>Coup de pouce 3</summary><div class="contenu"><p>Reprends la structure du témoin : a) schéma + tableau des broches, b) algorigramme + liste des fonctions, c) plan du boîtier (électronique), d) liste des besoins avec quantités. Fais les quatre parties dans cet ordre, même rapidement.</p></div></details></div><details class="temoin"><summary>Voir l’exemple complet du projet témoin (arrosage automatique du jardin)<sup><a href="#note-2">2</a></sup></summary><p class="petit">Ce témoin n’est pas dans la liste de la classe : tu ne le recopies pas. Regarde comment c’est construit, puis fais la même chose sur ton projet. La cliente et les chiffres sont inventés pour l’exemple.</p><h4>Production du témoin : B4, extrait du dossier de fabrication</h4><p><strong>a) Schéma de câblage.</strong> Le relais sert d’interrupteur commandé : l’ESP32 envoie un petit signal sur IN, le contact COM–NO se ferme et le 5 V arrive à la pompe. Tout reste en 5 V.</p><div class="tab-scroll"><table><thead><tr><th>Composant</th><th>Broche du composant</th><th>Broche ESP32</th><th>Broche Arduino Uno</th><th>Rôle</th></tr></thead><tbody><tr><td>Capteur d’humidité capacitif v1.2</td><td>VCC / GND / AOUT</td><td>3V3 / GND / GPIO34</td><td>5V / GND / A0</td><td>Mesure l’humidité</td></tr><tr><td>Capteur de niveau d’eau</td><td>+ / − / S</td><td>GPIO33 / GND / GPIO35</td><td>D6 / GND / A1</td><td>Détecte le bidon vide (niveau 2)</td></tr><tr><td>Module relais 1 voie 5 V</td><td>VCC / GND / IN</td><td>VIN (5 V) / GND / GPIO26</td><td>5V / GND / D7</td><td>Commande la pompe</td></tr><tr><td>LED rouge + résistance 220 Ω</td><td>anode / cathode</td><td>GPIO27 / GND</td><td>D8 / GND</td><td>Alerte réservoir vide</td></tr><tr><td>Mini-pompe 5 V + diode 1N4007</td><td>+ / −</td><td>NO du relais / GND</td><td>idem</td><td>Envoie l’eau ; la diode protège</td></tr></tbody></table></div><p><strong>b) Fonctions du programme.</strong> <code>lire_moyenne()</code> : fait 10 lectures et renvoie la moyenne ; <code>humidite_sol()</code> : convertit la valeur brute en pourcentage ; <code>reservoir_ok()</code> : dit s’il reste de l’eau ; <code>arroser()</code> : ferme le relais 8 s puis l’ouvre ; la boucle principale suit l’algorigramme.</p><p><strong>c) Boîtier FreeCAD</strong> : 124 × 84 × 44 mm, seule pièce fabriquée, imprimée en 3D ; passe-fils en bas de la face avant pour que la pluie ne coule pas vers l’intérieur.</p><p><strong>d) Liste des besoins (extrait)</strong></p><div class="tab-scroll"><table><thead><tr><th>Matériel / logiciel</th><th>Qté</th><th>Rôle</th><th>Tension</th><th>Prix (FCFA)</th></tr></thead><tbody><tr><td>ESP32 DevKit V1 (ou Arduino Uno)</td><td>1</td><td>Cerveau du système</td><td>5 V par USB</td><td>5 000</td></tr><tr><td>Module relais 1 voie 5 V</td><td>1</td><td>Interrupteur commandé de la pompe</td><td>5 V</td><td>1 500</td></tr><tr><td>Capteur d’humidité capacitif v1.2</td><td>1</td><td>Mesure l’humidité de la terre</td><td>3,3 V</td><td>2 000</td></tr><tr><td>Mini-pompe immergée 5 V + tuyau</td><td>1</td><td>Envoie l’eau</td><td>5 V</td><td>2 500</td></tr><tr><td>Logiciels : Thonny + MicroPython ou Arduino IDE 2, FreeCAD, Cura</td><td>—</td><td>Programmer, modéliser, imprimer</td><td>—</td><td>gratuits</td></tr><tr><td><strong>Total</strong></td><td></td><td></td><td></td><td><strong>13 500</strong></td></tr></tbody></table></div><div class="autres"><h4>Dans les autres projets témoins</h4><p><strong>Jeu PyGame « Goutte à goutte »</strong> : maquettes des écrans (matin, midi, pluie, bilan), algorigramme de la boucle de jeu, et des fonctions comme <code>arroser()</code>, <code>remplir()</code>, <code>calculer_score()</code>, <code>pourcentage_gaspille()</code>.</p><p><strong>Appli Thunkable « Mon sac compte »</strong> : maquette Figma des écrans Accueil, Oubli, Historique et Classe, algorigramme de l’ajout d’un usage, et base relationnelle de 3 tables reliées (<code>types_objet</code>, <code>objets</code>, <code>usages</code>).</p></div></details></section><section id="recolter"><h2>5. Récolter dans mon Word <small>2 min</small></h2><h3>Ma version finale</h3><p>Ton travail de l’étape 4 est ton <strong>brouillon</strong>. Relis-le, puis écris à droite ta <strong>version au propre</strong> : des phrases complètes, les mots de la tâche, et seulement ce qui répond au descripteur. C’est elle qui ira dans le Word.</p><div class="deux-colonnes"><div><h4>Mon brouillon</h4><textarea id="mon-brouillon" rows="14" readonly></textarea></div><div><h4>Ma version au propre</h4><textarea rows="14" data-save="B4-finale" placeholder="Je reformule au propre…"></textarea></div></div><h3>Mon auto-évaluation</h3><p><strong>Descripteur 7-8</strong><sup><a href="#note-3">3</a></sup><strong> :</strong> L’élève élabore des dessins ou diagrammes de planification précis et détaillés et décrit les exigences nécessaires à la réalisation de la solution choisie.</p><ul class="check"><li><label><input type="checkbox" data-save="B4-ck-0"> Mes schémas sont assez précis pour qu’un autre puisse fabriquer la solution.</label></li><li><label><input type="checkbox" data-save="B4-ck-1"> J’ai listé tous les composants, logiciels ou bibliothèques.</label></li><li><label><input type="checkbox" data-save="B4-ck-2"> Tout fonctionne en très basse tension (5 V).</label></li></ul><fieldset class="niveau-estime"><legend>Mon niveau estimé</legend><label><input type="radio" name="niv" value="1-2" data-save="B4-niv-1-2"> 1-2</label><label><input type="radio" name="niv" value="3-4" data-save="B4-niv-3-4"> 3-4</label><label><input type="radio" name="niv" value="5-6" data-save="B4-niv-5-6"> 5-6</label><label><input type="radio" name="niv" value="7-8" data-save="B4-niv-7-8"> 7-8</label></fieldset><textarea class="phrase" rows="2" data-save="B4-preuve" data-depart="La preuve dans ma production est">La preuve dans ma production est </textarea><textarea class="phrase" rows="2" data-save="B4-manque" data-depart="Pour atteindre 7-8, il me manque">Pour atteindre 7-8, il me manque </textarea><p class="pouces-utilises">Coups de pouce utilisés : <span>aucun</span></p><div class="export"><button type="button" id="copier">Copier tout pour mon Word</button><button type="button" id="telecharger">Télécharger en fichier texte</button><button type="button" id="imprimer">Imprimer la page</button></div><p class="message" aria-live="polite"></p><textarea id="apercu" rows="10" readonly hidden></textarea><div class="ou-coller"><h3>Où coller dans le Word ?</h3><ol><li>Va au sous-titre <strong>B4 : Réaliser les dessins de planification et lister les besoins</strong>.</li><li>Colle la reformulation dans la zone <strong>1. Je reformule la tâche avec mes mots</strong>.</li><li>Colle ta production dans <strong>2. Ma production</strong> (ajoute les images de tes schémas sous chaque partie).</li><li>Coche les cases de <strong>3. Mon auto-évaluation</strong> et recopie tes deux phrases.</li><li>Note toute source utilisée (site, personne interrogée, IA) dans la section <strong>Sources</strong> à la fin du Word.</li></ol></div></section><section id="sommative" class="sommative"><h2>Lien avec la sommative</h2><p>À la sommative, B4 se juge sur la <strong>précision</strong> : « un autre pourrait-il fabriquer ma solution avec ce dossier ? ». Les cotes, les numéros de broches et les quantités font la différence.</p><p>Retiens les 4 parties : <strong>schéma, algorigramme, plan, liste des besoins</strong>.</p></section><nav class="suite"><a href="B3.html">← B3 : Présenter et justifier la conception choisie</a><a href="C1.html">C1 : Construire un plan logique →</a></nav></main><section class="notes"><h2>Notes et références</h2><ol><li id="note-1">La situation de l’exemple réel est inventée, mais inspirée de la vie courante à Lomé. Elle montre une personne qui fait déjà, sans le savoir, ce que la tâche B4 demande.</li><li id="note-2">Projet témoin « Arrosage automatique du jardin », Design PEI 5 (2026). Cliente, citations, prix et mesures inventés pour l’exemple, mais réalistes. Code complet en Arduino et en MicroPython dans le dossier <em>projet-temoin</em>. Autres témoins : jeu PyGame « Goutte à goutte » et application Thunkable « Mon sac compte ».</li><li id="note-3">Descripteur de niveau 7-8, d’après les volets officiels du critère B du Design PEI (IB), reformulé en français dans le modèle Word « Ma trace de projet ».</li><li>Sécurité : très basse tension uniquement (5 V maximum), jamais de fil relié au secteur.</li></ol></section><footer>Design PEI 5 · Unités 1 et 2 · Sécurité : très basse tension uniquement (5 V maximum). Tes réponses restent dans ce navigateur, sur cet ordinateur : copie-les dans ton Word avant de partir.</footer><script>window.PEI5_CONFIG = {"url": "", "cle": "", "cours": "design-pei5-u1"};</script><script>(function(){
+var code=document.body.getAttribute('data-code');
+var CFG=window.PEI5_CONFIG||{};var EN_LIGNE=!!(CFG.url&&CFG.cle&&CFG.cours);
+var CODE=null;try{CODE=sessionStorage.getItem('pei5-code');}catch(x){}
+function petitHash(t){var h=0;for(var i=0;i<t.length;i=i+1){h=(h*31+t.charCodeAt(i))%1000000007;}return String(h);}
+var PREFIXE=CODE?('pei5-u'+petitHash(CODE)+'-'):'pei5-';
+function lire(k){try{return localStorage.getItem(PREFIXE+k);}catch(x){return null;}}
+function ecrire(k,v){try{localStorage.setItem(PREFIXE+k,v);}catch(x){}planifier();}
+// Données supplémentaires d'autres activités de la page (QCM…) : window.PEI5.ecrireExtra(nom, objet)
+function listeExtras(){var l=lire(code+'-extras');return l?l.split(','):[];}
+function lireExtra(nom){var v=lire(code+'-extra-'+nom);if(v===null){return null;}try{return JSON.parse(v);}catch(x){return null;}}
+function ecrireExtraLocal(nom,objet){try{localStorage.setItem(PREFIXE+code+'-extra-'+nom,JSON.stringify(objet));
+  var l=listeExtras();if(l.indexOf(nom)<0){l.push(nom);localStorage.setItem(PREFIXE+code+'-extras',l.join(','));}}catch(x){}}
+window.PEI5={activite:code,lireExtra:lireExtra,ecrireExtra:function(nom,objet){if(!/^[a-z0-9_-]{1,30}$/.test(nom)){return;}ecrireExtraLocal(nom,objet);planifier();}};
+var PRET=false;var minuterie=null;function planifier(){if(!EN_LIGNE||!CODE||!PRET){return;}try{localStorage.setItem(PREFIXE+code+'-attente','1');}catch(x){}
+  etat('attente');if(minuterie){clearTimeout(minuterie);}minuterie=setTimeout(envoyer,1500);}
+function etat(e,t){var z=document.getElementById('etat-sync');if(!z){return;}
+  if(e==='ok'||e==='attente'||e==='horsligne'){z.textContent='';}else{z.textContent=e;}}
+var tous=document.querySelectorAll('[data-save]');
+for(var i=0;i<tous.length;i=i+1){(function(el){
+  var cle=el.getAttribute('data-save');
+  var v=lire(cle);
+  if(el.type==='checkbox'||el.type==='radio'){ if(v==='1'){el.checked=true;} }
+  else if(v!==null){el.value=v;}
+  var ev=(el.type==='checkbox'||el.type==='radio')?'change':'input';
+  el.addEventListener(ev,function(){
+    if(el.type==='radio'){var r=document.querySelectorAll('input[name="'+el.name+'"]');for(var j=0;j<r.length;j=j+1){ecrire(r[j].getAttribute('data-save'),r[j].checked?'1':'0');}}
+    else if(el.type==='checkbox'){ecrire(cle,el.checked?'1':'0');}
+    else{ecrire(cle,el.value);}
+  });
+})(tous[i]);}
+// projet
+var sel=document.getElementById('projet');
+function montrerProjet(){var p=sel.value;var ids=['lampe','detecteur','jeu','repar'];
+  for(var j=0;j<ids.length;j=j+1){var b=document.querySelectorAll('.projet-'+ids[j]);for(var k=0;k<b.length;k=k+1){b[k].hidden=(ids[j]!==p);}}
+  var vide=document.querySelectorAll('.projet-vide');for(var k2=0;k2<vide.length;k2=k2+1){vide[k2].hidden=(p!=='');}}
+var pr=lire('projet');if(pr){sel.value=pr;}
+sel.addEventListener('change',function(){ecrire('projet',sel.value);montrerProjet();});montrerProjet();
+// onglets
+var onglets=document.querySelectorAll('.onglets button');var panneaux=document.querySelectorAll('.panneau');
+function niveau(n){for(var j=0;j<onglets.length;j=j+1){onglets[j].setAttribute('aria-selected',onglets[j].getAttribute('data-niveau')===n?'true':'false');}
+  for(var k=0;k<panneaux.length;k=k+1){panneaux[k].hidden=(panneaux[k].getAttribute('data-niveau')!==n);} ecrire(code+'-niveau',n);}
+for(var j=0;j<onglets.length;j=j+1){onglets[j].addEventListener('click',function(){niveau(this.getAttribute('data-niveau'));});}
+niveau(lire(code+'-niveau')||'1');
+// trier
+var listes=document.querySelectorAll('.tri');
+for(var t=0;t<listes.length;t=t+1){(function(liste){
+  var items=liste.querySelectorAll('li');for(var a0=0;a0<items.length;a0=a0+1){items[a0].setAttribute('data-i',String(a0));}var score=liste.parentNode.querySelector('.score');
+  function compter(){var faits=0,bons=0;for(var a=0;a<items.length;a=a+1){if(items[a].getAttribute('data-fait')){faits=faits+1;if(items[a].getAttribute('data-fait')==='ok'){bons=bons+1;}}}
+    if(faits>0){score.textContent='Score : '+bons+' bonne(s) réponse(s) du premier coup sur '+faits+' (sur '+items.length+' en tout).';}}
+  for(var a=0;a<items.length;a=a+1){(function(li){
+    var bonne=li.getAttribute('data-bonne');var bts=li.querySelectorAll('button');var ex=li.querySelector('.explication');
+    for(var b=0;b<bts.length;b=b+1){bts[b].addEventListener('click',function(){
+      var k=this.getAttribute('data-k');var juste=(k===bonne);
+      if(!li.getAttribute('data-fait')){li.setAttribute('data-fait',juste?'ok':'ko');}
+      montrer(k);ecrire(code+'-tri-'+li.getAttribute('data-i'),li.getAttribute('data-fait')+':'+k);compter();});}
+    function montrer(k){var juste=(k===bonne);for(var c=0;c<bts.length;c=c+1){bts[c].className='';
+        if(bts[c].getAttribute('data-k')===k){bts[c].className=juste?'choisi-ok':'choisi-ko';}
+        if(!juste&&bts[c].getAttribute('data-k')===bonne){bts[c].className='choisi-ok';}}
+      ex.hidden=false;ex.className='explication '+(juste?'ok':'ko');}
+    var mem=lire(code+'-tri-'+li.getAttribute('data-i'));
+    if(mem){var m=mem.split(':');li.setAttribute('data-fait',m[0]);montrer(m[1]);}
+  })(items[a]);}
+  compter();
+})(listes[t]);}
+// coups de pouce
+var pouces=document.querySelectorAll('.pouce');
+function majPouces(){var u=[];for(var j=0;j<pouces.length;j=j+1){if(lire(code+'-pouce-'+(j+1))==='1'){u.push(String(j+1));}}
+  document.querySelector('.pouces-utilises span').textContent=u.length?u.join(', '):'aucun';return u;}
+for(var p=0;p<pouces.length;p=p+1){(function(po,idx){
+  if(lire(code+'-pouce-'+(idx+1))==='1'){po.setAttribute('data-vu','1');}
+  po.addEventListener('toggle',function(){if(po.open){ecrire(code+'-pouce-'+(idx+1),'1');po.setAttribute('data-vu','1');majPouces();}});
+})(pouces[p],p);}
+majPouces();
+// export
+function val(el){return (el.value||'').trim();}
+function lireTrous(n){if(n.nodeType===3){return n.nodeValue;}if(n.tagName==='BR'){return '\n';}if(n.tagName==='INPUT'){return val(n)||'…';}
+  var s='';for(var j=0;j<n.childNodes.length;j=j+1){s=s+lireTrous(n.childNodes[j]);}return s;}
+function texteBloc(b){var type=b.getAttribute('data-type');var out='';var tt=b.querySelector('[data-titre]');if(tt){out=out+tt.textContent+'\n';}
+  if(type==='trous'){out=out+lireTrous(b.querySelector('p.trous')).trim()+'\n';}
+  else if(type==='tableau'){var ths=b.querySelectorAll('th');var trs=b.querySelectorAll('tbody tr');
+    for(var r=0;r<trs.length;r=r+1){var tds=trs[r].querySelectorAll('td');var morceaux=[];var vide=true;
+      for(var k=0;k<tds.length;k=k+1){var x=tds[k].querySelector('textarea');var v=x?val(x):tds[k].getAttribute('data-fixe');if(x&&v){vide=false;}morceaux.push(ths[k].textContent+' : '+(v||'…'));}
+      if(!vide){out=out+'- '+morceaux.join(' | ')+'\n';}}}
+  else if(type==='phrases'){var ps=b.querySelectorAll('textarea');for(var j2=0;j2<ps.length;j2=j2+1){if(val(ps[j2])!==ps[j2].getAttribute('data-depart')){out=out+val(ps[j2])+'\n';}}}
+  else if(type==='libre'){out=out+val(b.querySelector('textarea'))+'\n';}
+  else{return '';}
+  return out;}
+function brouillon(){var n=lire(code+'-niveau')||'1';var pan=document.querySelector('.panneau[data-niveau="'+n+'"]');var bl=pan.querySelectorAll('.bloc');var L=[];
+  for(var k=0;k<bl.length;k=k+1){var t=texteBloc(bl[k]);if(t){L.push(t);}}return L.join('\n');}
+var zb=document.getElementById('mon-brouillon');
+function majBrouillon(){if(zb){zb.value=brouillon();}}
+majBrouillon();document.getElementById('appliquer').addEventListener('input',majBrouillon);
+function construire(){var titre=document.body.getAttribute('data-titre');var L=[];
+  L.push(code+' : '+titre);L.push('');L.push('1. Je reformule la tâche avec mes mots');
+  var rf=document.querySelectorAll('.reform');for(var j=0;j<rf.length;j=j+1){L.push(val(rf[j]));}
+  L.push('');var n=lire(code+'-niveau')||'1';L.push('2. Ma production');
+  var fin=document.querySelector('[data-save="'+code+'-finale"]');
+  if(fin&&val(fin)){L.push(val(fin));L.push('');}else{L.push(brouillon());}
+  L.push('3. Mon auto-évaluation (descripteur 7-8)');
+  var ck=document.querySelectorAll('.check label');for(var c=0;c<ck.length;c=c+1){L.push((ck[c].querySelector('input').checked?'☒ ':'☐ ')+ck[c].textContent.trim());}
+  var nv=document.querySelector('input[name="niv"]:checked');L.push('Mon niveau estimé : '+(nv?nv.value:'…'));
+  L.push(val(document.querySelector('[data-save="'+code+'-preuve"]')));L.push(val(document.querySelector('[data-save="'+code+'-manque"]')));
+  var u=majPouces();L.push('Coups de pouce utilisés : '+(u.length?u.join(', '):'aucun'));
+  return L.join('\n');}
+var msg=document.querySelector('.message');var ap=document.getElementById('apercu');
+document.getElementById('copier').addEventListener('click',function(){var t=construire();ap.value=t;ap.hidden=false;
+  function secours(){ap.focus();ap.select();var ok=false;try{ok=document.execCommand('copy');}catch(x){}
+    msg.textContent=ok?'Copié ! Colle-le dans ton Word (Ctrl + V).':'Sélectionne le texte ci-dessous (Ctrl + A) puis copie-le (Ctrl + C).';}
+  if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(t).then(function(){msg.textContent='Copié ! Colle-le dans ton Word (Ctrl + V).';},secours);}else{secours();}});
+document.getElementById('telecharger').addEventListener('click',function(){var t=construire();
+  var blob=new Blob(['﻿'+t],{type:'text/plain;charset=utf-8'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=code+'_ma_trace.txt';document.body.appendChild(a);a.click();document.body.removeChild(a);msg.textContent='Fichier '+code+'_ma_trace.txt téléchargé.';});
+document.getElementById('imprimer').addEventListener('click',function(){window.print();});
+
+// ---------- enregistrement en ligne (Supabase), seulement si la page est configurée ----------
+function attente(){try{return localStorage.getItem(PREFIXE+code+'-attente')==='1';}catch(x){return false;}}
+function donneesPage(){var d={champs:{},etat:{},resultat:{}};var t=document.querySelectorAll('[data-save]');
+  for(var i=0;i<t.length;i=i+1){var el=t[i];var k=el.getAttribute('data-save');
+    if(el.type==='checkbox'||el.type==='radio'){d.champs[k]=el.checked?'1':'0';}else{d.champs[k]=el.value;}}
+  d.etat.niveau=lire(code+'-niveau')||'1';d.etat.pouces=majPouces();
+  var its=document.querySelectorAll('.tri li');var det=[];var bons=0;var faits=0;
+  for(var j=0;j<its.length;j=j+1){var m=lire(code+'-tri-'+j);det.push(m);if(m){faits=faits+1;if(m.split(':')[0]==='ok'){bons=bons+1;}}}
+  d.resultat={type:'tri',score:bons,repondu:faits,sur:its.length,detail:det};
+  d.extra={};var noms=listeExtras();for(var e2=0;e2<noms.length;e2=e2+1){d.extra[noms[e2]]=lireExtra(noms[e2]);}
+  return d;}
+// Clé « anon » (ancienne, commence par eyJ) : envoyée aussi en Authorization ; clé « publishable » : en apikey seulement
+function entetes(){var h={'apikey':CFG.cle,'Content-Type':'application/json'};if(CFG.cle.indexOf('eyJ')===0){h['Authorization']='Bearer '+CFG.cle;}return h;}
+function appel(fn,corps){return fetch(CFG.url.replace(/\/$/,'')+'/rest/v1/rpc/'+fn,{method:'POST',
+    headers:entetes(),body:JSON.stringify(corps)})
+  .then(function(r){if(!r.ok){return r.text().then(function(t){var e=new Error(t);e.serveur=true;throw e;});}return r.json();});}
+function heure(){var d=new Date();var m=d.getMinutes();return d.getHours()+' h '+(m<10?'0':'')+m;}
+function envoyer(){if(!PRET||!CODE){return;}var fin=document.querySelector('[data-save="'+code+'-finale"]');
+  appel('eleve_enregistrer',{p_code:CODE,p_cours:CFG.cours,p_activite:code,p_donnees:donneesPage(),p_finale:fin?fin.value:'',p_choix:sel.value||null})
+  .then(function(){try{localStorage.removeItem(PREFIXE+code+'-attente');}catch(x){}etat('ok',heure());},
+        function(){etat('horsligne');});}
+function chargerDepuisServeur(){
+  return appel('eleve_lire',{p_code:CODE,p_cours:CFG.cours,p_activite:code}).then(function(r){
+    if(!r||!r.donnees){return false;}var d=r.donnees;var ch=d.champs||{};
+    for(var k in ch){if(Object.prototype.hasOwnProperty.call(ch,k)){try{localStorage.setItem(PREFIXE+k,ch[k]);}catch(x){}}}
+    var et=d.etat||{};if(et.niveau){try{localStorage.setItem(PREFIXE+code+'-niveau',et.niveau);}catch(x){}}
+    var pc=et.pouces||[];for(var i=0;i<pc.length;i=i+1){try{localStorage.setItem(PREFIXE+code+'-pouce-'+pc[i],'1');}catch(x){}}
+    var det=(d.resultat&&d.resultat.detail)||[];for(var j=0;j<det.length;j=j+1){if(det[j]){try{localStorage.setItem(PREFIXE+code+'-tri-'+j,det[j]);}catch(x){}}}
+    var ex=d.extra||{};for(var nx in ex){if(Object.prototype.hasOwnProperty.call(ex,nx)){ecrireExtraLocal(nx,ex[nx]);}}
+    if(typeof r.finale==='string'){try{localStorage.setItem(PREFIXE+code+'-finale',r.finale);}catch(x){}}
+    return true;});}
+function barreConnexion(){var z=document.getElementById('connexion');if(!z||!EN_LIGNE){return;}z.hidden=false;
+  if(!CODE){z.innerHTML='<label>Mon code élève : <input id="code-eleve" type="text" size="12" autocomplete="off" placeholder="E-XXXXXX"></label> <button type="button" id="se-connecter">Me connecter</button> <span id="etat-sync" class="etat">Avec ton code, tu retrouves ton travail sur n’importe quel ordinateur.</span>';
+    var go=function(){var c=document.getElementById('code-eleve').value.trim().toUpperCase();if(!c){return;}etat('Vérification du code…');
+      appel('eleve_connexion',{p_code:c,p_cours:CFG.cours}).then(function(r){
+        if(!r){etat('Code inconnu, ou tu n’es pas inscrit(e) à ce cours.');return;}
+        try{sessionStorage.setItem('pei5-code',c);sessionStorage.setItem('pei5-classe',r.classe||'');}catch(x){}
+        if(r.choix){try{localStorage.setItem('pei5-u'+petitHash(c)+'-projet',r.choix);}catch(x){}}
+        location.reload();},function(err){etat(err.serveur?'Erreur du serveur : préviens ton enseignant(e).':'Pas de connexion Internet : réessaie plus tard. Tu peux travailler sans code en attendant.');});};
+    document.getElementById('se-connecter').addEventListener('click',go);
+    document.getElementById('code-eleve').addEventListener('keydown',function(ev){if(ev.key==='Enter'){go();}});
+    return;}
+  var cl='';try{cl=sessionStorage.getItem('pei5-classe')||'';}catch(x){}
+  z.innerHTML='Mon code : …'+CODE.slice(-2)+(cl?' · classe '+cl:'')+' <button type="button" id="se-deconnecter">Changer de code</button> <span id="etat-sync" class="etat"></span>';
+  document.getElementById('se-deconnecter').addEventListener('click',function(){
+    if(attente()&&!confirm('Ton travail n’est pas encore à jour sur ton code (pas de connexion Internet). Si tu changes de code maintenant, tes dernières modifications seront perdues sur ce poste. Continuer ?')){return;}
+    try{var asup=[];for(var i=0;i<localStorage.length;i=i+1){var k=localStorage.key(i);if(k&&k.indexOf(PREFIXE)===0){asup.push(k);}}
+      for(var j=0;j<asup.length;j=j+1){localStorage.removeItem(asup[j]);}
+      var ss=[];for(var i2=0;i2<sessionStorage.length;i2=i2+1){var k2=sessionStorage.key(i2);if(k2&&k2.indexOf('pei5-')===0){ss.push(k2);}}
+      for(var j2=0;j2<ss.length;j2=j2+1){sessionStorage.removeItem(ss[j2]);}}catch(x){}
+    location.reload();});}
+barreConnexion();
+if(EN_LIGNE&&CODE){
+  var dejaCharge=false;try{dejaCharge=sessionStorage.getItem('pei5-charge-'+code)==='1';}catch(x){}
+  if(attente()||dejaCharge){PRET=true;if(attente()){envoyer();}else{etat('ok');}}
+  else{etat('Chargement de ton travail…');
+    chargerDepuisServeur().then(function(trouve){try{sessionStorage.setItem('pei5-charge-'+code,'1');}catch(x){}
+      if(trouve){location.reload();}else{PRET=true;etat('ok');}},
+      function(){PRET=true;etat('horsligne');});}
+  window.addEventListener('online',function(){if(attente()){envoyer();}});
+  setInterval(function(){if(attente()&&PRET){envoyer();}},30000);
+}
+})();
+// ---------- QCM « Ai-je compris la tâche ? » ----------
+(function(){
+var boite=document.querySelector('.qcm');
+if(!boite){return;}
+var code=document.body.getAttribute('data-code');
+var Q=JSON.parse(boite.querySelector('.qcm-donnees').textContent);
+var NB=parseInt(boite.getAttribute('data-nb'),10);
+if(NB>Q.length){NB=Q.length;}
+var liste=boite.querySelector('.qcm-liste');
+var zoneScore=boite.querySelector('.qcm-score');
+var encore=boite.querySelector('.qcm-encore');
+var LETTRES=['A','B','C','D','E'];
+var api=window.PEI5||null;
+
+function melanger(t){
+  for(var i=t.length-1;i>0;i=i-1){var j=Math.floor(Math.random()*(i+1));var x=t[i];t[i]=t[j];t[j]=x;}
+  return t;}
+function suiteDe(n){var t=[];for(var i=0;i<n;i=i+1){t.push(i);}return t;}
+function contient(t,v){for(var i=0;i<t.length;i=i+1){if(t[i]===v){return true;}}return false;}
+function maintenant(){return new Date().toISOString();}
+
+var e=null;
+if(api){e=api.lireExtra('qcm');}
+
+function compter(){
+  var score=0;var repondu=0;var detail=[];
+  for(var i=0;i<e.questions.length;i=i+1){
+    var c=e.choix[i];
+    if(c!==null){repondu=repondu+1;if(c===0){score=score+1;}}
+    detail.push({q:code+'-'+(e.questions[i]+1),choix:c,juste:(c===0)});}
+  e.score=score;e.repondu=repondu;e.sur=e.questions.length;e.detail=detail;}
+function enregistrer(){compter();if(api){api.ecrireExtra('qcm',e);}}
+
+function nouveauTirage(){
+  var restantes=[];
+  for(var i=0;i<Q.length;i=i+1){if(!contient(e.vues,i)){restantes.push(i);}}
+  if(restantes.length<NB){
+    // toutes les questions ont été vues : on repart de la banque complète, sans reprendre le tirage qui vient d'être fait
+    e.vues=[];restantes=[];
+    for(var k=0;k<Q.length;k=k+1){if(!contient(e.questions||[],k)){restantes.push(k);}}
+    if(restantes.length<NB){restantes=suiteDe(Q.length);}}
+  var choisies=melanger(restantes).slice(0,NB);
+  e.essai=e.essai+1;e.questions=choisies;e.ordres=[];e.choix=[];
+  for(var j=0;j<choisies.length;j=j+1){e.vues.push(choisies[j]);e.ordres.push(melanger(suiteDe(Q[choisies[j]].p.length)));e.choix.push(null);}
+  e.debut=maintenant();e.fin=null;e.duree_s=null;
+  // au premier affichage, rien n'est enregistré tant que l'élève n'a pas répondu
+  if(e.essai>1){enregistrer();}else{compter();}
+  afficher();}
+
+function montrer(li,n){
+  var c=e.choix[n];var bts=li.querySelectorAll('.qcm-choix button');
+  for(var b=0;b<bts.length;b=b+1){
+    var k=parseInt(bts[b].getAttribute('data-k'),10);
+    bts[b].disabled=true;bts[b].className='';
+    if(k===0){bts[b].className='juste';}
+    else if(k===c){bts[b].className='faux';}
+    else{bts[b].className='attenue';}}
+  var ex=li.querySelector('.explication');ex.hidden=false;ex.className='explication '+(c===0?'ok':'ko');}
+
+function bilan(){
+  var fini=true;for(var i=0;i<e.choix.length;i=i+1){if(e.choix[i]===null){fini=false;}}
+  if(e.repondu===0){zoneScore.textContent='';encore.hidden=true;return;}
+  if(!fini){zoneScore.textContent='Score : '+e.score+' sur '+e.repondu+' (question '+(e.repondu+1)+' sur '+e.sur+').';encore.hidden=true;return;}
+  var conseil='';
+  if(e.score===e.sur){conseil='Tu as compris ce que la tâche demande. Passe à « Appliquer ».';}
+  else if(e.score>=e.sur-2){conseil='Relis les explications des questions manquées, puis l’étape « Ce que cela veut dire, pas à pas ».';}
+  else{conseil='Relis la consigne et l’exemple réel, puis fais '+NB+' autres questions avant d’appliquer.';}
+  zoneScore.textContent='Score : '+e.score+' sur '+e.sur+'. '+conseil;
+  var restantes=0;for(var k=0;k<Q.length;k=k+1){if(!contient(e.vues,k)){restantes=restantes+1;}}
+  if(restantes>=NB){encore.textContent=NB+' autres questions';}else{encore.textContent='Recommencer avec '+NB+' nouvelles questions';}
+  encore.hidden=false;}
+
+function finSiComplet(){
+  for(var i=0;i<e.choix.length;i=i+1){if(e.choix[i]===null){return;}}
+  if(e.fin){return;}
+  e.fin=maintenant();
+  e.duree_s=Math.round((new Date(e.fin).getTime()-new Date(e.debut).getTime())/1000);
+  e.historique.push({essai:e.essai,score:e.score,sur:e.sur,questions:e.questions.slice(0),fin:e.fin,duree_s:e.duree_s});}
+
+function afficher(){
+  liste.innerHTML='';
+  for(var n=0;n<e.questions.length;n=n+1){(function(n){
+    var q=Q[e.questions[n]];
+    var li=document.createElement('li');
+    var html='<p class="qcm-enonce">'+q.e+'</p><div class="qcm-choix">';
+    for(var r=0;r<e.ordres[n].length;r=r+1){
+      var k=e.ordres[n][r];
+      html=html+'<button type="button" data-k="'+k+'"><span class="lettre">'+LETTRES[r]+'</span><span>'+q.p[k]+'</span></button>';}
+    html=html+'</div><p class="explication" hidden>'+q.x+'</p>';
+    li.innerHTML=html;
+    var bts=li.querySelectorAll('.qcm-choix button');
+    for(var b=0;b<bts.length;b=b+1){bts[b].addEventListener('click',function(){
+      if(e.choix[n]!==null){return;}
+      if(e.repondu===0){e.debut=maintenant();}
+      e.choix[n]=parseInt(this.getAttribute('data-k'),10);
+      compter();finSiComplet();enregistrer();montrer(li,n);bilan();});}
+    if(e.choix[n]!==null){montrer(li,n);}
+    liste.appendChild(li);
+  })(n);}
+  bilan();}
+
+encore.addEventListener('click',function(){nouveauTirage();boite.scrollIntoView();});
+
+if(!e||!e.questions||!e.ordres||!e.choix){
+  e={type:'qcm',tache:code,essai:0,vues:[],historique:[]};
+  nouveauTirage();}
+else{
+  if(!e.vues){e.vues=e.questions.slice(0);}
+  if(!e.historique){e.historique=[];}
+  compter();afficher();}
+})();</script></body></html>

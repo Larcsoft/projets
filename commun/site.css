@@ -1,0 +1,64 @@
+/* Site des cours : compléments à distill.css (la feuille des pages témoins).
+   distill.css donne la grille, l'en-tête, le sommaire, les titres numérotés et les annexes ;
+   ce fichier ajoute seulement la barre de navigation et les éléments propres au site. */
+
+/* ---------- barre de navigation du site ---------- */
+.menu-site { border-bottom: 1px solid var(--filet); font-size: .72em; letter-spacing: .05em; text-transform: uppercase; }
+.menu-int { max-width: 1180px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 24px; padding: 12px 0; }
+.menu-int span { display: flex; flex-wrap: wrap; gap: 4px 20px; }
+.menu-int a { border: none; color: var(--gris); }
+.menu-int a:hover, .menu-int a.actif { color: var(--encre); }
+.menu-int a.actif { font-weight: 600; }
+.menu-int .marque { color: var(--encre); font-weight: 700; }
+
+/* ---------- encadrés ---------- */
+.encadre { background: var(--regle); padding: 14px 18px; font-size: .92em; margin: 20px 0; }
+.encadre-gris { background: var(--appendice); padding: 14px 18px; margin-top: 40px; }
+.encadre-gris h2 { margin-top: 0; font-size: 1.1em; }
+.avert { margin: 24px 0; }
+.encadre p:last-child, .encadre-gris p:last-child, .avert p:last-child { margin-bottom: 0; }
+.gris { color: var(--gris); }
+kbd { font-family: var(--mono); font-size: .8em; border: 1px solid var(--filet); border-radius: 3px; padding: 0 .3em; background: var(--code-fond); }
+
+/* ---------- cadre de l'unité ---------- */
+dl.cadre { display: grid; grid-template-columns: 11rem 1fr; gap: 8px 18px; margin: 0; }
+dl.cadre dt { font-weight: 600; font-size: .74em; color: var(--gris); text-transform: uppercase; letter-spacing: .06em; padding-top: 4px; }
+dl.cadre dd { margin: 0; }
+@media (max-width: 600px) { dl.cadre { grid-template-columns: 1fr; } dl.cadre dd { margin-bottom: 8px; } }
+
+/* ---------- cartes ---------- */
+.cartes { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--filet); }
+.cartes li { margin: 0; border-bottom: 1px solid var(--filet); }
+.cartes a { display: block; border: none; color: var(--encre); padding: 18px 0; }
+.cartes a:hover strong { color: var(--lien); }
+.cartes strong { display: block; font-size: 1.15em; margin: 2px 0 4px; }
+.cartes span { display: block; color: var(--gris); font-size: .9em; }
+.cartes .surtitre { font-size: .68em; margin: 0; }
+
+/* ---------- sommaire des tâches (une couleur par critère) ---------- */
+.critere { border-left: 4px solid var(--c, #ccc); padding-left: 16px; margin: 26px 0; }
+.critere h3 { margin-top: 0; }
+.crit-A { --c: var(--crit-a); } .crit-B { --c: var(--crit-b); } .crit-C { --c: var(--crit-c); } .crit-D { --c: var(--crit-d); }
+.critere ol, .liste-taches { list-style: none; padding: 0; margin: 0; }
+.critere li, .liste-taches li { margin: 4px 0; }
+.num { display: inline-block; min-width: 2.6em; font-weight: 600; color: var(--gris); font-size: .85em; font-variant-numeric: tabular-nums; }
+
+/* ---------- fichiers à télécharger ---------- */
+.fichiers { list-style: none; padding: 0; border-top: 1px solid var(--filet); }
+.fichiers li { padding: 10px 0; border-bottom: 1px solid var(--filet); }
+.format { font-size: .7em; color: var(--gris); text-transform: uppercase; letter-spacing: .05em; margin-left: 6px; }
+
+/* ---------- galerie de figures (plus large que le texte, comme dans Distill) ---------- */
+.galerie { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 24px; margin: 24px -120px 24px 0; }
+.galerie figure { margin: 0; }
+.galerie figure a { border: none; }
+.galerie figure img { width: 100%; border: 1px solid var(--filet); }
+@media (max-width: 1180px) { .galerie { margin-right: 0; } }
+
+/* ---------- code source replié ---------- */
+.code-source { border-top: 1px solid var(--filet); padding: 10px 0; }
+.code-source summary { cursor: pointer; font-size: .92em; }
+.code-source pre { margin-top: 10px; }
+
+table { display: table; }
+.corps > section > table { font-size: .8em; }
