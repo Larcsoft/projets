@@ -62,3 +62,28 @@ dl.cadre dd { margin: 0; }
 
 table { display: table; }
 .corps > section > table { font-size: .8em; }
+
+/* ---------- touches de couleur (comme la page du témoin arrosage) ---------- */
+.badge { display: inline-block; min-width: 2.2em; padding: 0 .4em; margin-right: .6em; border-radius: 3px; background: var(--c, #eee);
+  font-weight: 600; font-size: .82em; text-align: center; font-variant-numeric: tabular-nums; color: var(--encre); }
+.critere { border-left: none; padding-left: 0; }
+.critere h3 { display: flex; align-items: center; }
+.critere h3 .badge { font-size: .85em; }
+.critere li { display: flex; align-items: baseline; margin: 6px 0; }
+.critere li .badge { font-size: .78em; flex: none; }
+.encadre { border-left: 3px solid var(--crit-a); }
+.encadre-gris { border-left: 3px solid rgba(0, 0, 0, .18); }
+
+/* héros de l'accueil : le cycle de design */
+.cycle ol { list-style: none; margin: 8px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.cycle li { background: color-mix(in srgb, var(--c) 28%, #fff); border-top: 4px solid var(--c); padding: 12px 14px 14px; font-size: .8em; line-height: 1.45; position: relative; }
+.cycle li strong { display: block; font-size: 1.15em; margin: 8px 0 4px; }
+.cycle li span:not(.badge) { color: rgba(0, 0, 0, .68); }
+.cycle li:not(:last-child)::after { content: "→"; position: absolute; right: -13px; top: 14px; color: var(--gris); font-size: 1.1em; }
+.cycle figcaption { margin-top: 10px; }
+@media (max-width: 760px) { .cycle ol { grid-template-columns: repeat(2, minmax(0, 1fr)); } .cycle li::after { display: none; } }
+
+/* cartes des témoins : un filet de couleur à gauche */
+.cartes li { border-left: 3px solid transparent; }
+.cartes li:hover { border-left-color: var(--crit-a); }
+.cartes a { padding-left: 14px; }
