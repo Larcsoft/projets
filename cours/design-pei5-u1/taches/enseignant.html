@@ -1,4 +1,4 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Espace enseignant</title><style>/* Design PEI 5 · pages d'activités A1 à D4
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Espace enseignant</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap"><style>/* Design PEI 5 · pages d'activités A1 à D4
    Style inspiré des articles scientifiques Distill : une large colonne aérée,
    titres nets sans empattement, filets fins, aucune décoration,
    couleurs pastel seulement pour reconnaître les encadrés.
@@ -221,6 +221,53 @@ h1 .puce{font-size:.62em;vertical-align:.18em;padding:.05em .4em}
 .qcm-choix button.attenue{opacity:.6}
 .qcm-score{font-weight:600;margin-bottom:0}
 @media print{.qcm-encore{display:none}}
+/* ---------- Thème « Atelier Arduino & ESP32 » (choix de Pat, 23/10/2026) ----------
+   Même style que le site du cours : bandeau vert « circuit imprimé », accent cuivre,
+   fond papier, sections en cartes blanches. Supprimer ce fichier du build = retour au style Distill. */
+:root{
+  --papier:#F3F6F2; --encre:#14211E; --gris:#52625C; --filet:#D3DCD5; --lien:#B5652A;
+  --pcb:#0E4A42; --pcb-2:#0B3B35; --pcb-ink:#E8F2EC; --silk:#BFD9CF; --cuivre:#B5652A; --cuivre-doux:#F7E9DB;
+  --consigne:#EAF1FA; --exemple:#FBF0DC; --trier:#E3F3E8; --atoi:#F1EBF8; --pouce:#FDF6DD; --sommative:#F7E9DB;
+}
+body{font-family:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;font-size:17px;line-height:1.6}
+h1,h2,h3,.temps a{font-family:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif}
+code,pre{font-family:"JetBrains Mono",Consolas,"Courier New",monospace}
+a{color:var(--cuivre);border-bottom-color:rgba(181,101,42,.3)}
+a:hover{border-bottom-color:var(--cuivre)}
+
+/* bandeau d'en-tête pleine largeur */
+.entete{background:var(--pcb);color:var(--pcb-ink);box-shadow:0 0 0 100vmax var(--pcb);clip-path:inset(0 -100vmax);padding-bottom:18px;position:relative}
+.entete::before{content:"";display:block;height:11px;margin:0 0 14px;
+  background:repeating-linear-gradient(90deg,var(--silk) 0 2px,var(--pcb-2) 2px 9px,var(--silk) 9px 11px,transparent 11px 17px);opacity:.75;width:180px}
+.entete .haut,.entete .code,.entete .byline h5{color:var(--silk)}
+.entete .haut a{color:var(--pcb-ink);border-bottom-color:rgba(191,217,207,.4)}
+.entete h1{color:#fff;font-weight:800;letter-spacing:-.02em}
+.entete .desc{color:var(--silk)}
+.entete .byline{border-top-color:rgba(191,217,207,.35)}
+.entete .byline p{color:var(--pcb-ink)}
+.entete .choix-projet{color:var(--silk);border-color:rgba(191,217,207,.35)}
+.entete .temps{background:var(--pcb-2);border-bottom:none;border-radius:8px;padding:10px 14px;margin-top:10px;border-left:6px solid var(--crit)}
+.entete .temps a{color:var(--pcb-ink)}
+.entete .temps a:hover{color:#fff}
+.entete .temps small{color:var(--silk)}
+.entete .connexion{color:var(--silk);border-bottom-color:rgba(191,217,207,.35)}
+h1 .puce{color:#14211E}
+
+/* sections en cartes blanches */
+main{padding-top:8px}
+main>section,main>nav{background:#fff;border:1px solid var(--filet);border-radius:10px;padding:18px 20px;margin:22px 0 0}
+main>section>h2{border-bottom:1px solid var(--filet)}
+.cadre,.histoire,#appliquer .panneau,.pouce,.sommative{border-radius:8px}
+.enonce{border-color:var(--filet);border-radius:8px}
+.notes{background:transparent}
+footer{color:var(--gris)}
+.puce{color:#14211E}
+@media print{
+  .entete{background:none;color:#000;box-shadow:none;clip-path:none}
+  .entete::before{display:none}
+  .entete h1,.entete .desc,.entete .haut,.entete .code,.entete .byline p,.entete .byline h5{color:#000}
+  main>section,main>nav{border:none;padding:0}
+}
 </style></head><body><header class="entete"><div class="haut"><span>Espace enseignant(e)</span><span>Tous les cours</span></div>
 <p class="code">Suivi des travaux · données anonymes</p>
 <h1>Tableau de bord</h1>
